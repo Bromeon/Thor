@@ -45,6 +45,7 @@ project(thor)
 # Global preprocessor and include options
 add_definitions(-DTHOR_EXPORTS)
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/extlibs/aurora/include)
 
 # Predefined configuration options
 set(THOR_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
@@ -126,3 +127,7 @@ install(DIRECTORY include
 
 install(FILES license.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
+
+install(DIRECTORY extlibs/aurora/include
+		DESTINATION .
+		REGEX "\\.svn|_svn" EXCLUDE)
