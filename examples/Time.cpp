@@ -1,0 +1,112 @@
+
+#include <Thor/Time.hpp>
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <sstream>
+
+// Converts a float to a string with two decimal places
+std::string ToString(sf::Time value)
+{
+	std::stringstream stream;
+	stream.setf(std::ios_base::fixed);
+	stream.precision(2);
+	stream << value.asSeconds();
+	return stream.str();
+}
+
+int main() 
+{
+	// Create SFML window
+	sf::RenderWindow window(sf::VideoMode(300, 200), "Thor Time", sf::Style::Close);
+	window.setVerticalSyncEnabled(true);
+
+	// Create stopwatch and timer
+	const sf::Time initialTime = sf::seconds(4.f);
+	thor::StopWatch stopWatch;
+	thor::TriggeringTimer timer(initialTime);
+
+	// Create texts that display instructions and current time
+	sf::Text instructions(
+		"S      Start/pause stopwatch\n"
+		"T      Start/pause timer\n"
+		"R      Reset stopwatch and timer\n"
+		"Esc  Quit");
+	instructions.setCharacterSize(12);
+	instructions.setColor(sf::Color::White);
+
+	sf::Text stopWatchMeasurement;
+	stopWatchMeasurement.setCharacterSize(20);
+	stopWatchMeasurement.setPosition(70.f, 120.f);
+	stopWatchMeasurement.setColor(sf::Color(0, 190, 140));
+	
+	sf::Text timerMeasurement;
+	timerMeasurement.setCharacterSize(20);
+	timerMeasurement.setPosition(70.f, 150.f);
+	timerMeasurement.setColor(sf::Color(0, 140, 190));
+	
+	// Connect timer with callback (colorize yellow) invoked at expiration time
+	timer.connect(std::tr1::bind(&sf::Text::setColor, &timerMeasurement, sf::Color::Yellow));
+
+	// Main loop
+	for (;;)
+	{
+		// Event handling
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			// [X]: Quit
+			if (event.type == sf::Event::Closed)
+			{
+				return 0;
+			}
+
+			// Key pressed
+			else if (event.type == sf::Event::KeyPressed)
+			{
+				switch (event.key.code)
+				{
+					// Esc: Quit
+					case sf::Keyboard::Escape:
+						return 0;
+
+					// S: Start/pause stopwatch
+					case sf::Keyboard::S:
+						if (stopWatch.isRunning())
+							stopWatch.stop();
+						else
+							stopWatch.start();
+						break;
+
+					// T: Start/pause timer
+					case sf::Keyboard::T:
+						if (timer.isRunning())
+							timer.stop();
+						else
+							timer.start();
+						break;
+
+					// R: Reset both stopwatch and timer
+					case sf::Keyboard::R:
+						stopWatch.reset();
+						timer.reset(initialTime);
+						timerMeasurement.setColor(sf::Color(0, 140, 190));
+						break;
+				}
+			}
+		}
+
+		// Adapt texts for stopwatch and timer according to elapsed/remaining time
+		stopWatchMeasurement.setString("Stopwatch:  " + ToString(stopWatch.getElapsedTime()));
+		timerMeasurement.setString("Timer:  " + ToString(timer.getRemainingTime()));
+
+		// Update TriggeringTimer that allows the callback to be invoked
+		timer.update();
+
+		// Draw everything
+		window.clear();
+		window.draw(instructions);
+		window.draw(stopWatchMeasurement);
+		window.draw(timerMeasurement);
+		window.display();
+	}	
+}
