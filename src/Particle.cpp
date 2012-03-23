@@ -25,8 +25,6 @@
 
 #include <Thor/Particles/Particle.hpp>
 
-#include <SFML/OpenGL.hpp>
-
 
 namespace thor
 {
