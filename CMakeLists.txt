@@ -50,6 +50,7 @@ include_directories(${CMAKE_SOURCE_DIR}/extlibs/aurora/include)
 # Predefined configuration options
 set(THOR_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
 set(THOR_BUILD_EXAMPLES FALSE CACHE BOOL "Build example projects")
+set(THOR_USE_CPP11 TRUE CACHE BOOL "Use C++11 features")
 
 # Windows: Choose to link CRT libraries statically or dynamically
 if(WIN32)
@@ -66,6 +67,16 @@ if(WIN32)
 		elseif(CMAKE_COMPILER_IS_GNUCXX)
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
 		endif()
+	endif()
+endif()
+
+
+# C++11 support
+if(THOR_USE_CPP11)
+	add_definitions(-DAURORA_HAS_CPP11)
+
+	if(CMAKE_COMPILER_IS_GNUCXX)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 	endif()
 endif()
 
