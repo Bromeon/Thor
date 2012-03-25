@@ -29,8 +29,9 @@
 #ifndef THOR_EVENTSYSTEM_HPP
 #define THOR_EVENTSYSTEM_HPP
 
-#include <Aurora/Tools/NonCopyable.hpp>
 #include <Thor/Detail/EventListener.hpp>
+
+#include <Aurora/Tools/NonCopyable.hpp>
 
 
 namespace thor

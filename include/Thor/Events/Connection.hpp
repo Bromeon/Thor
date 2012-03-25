@@ -29,8 +29,9 @@
 #ifndef THOR_CONNECTION_HPP
 #define THOR_CONNECTION_HPP
 
-#include <Aurora/Tools/NonCopyable.hpp>
 #include <Thor/Config.hpp>
+
+#include <SFML/System/NonCopyable.hpp>
 
 #include AURORA_TR1_HEADER(memory)
 
@@ -98,7 +99,7 @@ class THOR_API Connection
 /// @details In contrast to thor::Connection, the thor::ScopedConnection class disconnects its referenced listener
 ///  in the destructor. You can use ScopedConnection for temporary listeners that aren't needed after the end of scope.
 ///  @n ScopedConnection is noncopyable.
-class THOR_API ScopedConnection : private aur::NonCopyable
+class THOR_API ScopedConnection : private sf::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions

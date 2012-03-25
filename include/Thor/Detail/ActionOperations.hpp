@@ -29,9 +29,9 @@
 #include <Thor/Events/Joystick.hpp>
 #include <Thor/Config.hpp>
 
-#include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
 
+#include <SFML/System/NonCopyable.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -62,7 +62,7 @@ namespace detail
 	};
 
 	// Class that stores events and provides methods for lookup
-	class THOR_API EventBuffer : private aur::NonCopyable
+	class THOR_API EventBuffer : private sf::NonCopyable
 	{
 		private:
 			typedef std::multiset<sf::Event, CompareEvents> EventSet;

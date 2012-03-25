@@ -35,10 +35,10 @@
 #include <Thor/Config.hpp>
 
 #include <Aurora/Tools/Swap.hpp>
-#include <Aurora/Tools/NonCopyable.hpp>
 
-#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/NonCopyable.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 #include AURORA_TR1_HEADER(functional)
 #include <vector>
@@ -65,7 +65,7 @@ namespace thor
 /// @details Like sprites, particles are represented as sub-rectangles of sf::Texture. During their
 ///  lifetime, the particles can be affected in translation, rotation, scale and coloring.
 /// @n@n This class is noncopyable.
-class THOR_API ParticleSystem : private aur::NonCopyable, private Emitter::Adder
+class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 {		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
