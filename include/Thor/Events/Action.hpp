@@ -61,10 +61,9 @@ class THOR_API Action
 		///
 		enum ActionType
 		{
-			Realtime,		///< Repeated input (e.g. a key that is held down).
+			Hold,			///< Repeated input (e.g. a key that is held down).
 			PressOnce,		///< Press events that occur only once (e.g. key pressed).
 			ReleaseOnce,	///< Release events that occur only once (e.g. key released).
-			Once,			///< Events that occur only once (combines @a PressOnce and @a ReleaseOnce).
 		};
 
 
@@ -74,18 +73,18 @@ class THOR_API Action
 		/// @brief Construct key action
 		/// @details Creates an action that is in effect when @a key is manipulated. The second parameter specifies whether
 		///  KeyPressed events, KeyReleased events or sf::Keyboard::isKeyPressed() act as action source.
-		explicit					Action(sf::Keyboard::Key key, ActionType action = Realtime);
+		explicit					Action(sf::Keyboard::Key key, ActionType action = Hold);
 
 		/// @brief Construct mouse button action
 		/// @details Creates an action that is in effect when @a mouseButton is manipulated. The second parameter specifies whether
 		///  MouseButtonPressed events, MouseButtonReleased events or sf::Mouse::isButtonPressed() act as action source.
-		explicit					Action(sf::Mouse::Button mouseButton, ActionType action = Realtime);
+		explicit					Action(sf::Mouse::Button mouseButton, ActionType action = Hold);
 
 		/// @brief Construct joystick button action
 		/// @details Creates an action that is in effect when the joystick button stored in @a joystickState is manipulated.
 		///  The second parameter specifies whether JoyButtonPressed events, JoyButtonReleased events or
 		///  sf::Joystick::isButtonPressed() act as action source.
-		explicit					Action(Joystick joystickState, ActionType action = Realtime);
+		explicit					Action(Joystick joystickState, ActionType action = Hold);
 
 		/// @brief Construct SFML event action
 		/// @details Creates an action that is in effect when a SFML event of the type @a eventType is fired.

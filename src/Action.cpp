@@ -42,17 +42,13 @@ Action::Action(sf::Keyboard::Key key, ActionType action)
 {
 	switch (action)
 	{
-		case Realtime:
+		case Hold:
 			mOperation.reset(new detail::RealtimeKeyLeaf(key));
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
 			mOperation.reset(new detail::EventKeyLeaf(key, action == PressOnce));
-			break;
-
-		case Once:
-			*this = Action(key, PressOnce) || Action(key, ReleaseOnce);
 			break;
 	}
 }
@@ -62,17 +58,13 @@ Action::Action(sf::Mouse::Button mouseButton, ActionType action)
 {
 	switch (action)
 	{
-		case Realtime:
+		case Hold:
 			mOperation.reset(new detail::RealtimeMouseLeaf(mouseButton));
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
 			mOperation.reset(new detail::EventMouseLeaf(mouseButton, action == PressOnce));
-			break;
-
-		case Once:
-			*this = Action(mouseButton, PressOnce) || Action(mouseButton, ReleaseOnce);
 			break;
 	}
 }
@@ -82,17 +74,13 @@ Action::Action(Joystick joystick, ActionType action)
 {
 	switch (action)
 	{
-		case Realtime:
+		case Hold:
 			mOperation.reset(new detail::RealtimeJoystickLeaf(joystick));
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
 			mOperation.reset(new detail::EventJoystickLeaf(joystick, action == PressOnce));
-			break;
-
-		case Once:
-			*this = Action(joystick, PressOnce) || Action(joystick, ReleaseOnce);
 			break;
 	}
 }
