@@ -116,7 +116,7 @@ int main()
 			system.update(frameTime);
 
 		// Set initial particle velocity, rotate vector randomly by maximal 10 degrees
-		emitter->setVelocity( thor::Distr::deflect(velocity, 10.f) );
+		emitter->setVelocity( thor::Distributions::deflect(velocity, 10.f) );
 
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));

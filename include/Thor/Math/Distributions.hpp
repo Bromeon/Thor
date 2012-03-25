@@ -44,7 +44,7 @@ namespace thor
 
 /// @brief Namespace for some predefined distribution functions
 /// 
-namespace Distr
+namespace Distributions
 {
 
 	/// @brief %Uniform random distribution in a float interval

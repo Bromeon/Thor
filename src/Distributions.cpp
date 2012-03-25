@@ -114,7 +114,7 @@ namespace
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-namespace Distr
+namespace Distributions
 {
 	
 	aur::Distribution<float> uniform(float begin, float end)
