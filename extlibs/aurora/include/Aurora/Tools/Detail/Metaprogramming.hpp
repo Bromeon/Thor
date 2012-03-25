@@ -84,6 +84,20 @@ namespace detail
 	};
 
 
+	// SFINAE Enable If
+	template <bool Condition>
+	struct EnableIf;
+
+	template <>
+	struct EnableIf<true>
+	{
+		typedef void Type;
+	};
+
+	#define AURORA_ENABLE_IF(...)  typename ::aur::detail::EnableIf<__VA_ARGS__>::Type* = NULL
+	#define AURORA_DISABLE_IF(...) AURORA_ENABLE_IF(!(__VA_ARGS__))
+
+
 	// Adjusts New such that it has the same const, pointer, reference attributes as Origin
 	template <typename Origin, typename New>
 	struct Replicate
