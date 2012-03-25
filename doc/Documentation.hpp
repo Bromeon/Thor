@@ -50,9 +50,6 @@
 /// @defgroup Events Events
 /// @brief Facilities for object-oriented event handling using callbacks.
 
-/// @defgroup Geometry Geometry
-/// @brief Geometric figures and zones based on 2D vectors.
-
 /// @defgroup Math Math
 /// @brief Mathematical functionality, such as random number generator or trigonometric wrappers.
 

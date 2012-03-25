@@ -33,11 +33,9 @@ set(THOR_SRC
 	Affector.cpp
 	Animator.cpp
 	Arrow.cpp
-	Attributes2D.cpp
 	AudioKeys.cpp
 	BigSprite.cpp
 	BigTexture.cpp
-	Circle.cpp
 	ColorImpl.cpp
 	Colors.cpp
 	ConcaveShape.cpp
@@ -49,9 +47,7 @@ set(THOR_SRC
 	Particle.cpp
 	ParticleInterfaces.cpp
 	ParticleSystem.cpp
-	Point.cpp
 	Random.cpp
-	Rectangle.cpp
 	Shapes.cpp
 	StopWatch.cpp
 	Timer.cpp
@@ -59,7 +55,6 @@ set(THOR_SRC
 	Triangulation.cpp
 	TriggeringTimer.cpp
 	Trigonometry.cpp
-	Zone.cpp
 )
 
 
