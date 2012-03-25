@@ -40,6 +40,7 @@ set(THOR_SRC
 	Colors.cpp
 	ConcaveShape.cpp
 	Connection.cpp
+	Distributions.cpp
 	Emitter.cpp
 	FrameAnimation.cpp
 	GraphicsKeys.cpp

@@ -1,6 +1,7 @@
 
 #include <Thor/Particles.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Math/Distributions.hpp>
 #include <SFML/Graphics.hpp>
 
 
@@ -113,7 +114,9 @@ int main()
 		const sf::Time frameTime = frameClock.restart();
 		if (!paused)
 			system.update(frameTime);
-		emitter->setVelocity(velocity);
+
+		// Set initial particle velocity, rotate vector randomly by maximal 10 degrees
+		emitter->setVelocity( thor::Distr::deflect(velocity, 10.f) );
 
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));
