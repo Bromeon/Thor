@@ -24,121 +24,102 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Particles/Emitter.hpp>
-#include <Thor/Math/Random.hpp>
+#include <Thor/Particles/Particle.hpp>
 
-#include <cmath>
 #include <cassert>
 
 
 namespace thor
 {
 
-DirectionalEmitter::Ptr DirectionalEmitter::create(float particlesPerSecond, sf::Time particleLifetime)
+UniversalEmitter::Ptr UniversalEmitter::create()
 {
-	return Ptr(new DirectionalEmitter(particlesPerSecond, particleLifetime));
+	return Ptr(new UniversalEmitter());
 }
 
-DirectionalEmitter::DirectionalEmitter(float particlesPerSecond, sf::Time particleLifetime)
-: Emitter(particlesPerSecond, particleLifetime)
-, mEmissionAngle(0.f)
-, mParticleVelocity()
+UniversalEmitter::UniversalEmitter()
+: Emitter()
+, mEmissionRate(1.f)
+, mEmissionDifference(0.f)
+, mParticleLifetime(sf::seconds(1.f)) 
+, mParticlePosition(sf::Vector2f(0.f, 0.f))
+, mParticleVelocity(sf::Vector2f(0.f, 0.f))
+, mParticleRotation(0.f)
+, mParticleRotationSpeed(0.f)
+, mParticleScale(sf::Vector2f(1.f, 1.f))
+, mParticleColor(sf::Color::White)
 {
 }
 
-void DirectionalEmitter::emit(Adder& system, sf::Time dt)
+void UniversalEmitter::emit(Adder& system, sf::Time dt)
 {
-	const unsigned int nbParticles = computeNbParticles(dt);
+	const unsigned int nbParticles = computeParticleCount(dt);
 
 	for (unsigned int i = 0; i < nbParticles; ++i)
 	{
 		// Create particle and specify parameters
-		Particle particle = createParticlePrototype();
-		particle.velocity = mParticleVelocity;
-
-		// Influence of emission angle
-		float var = randomDev(0.f, getEmissionAngle() / 2.f);
-		rotate(particle.velocity, var);
+		Particle particle( mParticleLifetime() );
+		particle.position = mParticlePosition();
+		particle.velocity = mParticleVelocity();
+		particle.rotation = mParticleRotation();
+		particle.rotationSpeed = mParticleRotationSpeed();
+		particle.scale = mParticleScale();
+		mParticleColor = mParticleColor();
 
 		system.addParticle(particle);
 	}
 }
 
-void DirectionalEmitter::setEmissionAngle(float emissionAngle)
+void UniversalEmitter::setEmissionRate(float particlesPerSecond)
 {
-	mEmissionAngle = emissionAngle;
+	mEmissionRate = particlesPerSecond;
 }
 
-float DirectionalEmitter::getEmissionAngle() const
+void UniversalEmitter::setLifetime(aur::Distribution<sf::Time> particleLifetime)
 {
-	return mEmissionAngle;
+	mParticleLifetime.swap(particleLifetime);
 }
 
-void DirectionalEmitter::setParticleVelocity(sf::Vector2f velocity)
+void UniversalEmitter::setPosition(aur::Distribution<sf::Vector2f> particlePosition)
 {
-	mParticleVelocity = velocity;
+	mParticlePosition.swap(particlePosition);
 }
 
-sf::Vector2f DirectionalEmitter::getParticleVelocity() const
+void UniversalEmitter::setVelocity(aur::Distribution<sf::Vector2f> particleVelocity)
 {
-	return mParticleVelocity;
+	mParticleVelocity.swap(particleVelocity);
 }
 
-// ---------------------------------------------------------------------------------------------------------------------------
-
-
-TargetEmitter::Ptr TargetEmitter::create(float particlesPerSecond, sf::Time particleLifetime)
+void UniversalEmitter::setRotation(aur::Distribution<float> particleRotation)
 {
-	return Ptr(new TargetEmitter(particlesPerSecond, particleLifetime));
+	mParticleRotation.swap(particleRotation);
 }
 
-TargetEmitter::TargetEmitter(float particlesPerSecond, sf::Time particleLifetime)
-: Emitter(particlesPerSecond, particleLifetime)
-, mTargetZone(getEmissionZone().clone(), aur::VirtualClone<thor::Zone>(), aur::OperatorDelete<thor::Zone>())
-, mParticleSpeed(0.f)
+void UniversalEmitter::setRotationSpeed(aur::Distribution<float> particleRotationSpeed)
 {
+	mParticleRotationSpeed.swap(particleRotationSpeed);
 }
 
-void TargetEmitter::emit(Adder& system, sf::Time dt)
+void UniversalEmitter::setScale(aur::Distribution<sf::Vector2f> particleScale)
 {
-	const unsigned int nbParticles = computeNbParticles(dt);
-
-	for (unsigned int i = 0; i < nbParticles; ++i)
-	{
-		// Create particle and specify parameters
-		Particle particle = createParticlePrototype();
-
-		// Compute vector from emission to target zone and scale it (unless it is zero)
-		sf::Vector2f direction = mTargetZone->getRandomPoint() - particle.position;
-		if (direction != sf::Vector2f())
-			particle.velocity = mParticleSpeed * unitVector(direction);
-
-		system.addParticle(particle);
-	}
+	mParticleScale.swap(particleScale);
 }
 
-void TargetEmitter::setTargetZone(ZonePtr zone)
+void UniversalEmitter::setColor(aur::Distribution<sf::Color> particleColor)
 {
-	mTargetZone = zone;
+	mParticleColor.swap(particleColor);
 }
 
-Zone& TargetEmitter::getTargetZone()
+unsigned int UniversalEmitter::computeParticleCount(sf::Time dt)
 {
-	return *mTargetZone;
-}
+	// We want to fulfill the desired particle rate as exact as possible. Since the amount of emitted particles per frame is
+	// integral, we have to emit sometimes more and sometimes less. mParticleDifference takes care of the deviation each frame.
+	float particleAmount = mEmissionRate * dt.asSeconds() + mEmissionDifference;
+	unsigned int nbParticles = static_cast<unsigned int>(particleAmount);
 
-const Zone& TargetEmitter::getTargetZone() const
-{
-	return *mTargetZone;
-}
-
-void TargetEmitter::setParticleSpeed(float speed)
-{
-	mParticleSpeed = speed;
-}
-
-float TargetEmitter::getParticleSpeed() const
-{
-	return mParticleSpeed;
+	// Compute difference for next frame, return current amount
+	mEmissionDifference = particleAmount - nbParticles;
+	return nbParticles;
 }
 
 } // namespace thor

@@ -1,7 +1,25 @@
 
 #include <Thor/Particles.hpp>
-#include <Thor/Geometry.hpp>
+#include <Thor/Vectors/PolarVector.hpp>
 #include <SFML/Graphics.hpp>
+
+
+// Functor that returns the mouse position in float coordinates
+struct MousePosition
+{
+	MousePosition(sf::Window& window)
+	: window(window)
+	{
+	}
+
+	sf::Vector2f operator() ()
+	{
+		return sf::Vector2f(sf::Mouse::getPosition(window));
+	}
+
+	sf::Window& window;
+};
+
 
 int main()
 {
@@ -13,15 +31,16 @@ int main()
 	if (!texture.loadFromFile("Media/particle.png"))
 		return EXIT_FAILURE;
 	
-	// Create particle system, emitter and circular emission zone
-	// By using thor::NoDeletePtr(), we claim that the sf::Texture stays alive as long as it is needed by thor::ParticleSystem.
+	// Create emitter
+	thor::UniversalEmitter::Ptr emitter = thor::UniversalEmitter::create();
+	emitter->setEmissionRate(30.f);
+	emitter->setLifetime(sf::seconds(5.f));
+	emitter->setPosition(MousePosition(window));
+
+	// Create particle system
+	// By using thor::noDeletePtr(), we claim that the sf::Texture stays alive as long as it is needed by thor::ParticleSystem.
 	// If we cannot ensure this, we might allocate the texture using new and normal reference counting.
 	thor::ParticleSystem system( thor::noDeletePtr(&texture) );
-	thor::DirectionalEmitter::Ptr emitter = thor::DirectionalEmitter::create(30.f, sf::seconds(5.f));
-	thor::Emitter::ZonePtr zone( new thor::Circle(sf::Vector2f(), 10.f) );
-
-	emitter->setEmissionAngle(10.f);
-	emitter->setEmissionZone(zone);
 	system.addEmitter(emitter);
 
 	// Build color gradient (green -> teal -> blue)
@@ -94,8 +113,7 @@ int main()
 		const sf::Time frameTime = frameClock.restart();
 		if (!paused)
 			system.update(frameTime);
-		emitter->getEmissionZone().setPosition(position);
-		emitter->setParticleVelocity(velocity);
+		emitter->setVelocity(velocity);
 
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));
