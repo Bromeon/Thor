@@ -34,6 +34,7 @@
 #include <Aurora/Tools/Distribution.hpp>
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Time.hpp>
 
 
 namespace thor
@@ -50,6 +51,10 @@ namespace Distributions
 	/// @brief %Uniform random distribution in a float interval
 	///
 	aur::Distribution<float> THOR_API			uniform(float begin, float end);
+
+	/// @brief %Uniform random distribution in a time interval
+	///
+	aur::Distribution<sf::Time> THOR_API		uniform(sf::Time begin, sf::Time end);
 
 	/// @brief %Uniform random distribution in a rectangle
 	/// 

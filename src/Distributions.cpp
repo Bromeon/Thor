@@ -35,9 +35,9 @@ namespace
 {
 
 	// Functor for uniform distribution
-	struct Uniform
+	struct UniformFloat
 	{
-		Uniform(float begin, float end)
+		UniformFloat(float begin, float end)
 		: begin(begin)
 		, end(end)
 		{
@@ -50,6 +50,22 @@ namespace
 
 		float begin;
 		float end;
+	};
+
+	// Functor for uniform distribution
+	struct UniformTime
+	{
+		UniformTime(sf::Time begin, sf::Time end)
+		: distribution(begin.asSeconds(), end.asSeconds())
+		{
+		}
+
+		sf::Time operator() ()
+		{
+			return sf::seconds(distribution());
+		}
+
+		UniformFloat distribution;
 	};
 
 	// Functor for rect distribution
@@ -119,7 +135,12 @@ namespace Distributions
 	
 	aur::Distribution<float> uniform(float begin, float end)
 	{
-		return Uniform(begin, end);
+		return UniformFloat(begin, end);
+	}
+
+	aur::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
+	{
+		return UniformTime(begin, end);
 	}
 
 	aur::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
