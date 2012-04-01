@@ -33,7 +33,7 @@
 
 
 // Define DLL import/export macros (only Windows, and only dynamic configuration)
-#if (defined(_WIN32) || defined(__WIN32__)) && !defined(THOR_STATIC)
+#if (defined(_WIN32) || defined(__WIN32__)) && !defined(SFML_STATIC)
  
 	// Export dynamic link library (from DLL side)
 	#ifdef THOR_EXPORTS
@@ -55,7 +55,7 @@
 #else
 	#define THOR_API
 
-#endif // (defined(_WIN32) || defined(__WIN32__)) && !defined(THOR_STATIC)
+#endif
 
 
 // Version of the library

@@ -32,7 +32,7 @@ macro(thor_example THOR_EXAMPLE_NAME)
 
 	add_executable(${THOR_EXAMPLE_NAME} "${THOR_EXAMPLE_NAME}.cpp")
 	if(NOT THOR_SHARED_LIBS)
-		add_definitions(-DTHOR_STATIC -DSFML_STATIC)
+		add_definitions(-DSFML_STATIC)
 	endif()
 
 	thor_link_thor(${THOR_EXAMPLE_NAME})
