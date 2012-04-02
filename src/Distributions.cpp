@@ -28,6 +28,8 @@
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 
+#include <cassert>
+
 
 namespace thor
 {
@@ -135,21 +137,29 @@ namespace Distributions
 	
 	aur::Distribution<float> uniform(float begin, float end)
 	{
+		assert(begin <= end);
+
 		return UniformFloat(begin, end);
 	}
 
 	aur::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
 	{
+		assert(begin <= end);
+
 		return UniformTime(begin, end);
 	}
 
 	aur::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
 	{
+		assert(halfSize.x >= 0.f && halfSize.y >= 0.f);
+
 		return Rect(center, halfSize);
 	}
 
 	aur::Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
 	{
+		assert(radius >= 0.f);
+
 		return Circle(center, radius);
 	}
 
@@ -158,5 +168,5 @@ namespace Distributions
 		return Deflect(direction, maxRotation);
 	}
 
-} // namespace Distr
+} // namespace Distributions
 } // namespace thor

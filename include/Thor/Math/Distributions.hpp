@@ -68,7 +68,7 @@ namespace Distributions
 	/// 
 	aur::Distribution<sf::Vector2f> THOR_API	deflect(sf::Vector2f direction, float maxRotation);
 
-} // namespace Distr
+} // namespace Distributions
 
 /// @}
 
