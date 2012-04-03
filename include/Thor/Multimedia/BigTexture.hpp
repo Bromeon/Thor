@@ -85,11 +85,7 @@ class THOR_API BigTexture
 
 		/// @brief Returns the texture width in pixels.
 		/// 
-		unsigned int				getWidth() const;
-
-		/// @brief Returns the texture height in pixels.
-		/// 
-		unsigned int				getHeight() const;
+		sf::Vector2u				getSize() const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

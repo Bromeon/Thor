@@ -104,7 +104,7 @@ ParticleSystem::ParticleSystem(ResourcePtr<const sf::Texture> texture)
 , mTexture()
 , mTexCoordsBegin(0.f, 0.f)
 , mTexCoordsEnd(1.f, 1.f)
-, mHalfSize(texture->getWidth() / 2.f, texture->getHeight() / 2.f)
+, mHalfSize(sf::Vector2f(texture->getSize()) / 2.f)
 , mGlow(false)
 {
 	mTexture.swap(texture);
@@ -117,15 +117,15 @@ ParticleSystem::ParticleSystem(ResourcePtr<const sf::Texture> texture, const sf:
 , mTexture()
 , mTexCoordsBegin()
 , mTexCoordsEnd()
-, mHalfSize(texture->getWidth() / 2.f, texture->getHeight() / 2.f)
+, mHalfSize(sf::Vector2f(texture->getSize()) / 2.f)
 , mGlow(false)
 {
 	mTexture.swap(texture);
 
-	mTexCoordsBegin.x = static_cast<float>(textureRect.left)                     / mTexture->getWidth();
-	mTexCoordsBegin.y = static_cast<float>(textureRect.top)                      / mTexture->getHeight();
-	mTexCoordsEnd.x	  = static_cast<float>(textureRect.left + textureRect.width) / mTexture->getWidth();
-	mTexCoordsEnd.y   = static_cast<float>(textureRect.top + textureRect.height) / mTexture->getHeight();
+	mTexCoordsBegin.x = static_cast<float>(textureRect.left)                     / mTexture->getSize().x;
+	mTexCoordsBegin.y = static_cast<float>(textureRect.top)                      / mTexture->getSize().y;
+	mTexCoordsEnd.x	  = static_cast<float>(textureRect.left + textureRect.width) / mTexture->getSize().x;
+	mTexCoordsEnd.y   = static_cast<float>(textureRect.top + textureRect.height) / mTexture->getSize().y;
 }
 
 void ParticleSystem::swap(ParticleSystem& other)

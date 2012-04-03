@@ -68,8 +68,7 @@ bool BigTexture::loadFromImage(const sf::Image& source)
 	BigTexture tmp;
 
 	const unsigned int maxSize = sf::Texture::getMaximumSize();
-	tmp.mPixelSize.x = source.getWidth();
-	tmp.mPixelSize.y = source.getHeight();
+	tmp.mPixelSize = source.getSize();
 
 	// Number of textures needed, in X and Y direction
 	tmp.mTableSize.x = (tmp.mPixelSize.x - 1u) / maxSize + 1u;
@@ -113,14 +112,9 @@ bool BigTexture::loadFromStream(sf::InputStream& stream)
 	return image.loadFromStream(stream) && loadFromImage(image);
 }
 
-unsigned int BigTexture::getWidth() const
+sf::Vector2u BigTexture::getSize() const
 {
-	return mPixelSize.x;
-}
-
-unsigned int BigTexture::getHeight() const
-{
-	return mPixelSize.y;
+	return mPixelSize;
 }
 
 sf::Vector2f BigTexture::fillSprites(const sf::Color& color, std::vector<sf::Sprite>& out) const

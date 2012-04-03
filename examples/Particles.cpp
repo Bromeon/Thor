@@ -107,8 +107,7 @@ int main()
 		}
 		
 		// Get mouse position
-		sf::Vector2u mousePos(sf::Mouse::getPosition(window));
-		position = window.convertCoords(mousePos.x, mousePos.y);
+		position = window.convertCoords(sf::Mouse::getPosition(window));
 
 		// Update particle system and emitter
 		const sf::Time frameTime = frameClock.restart();

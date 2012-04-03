@@ -46,7 +46,7 @@ int main()
 	sf::Sound  sound(*soundBuffer);
 
 	// Move second sprite so that the sprites don't overlap
-	sprite2.move( 0.f, static_cast<float>(texture1->getHeight()) );
+	sprite2.move( 0.f, static_cast<float>(texture1->getSize().y) );
 
 	// Create instruction text
 	sf::Text instructions("Press return to play sound, escape to quit");
