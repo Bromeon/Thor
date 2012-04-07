@@ -35,25 +35,25 @@ ResourceManager<Resource, ResourceKey>::ResourceManager()
 }
 
 template <class Resource, class ResourceKey>
-ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key)
+std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key)
 {
 	SlotConstIterator itr = mMap->find(key);
 	
 	// Return found resource or NULL if not found
 	if (itr == mMap->end())
-		return ResourcePtr<Resource>();
+		return std::shared_ptr<Resource>();
 	else
-		return ResourcePtr<Resource>(itr->second.share());
+		return std::shared_ptr<Resource>(itr->second.share());
 }
 
 template <class Resource, class ResourceKey>
-ResourcePtr<const Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key) const
+std::shared_ptr<const Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key) const
 {
 	return const_cast<ResourceManager*>(this)->search(key);
 }
 
 template <class Resource, class ResourceKey>
-ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::acquire(const ResourceKey& key)
+std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::acquire(const ResourceKey& key)
 {
 	SlotIterator itr = mMap->find(key);
 
@@ -62,7 +62,7 @@ ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::acquire(const Reso
 		return addResource(key);
 
 	// If resource is already stored, return pointer to it
-	return ResourcePtr<Resource>(itr->second.share());
+	return std::shared_ptr<Resource>(itr->second.share());
 }
 
 template <class Resource, class ResourceKey>
@@ -97,7 +97,7 @@ void ResourceManager<Resource, ResourceKey>::setReleaseStrategy(Resources::Relea
 }
 
 template <class Resource, class ResourceKey>
-ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::addResource(const ResourceKey& key)
+std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::addResource(const ResourceKey& key)
 {
 	// Try to load resource, react with strategy at failure
 	aur::CopiedPtr<Resource> resource = key.load();
@@ -109,7 +109,7 @@ ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::addResource(const 
 				throw ResourceLoadingException("Failed to load resource \"" + detail::getKeyInfo(key) + "\"");
 
 			case Resources::ReturnNullPointer:
-				return ResourcePtr<Resource>();
+				return std::shared_ptr<Resource>();
 		}
 	}
 
@@ -120,7 +120,7 @@ ResourcePtr<Resource> ResourceManager<Resource, ResourceKey>::addResource(const 
 	detail::ResourceDeleter<Resource, ResourceKey> deleter(mMap, itr);
 
 	// Post-initialize inserted slot, return shared pointer to resource
-	return ResourcePtr<Resource>( itr->second.initialize(resource.release(), deleter, mReleaseStrategy == Resources::ExplicitRelease) );
+	return std::shared_ptr<Resource>( itr->second.initialize(resource.release(), deleter, mReleaseStrategy == Resources::ExplicitRelease) );
 }
 
 template <class Resource, class ResourceKey>

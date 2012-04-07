@@ -24,8 +24,8 @@ int main()
 	SoundBufferKey soundKey = SoundBufferKey::fromFile("Media/click.wav");
 
 	// Create resource pointers to access the resources
-	thor::ResourcePtr<sf::Texture>     texture1, texture2;
-	thor::ResourcePtr<sf::SoundBuffer> soundBuffer;
+	std::shared_ptr<sf::Texture>     texture1, texture2;
+	std::shared_ptr<sf::SoundBuffer> soundBuffer;
 
 	// Actually load resources, store them in resource pointers and react to loading errors
 	try

@@ -46,10 +46,10 @@ FrameAnimation::FrameAnimation()
 
 void FrameAnimation::addFrame(float relativeDuration, const sf::IntRect& subrect)
 {
-	addFrame(relativeDuration, thor::ResourcePtr<sf::Texture>(), subrect);
+	addFrame(relativeDuration, std::shared_ptr<sf::Texture>(), subrect);
 }
 
-void FrameAnimation::addFrame(float relativeDuration, ResourcePtr<const sf::Texture> texture, const sf::IntRect& subrect)
+void FrameAnimation::addFrame(float relativeDuration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect)
 {
 	mFrames.push_back(Frame(relativeDuration, texture, subrect));
 	mNormalized = false;
@@ -91,7 +91,7 @@ void FrameAnimation::ensureNormalized() const
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-FrameAnimation::Frame::Frame(float duration, ResourcePtr<const sf::Texture> texture, const sf::IntRect& subrect)
+FrameAnimation::Frame::Frame(float duration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect)
 : duration(duration)
 , texture(texture)
 , subrect(subrect)

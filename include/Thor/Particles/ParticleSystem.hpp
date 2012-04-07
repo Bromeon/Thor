@@ -31,7 +31,6 @@
 
 #include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Particles/Particle.hpp>
-#include <Thor/Resources/ResourcePtr.hpp>
 #include <Thor/Config.hpp>
 
 #include <Aurora/Tools/Swap.hpp>
@@ -43,6 +42,7 @@
 #include <functional>
 #include <vector>
 #include <utility>
+#include <memory>
 
 
 namespace sf
@@ -81,12 +81,12 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 	public:
 		/// @brief Constructor: Create particle system from a whole sf::Texture
 		/// @param texture Shared resource pointer to the sf::Texture used as particle texture. May not be empty.
-		explicit					ParticleSystem(ResourcePtr<const sf::Texture> texture);
+		explicit					ParticleSystem(std::shared_ptr<const sf::Texture> texture);
 
 		/// @brief Constructor: Create particle system using parts of a sf::Texture
 		/// @param texture Shared resource pointer to the sf::Texture used as particle texture. May not be empty.
 		/// @param textureRect Area of the texture that is used to draw the particle.
-									ParticleSystem(ResourcePtr<const sf::Texture> texture, const sf::IntRect& textureRect);
+									ParticleSystem(std::shared_ptr<const sf::Texture> texture, const sf::IntRect& textureRect);
 
 		/// @brief Swaps the contents of two instances in constant time.
 		///
@@ -195,15 +195,15 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		ParticleContainer				mParticles;
-		AffectorContainer				mAffectors;
-		EmitterContainer				mEmitters;
+		ParticleContainer					mParticles;
+		AffectorContainer					mAffectors;
+		EmitterContainer					mEmitters;
 
-		ResourcePtr<const sf::Texture>	mTexture;
-		sf::Vector2f					mTexCoordsBegin;
-		sf::Vector2f					mTexCoordsEnd;
-		sf::Vector2f					mHalfSize;
-		bool							mGlow;
+		std::shared_ptr<const sf::Texture>	mTexture;
+		sf::Vector2f						mTexCoordsBegin;
+		sf::Vector2f						mTexCoordsEnd;
+		sf::Vector2f						mHalfSize;
+		bool								mGlow;
 };
 
 /// @relates ParticleSystem

@@ -28,8 +28,8 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Thor Particles");
 	
 	// Load image and initialize sprite
-	sf::Texture texture;
-	if (!texture.loadFromFile("Media/particle.png"))
+	std::shared_ptr<sf::Texture> texture(new sf::Texture());
+	if (!texture->loadFromFile("Media/particle.png"))
 		return EXIT_FAILURE;
 	
 	// Create emitter
@@ -39,9 +39,7 @@ int main()
 	emitter->setPosition(MousePosition(window));
 
 	// Create particle system
-	// By using thor::noDeletePtr(), we claim that the sf::Texture stays alive as long as it is needed by thor::ParticleSystem.
-	// If we cannot ensure this, we might allocate the texture using new and normal reference counting.
-	thor::ParticleSystem system( thor::noDeletePtr(&texture) );
+	thor::ParticleSystem system(texture);
 	system.addEmitter(emitter);
 
 	// Build color gradient (green -> teal -> blue)

@@ -29,7 +29,6 @@
 #ifndef THOR_RESOURCEMANAGER_HPP
 #define THOR_RESOURCEMANAGER_HPP
 
-#include <Thor/Resources/ResourcePtr.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
 #include <Thor/Resources/ResourceKeyTraits.hpp>
 #include <Thor/Resources/ResourceLoadingException.hpp>
@@ -54,7 +53,7 @@ namespace thor
 /// @brief Class that is responsible for the management of resources like images, fonts or music.
 /// @details You can acquire and release resources. Access is granted through the key (an ID class).
 /// @tparam Resource The resource type to manage (for example sf::Image). Const-correctness is properly forwarded: If
-///  @a Resource is const-qualified, you cannot modify the resources after initialization (via ResourcePtr).
+///  @a Resource is const-qualified, you cannot modify the resources after initialization (via std::shared_ptr).
 ///  @n @a Resource isn't required to be default-constructible or copy-constructible.
 /// @tparam ResourceKey The key class that is used to distinguish between resources (for example thor::Resources::ImageKey).
 ///  By default, a library implementation supporting the SFML resource classes is used. If you want to specify your own
@@ -77,28 +76,28 @@ class ResourceManager : private aur::NonCopyable
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible.
 		/// @details This function does never load a new resource.
 		/// @param key The resource identifier to search for.
-		/// @return The corresponding ResourcePtr, if found, or @a NULL otherwise.
-		ResourcePtr<Resource>		search(const ResourceKey& key);
+		/// @return The corresponding std::shared_ptr, if found, or @a NULL otherwise.
+		std::shared_ptr<Resource>		search(const ResourceKey& key);
 		
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible (const overload).
 		/// @details This function does never load a new resource. 
 		/// @param key The resource identifier to search for.
-		/// @return The corresponding read-only ResourcePtr, if found, or @a NULL otherwise.
-		ResourcePtr<const Resource>	search(const ResourceKey& key) const;
+		/// @return The corresponding read-only std::shared_ptr, if found, or @a NULL otherwise.
+		std::shared_ptr<const Resource>	search(const ResourceKey& key) const;
 
 		/// @brief Returns the resource mapped to @a key, loading the resource if required.
 		/// @details If the key is already stored, the corresponding resource is returned. Otherwise, the resource is loaded. The
 		///  release time of the resource is determined by the release strategy.
 		/// @param key The resource identifier to search for, which also contains loading information.
-		/// @return ResourcePtr that allows access to the resource. If the resource allocation fails and the @a ReturnNullPointer
+		/// @return std::shared_ptr that allows access to the resource. If the resource allocation fails and the @a ReturnNullPointer
 		///  strategy is active, a null pointer is returned.
 		/// @throw ResourceLoadingException if the loading of the resource fails (and the @a ThrowException strategy is active).
 		/// @see setLoadingFailureStrategy(), SetReleaseStrategy()
-		ResourcePtr<Resource>		acquire(const ResourceKey& key);
+		std::shared_ptr<Resource>		acquire(const ResourceKey& key);
 
 		/// @brief Releases the resource as soon as possible.
-		/// @details If the resource is not in use (i.e. no ResourcePtr references it), it is immediately released.
-		///  Otherwise, it is released as soon as the last ResourcePtr loses ownership. Calling this function
+		/// @details If the resource is not in use (i.e. no std::shared_ptr references it), it is immediately released.
+		///  Otherwise, it is released as soon as the last std::shared_ptr loses ownership. Calling this function
 		///  has no effect when the @a AutoRelease strategy is active, since the resource is released ASAP anyway.
 		/// @pre @a key must be a valid resource key (the corresponding resource must be stored inside this manager).
 		///  To check for available resources, use Search().
@@ -131,7 +130,7 @@ class ResourceManager : private aur::NonCopyable
 	// Private member functions
 	private:
 		// Loads and inserts a resource.
-		ResourcePtr<Resource>					addResource(const ResourceKey& key);
+		std::shared_ptr<Resource>					addResource(const ResourceKey& key);
 	
 		// Unloads and erases a resource.
 		void									removeResource(SlotIterator itr);

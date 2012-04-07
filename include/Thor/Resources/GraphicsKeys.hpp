@@ -50,7 +50,7 @@ namespace thor
 /// @{
 
 /// @brief Namespace for resource-specific functionality
-/// @details Contains resource-related functionality that is a bit more specific than ResourceManager and ResourcePtr.
+/// @details Contains resource-related functionality that is a bit more specific than ResourceManager and std::shared_ptr.
 namespace Resources
 {
 

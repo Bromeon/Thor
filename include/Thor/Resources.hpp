@@ -30,7 +30,6 @@
 #define THOR_MODULE_RESOURCES_HPP
 
 #include <Thor/Resources/ResourceManager.hpp>
-#include <Thor/Resources/ResourcePtr.hpp>
 #include <Thor/Resources/ResourceKeyTraits.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
 #include <Thor/Resources/GraphicsKeys.hpp>

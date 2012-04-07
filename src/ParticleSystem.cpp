@@ -97,7 +97,7 @@ namespace
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-ParticleSystem::ParticleSystem(ResourcePtr<const sf::Texture> texture)
+ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture)
 : mParticles()
 , mAffectors()
 , mEmitters()
@@ -110,7 +110,7 @@ ParticleSystem::ParticleSystem(ResourcePtr<const sf::Texture> texture)
 	mTexture.swap(texture);
 }
 
-ParticleSystem::ParticleSystem(ResourcePtr<const sf::Texture> texture, const sf::IntRect& textureRect)
+ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture, const sf::IntRect& textureRect)
 : mParticles()
 , mAffectors()
 , mEmitters()

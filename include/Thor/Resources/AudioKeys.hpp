@@ -48,7 +48,7 @@ namespace thor
 /// @{
 
 /// @brief Namespace for resource-specific functionality
-/// @details Contains resource-related functionality that is a bit more specific than ResourceManager and ResourcePtr.
+/// @details Contains resource-related functionality that is a bit more specific than ResourceManager and std::shared_ptr.
 namespace Resources
 {
 
@@ -123,7 +123,7 @@ namespace Resources
 	///  Note that unlike the other SFML resources, sf::Music is not copied completely into memory, rather streamed continuously.
 	///  Therefore, it is only suited to a limited extend as a resource in a resource manager. While ResourceManager allows easy
 	///  loading and error-checking, a single sf::Music instance cannot be meaningfully shared, therefore the access through multiple
-	///  ResourcePtr objects isn't recommended. Also note that const pointers to sf::Music aren't useful at all.
+	///  std::shared_ptr objects isn't recommended. Also note that const pointers to sf::Music aren't useful at all.
 	class THOR_API MusicKey
 	{
 		// ---------------------------------------------------------------------------------------------------------------------------

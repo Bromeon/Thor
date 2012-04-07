@@ -30,7 +30,6 @@
 #define THOR_FRAMEANIMATION_HPP
 
 #include <Thor/Animation/Animation.hpp>
-#include <Thor/Resources/ResourcePtr.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
@@ -81,7 +80,7 @@ class THOR_API FrameAnimation : public Animation
 		/// @param relativeDuration Duration of the frame relative to the other durations.
 		/// @param texture Smart pointer to sf::Texture that is used for the new frame.
 		/// @param subrect %Rectangle of the sf::Texture that is used for the new frame.
-		void						addFrame(float relativeDuration, ResourcePtr<const sf::Texture> texture,
+		void						addFrame(float relativeDuration, std::shared_ptr<const sf::Texture> texture,
 										const sf::IntRect& subrect);
 
 		virtual void				apply(sf::Sprite& target, float progress) const;
@@ -93,11 +92,11 @@ class THOR_API FrameAnimation : public Animation
 		// Frame with sub-rectangle and duration
 		struct Frame
 		{
-											Frame(float duration, ResourcePtr<const sf::Texture> texture, const sf::IntRect& subrect);
+											Frame(float duration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect);
 
 			mutable float					duration;
 			sf::IntRect						subrect;
-			ResourcePtr<const sf::Texture>	texture;
+			std::shared_ptr<const sf::Texture>	texture;
 		};
 
 		// Functor to find current frame
