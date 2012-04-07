@@ -31,7 +31,7 @@
 
 #include <Thor/Config.hpp>
 
-#include AURORA_TR1_HEADER(memory)
+#include <memory>
 
 
 namespace sf
@@ -60,7 +60,7 @@ class THOR_API Animation
 	public:
 		/// @brief Shared pointer type to Animation objects
 		/// 
-		typedef std::tr1::shared_ptr<Animation>		Ptr;
+		typedef std::shared_ptr<Animation>		Ptr;
 		
 		
 	// ---------------------------------------------------------------------------------------------------------------------------

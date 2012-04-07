@@ -159,7 +159,7 @@ namespace detail
 	template <class Key>
 	const std::string& getKeyInfo(const Key& key)
 	{
-		using std::tr1::is_same;
+		using std::is_same;
 
 		const bool builtin =
 			is_same<Key, Resources::ImageKey>::value

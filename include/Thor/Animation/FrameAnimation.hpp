@@ -54,7 +54,7 @@ class THOR_API FrameAnimation : public Animation
 	public:
 		/// @brief Shared pointer type to FrameAnimation objects
 		/// 
-		typedef std::tr1::shared_ptr<FrameAnimation>	Ptr;
+		typedef std::shared_ptr<FrameAnimation>		Ptr;
 		
 		
 	// ---------------------------------------------------------------------------------------------------------------------------

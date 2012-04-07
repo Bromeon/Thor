@@ -55,7 +55,7 @@ class EventSystem : private aur::NonCopyable
 	public:
 		/// @brief Function type of listeners associated with Event
 		///
-		typedef std::tr1::function< void(const Event&) >					Listener;
+		typedef std::function< void(const Event&) >		Listener;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

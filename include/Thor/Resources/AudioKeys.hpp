@@ -37,7 +37,7 @@
 
 #include <SFML/Config.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <string>
 
 
@@ -108,8 +108,8 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::SoundBuffer&)>	mLoader;
-			std::string									mKey;
+			std::function<bool(sf::SoundBuffer&)>	mLoader;
+			std::string								mKey;
 
 	
 		// ---------------------------------------------------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::Music&)>	mLoader;
+			std::function<bool(sf::Music&)>	mLoader;
 			std::string								mKey;
 
 	

@@ -33,7 +33,7 @@
 
 #include <SFML/System/NonCopyable.hpp>
 
-#include AURORA_TR1_HEADER(memory)
+#include <memory>
 
 
 namespace thor
@@ -85,7 +85,7 @@ class THOR_API Connection
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::tr1::weak_ptr<detail::AbstractConnectionImpl> mWeakRef;
+		std::weak_ptr<detail::AbstractConnectionImpl> mWeakRef;
 		
 	
 	// ---------------------------------------------------------------------------------------------------------------------------

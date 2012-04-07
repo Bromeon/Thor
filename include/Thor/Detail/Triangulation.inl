@@ -149,7 +149,7 @@ namespace detail
 
 		private:		
 			VertexPtrSet							mRemainingVertices;
-			std::tr1::array<OptTriangleIterator, 3>	mAdjacentTriangles;
+			std::array<OptTriangleIterator, 3>		mAdjacentTriangles;
 			bool									mFlagged;
 	};
 

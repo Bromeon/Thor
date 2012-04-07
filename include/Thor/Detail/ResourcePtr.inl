@@ -81,7 +81,7 @@ ResourcePtr<Resource>::~ResourcePtr()
 template <class Resource>
 void ResourcePtr<Resource>::swap(ResourcePtr& other)
 {
-	std::tr1::swap(mPointer, other.mPointer);
+	std::swap(mPointer, other.mPointer);
 }
 
 template <class Resource>
@@ -106,7 +106,7 @@ void ResourcePtr<Resource>::reset(Resource* rawPointer, D deleter)
 template <class Resource>
 ResourcePtr<Resource>::operator aur::SafeBool() const
 {
-	return aur::toSafeBool(mPointer);
+	return aur::toSafeBool(static_cast<bool>(mPointer));
 }
 
 template <class Resource>
@@ -124,7 +124,7 @@ Resource* ResourcePtr<Resource>::operator-> () const
 }
 
 template <class Resource>
-ResourcePtr<Resource>::ResourcePtr(std::tr1::shared_ptr<Resource> sharedPtr)
+ResourcePtr<Resource>::ResourcePtr(std::shared_ptr<Resource> sharedPtr)
 : mPointer()
 {
 	mPointer.swap(sharedPtr);

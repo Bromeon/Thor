@@ -31,7 +31,7 @@
 
 #include <Thor/Config.hpp>
 
-#include AURORA_TR1_HEADER(memory)
+#include <memory>
 
 #include <SFML/System/Time.hpp>
 
@@ -55,7 +55,7 @@ class THOR_API Affector
 	public:
 		/// @brief Shared pointer type referring to derivates of Affector
 		///
-		typedef std::tr1::shared_ptr<Affector>	Ptr;
+		typedef std::shared_ptr<Affector>	Ptr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ class THOR_API Emitter
 	public:
 		/// @brief Shared pointer type referring to derivates of Emitter
 		///
-		typedef std::tr1::shared_ptr<Emitter>	Ptr;
+		typedef std::shared_ptr<Emitter>	Ptr;
 
 		/// @brief Class that connects emitters with their corresponding particle system.
 		/// @details Provides a virtual method that adds particles to the system.

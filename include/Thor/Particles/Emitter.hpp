@@ -56,7 +56,7 @@ class THOR_API UniversalEmitter : public Emitter
 	public:
 		/// @brief Shared pointer type referring to UniversalEmitter objects
 		///
-		typedef std::tr1::shared_ptr<UniversalEmitter> Ptr;
+		typedef std::shared_ptr<UniversalEmitter> Ptr;
 
 		
 	// ---------------------------------------------------------------------------------------------------------------------------

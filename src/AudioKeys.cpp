@@ -42,7 +42,7 @@ namespace Resources
 	SoundBufferKey SoundBufferKey::fromFile(const std::string& fileName, const std::string& tag)
 	{
 		SoundBufferKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::SoundBuffer::loadFromFile, _1, fileName);
+		tmp.mLoader =	std::bind(&sf::SoundBuffer::loadFromFile, _1, fileName);
 		tmp.mKey =		detail::Tagger("File") << fileName << tag;
 		return tmp;
 	}
@@ -50,7 +50,7 @@ namespace Resources
 	SoundBufferKey SoundBufferKey::fromMemory(const void* data, std::size_t size, const std::string& tag)
 	{
 		SoundBufferKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::SoundBuffer::loadFromMemory, _1, data, size);
+		tmp.mLoader =	std::bind(&sf::SoundBuffer::loadFromMemory, _1, data, size);
 		tmp.mKey =		detail::Tagger("Memory") << data << size << tag;
 		return tmp;
 	}
@@ -59,7 +59,7 @@ namespace Resources
 		unsigned int sampleRate, const std::string& tag)
 	{
 		SoundBufferKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::SoundBuffer::loadFromSamples, _1, samples, samplesCount, channelsCount, sampleRate);
+		tmp.mLoader =	std::bind(&sf::SoundBuffer::loadFromSamples, _1, samples, samplesCount, channelsCount, sampleRate);
 		tmp.mKey =		detail::Tagger("Samples") << samples << samplesCount << channelsCount << sampleRate << tag;
 		return tmp;
 	}
@@ -67,7 +67,7 @@ namespace Resources
 	SoundBufferKey SoundBufferKey::fromStream(sf::InputStream& stream, const std::string& tag)
 	{
 		SoundBufferKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::SoundBuffer::loadFromStream, _1, tr1::ref(stream));
+		tmp.mLoader =	std::bind(&sf::SoundBuffer::loadFromStream, _1, std::ref(stream));
 		tmp.mKey =		detail::Tagger("Stream") << &stream << tag;
 		return tmp;
 	}
@@ -79,7 +79,7 @@ namespace Resources
 
 	void SoundBufferKey::swap(SoundBufferKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 
@@ -98,7 +98,7 @@ namespace Resources
 	MusicKey MusicKey::fromFile(const std::string& fileName, const std::string& tag)
 	{
 		MusicKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Music::openFromFile, _1, fileName);
+		tmp.mLoader =	std::bind(&sf::Music::openFromFile, _1, fileName);
 		tmp.mKey =		detail::Tagger("File") << fileName << tag;
 		return tmp;
 	}
@@ -106,7 +106,7 @@ namespace Resources
 	MusicKey MusicKey::fromMemory(const void* data, std::size_t size, const std::string& tag)
 	{
 		MusicKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Music::openFromMemory, _1, data, size);
+		tmp.mLoader =	std::bind(&sf::Music::openFromMemory, _1, data, size);
 		tmp.mKey =		detail::Tagger("Memory") << data << size << tag;
 		return tmp;
 	}
@@ -114,7 +114,7 @@ namespace Resources
 	MusicKey MusicKey::fromStream(sf::InputStream& stream, const std::string& tag)
 	{
 		MusicKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Music::openFromStream, _1, tr1::ref(stream));
+		tmp.mLoader =	std::bind(&sf::Music::openFromStream, _1, std::ref(stream));
 		tmp.mKey =		detail::Tagger("Stream") << &stream << tag;
 		return tmp;
 	}
@@ -126,7 +126,7 @@ namespace Resources
 
 	void MusicKey::swap(MusicKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 

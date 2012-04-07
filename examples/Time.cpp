@@ -45,7 +45,7 @@ int main()
 	timerMeasurement.setColor(sf::Color(0, 140, 190));
 	
 	// Connect timer with callback (colorize yellow) invoked at expiration time
-	timer.connect(std::tr1::bind(&sf::Text::setColor, &timerMeasurement, sf::Color::Yellow));
+	timer.connect(std::bind(&sf::Text::setColor, &timerMeasurement, sf::Color::Yellow));
 
 	// Main loop
 	for (;;)

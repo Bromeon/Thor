@@ -40,7 +40,7 @@ namespace
 	template <typename T>
 	class StringBimap
 	{
-		AURORA_STATIC_ASSERT(( !std::tr1::is_same<T, std::string>::value ));
+		AURORA_STATIC_ASSERT(( !std::is_same<T, std::string>::value ));
 
 		public:
 			explicit StringBimap(unsigned int size)

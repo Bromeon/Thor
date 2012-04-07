@@ -102,7 +102,7 @@ namespace Resources
 	ImageKey ImageKey::fromFile(const std::string& fileName, const std::string& tag)
 	{
 		ImageKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Image::loadFromFile, _1, fileName);
+		tmp.mLoader =	std::bind(&sf::Image::loadFromFile, _1, fileName);
 		tmp.mKey =		detail::Tagger("File") << fileName << tag;
 		return tmp;
 	}
@@ -110,7 +110,7 @@ namespace Resources
 	ImageKey ImageKey::fromMemory(const void* data, std::size_t size, const std::string& tag)
 	{
 		ImageKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Image::loadFromMemory, _1, data, size);
+		tmp.mLoader =	std::bind(&sf::Image::loadFromMemory, _1, data, size);
 		tmp.mKey =		detail::Tagger("Memory") << data << size << tag;
 		return tmp;
 	}
@@ -126,7 +126,7 @@ namespace Resources
 	ImageKey ImageKey::fromStream(sf::InputStream& stream, const std::string& tag)
 	{
 		ImageKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Image::loadFromStream, _1, tr1::ref(stream));
+		tmp.mLoader =	std::bind(&sf::Image::loadFromStream, _1, std::ref(stream));
 		tmp.mKey =		detail::Tagger("Stream") << &stream << tag;
 		return tmp;
 	}
@@ -138,7 +138,7 @@ namespace Resources
 
 	void ImageKey::swap(ImageKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 
@@ -157,7 +157,7 @@ namespace Resources
 	TextureKey TextureKey::fromSize(unsigned int width, unsigned int height, const std::string& tag)
 	{
 		TextureKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Texture::create, _1, width, height);
+		tmp.mLoader =	std::bind(&sf::Texture::create, _1, width, height);
 		tmp.mKey =		detail::Tagger("Size") << width << height << tag;
 		return tmp;
 	}
@@ -165,7 +165,7 @@ namespace Resources
 	TextureKey TextureKey::fromFile(const std::string& fileName, const sf::IntRect& area, const std::string& tag)
 	{
 		TextureKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Texture::loadFromFile, _1, fileName, area);
+		tmp.mLoader =	std::bind(&sf::Texture::loadFromFile, _1, fileName, area);
 		tmp.mKey =		detail::Tagger("File") << fileName << tag;
 		return tmp;
 	}
@@ -173,7 +173,7 @@ namespace Resources
 	TextureKey TextureKey::fromMemory(const void* data, std::size_t size, const sf::IntRect& area, const std::string& tag)
 	{
 		TextureKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Texture::loadFromMemory, _1, data, size, area);
+		tmp.mLoader =	std::bind(&sf::Texture::loadFromMemory, _1, data, size, area);
 		tmp.mKey =		detail::Tagger("Memory") << data << size << toString(area) << tag;
 		return tmp;
 	}
@@ -181,7 +181,7 @@ namespace Resources
 	TextureKey TextureKey::fromImage(const sf::Image& image, const sf::IntRect& area, const std::string& tag)
 	{
 		TextureKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Texture::loadFromImage, _1, tr1::cref(image), area);
+		tmp.mLoader =	std::bind(&sf::Texture::loadFromImage, _1, std::cref(image), area);
 		tmp.mKey =		detail::Tagger("Image") << &image << toString(area) << tag;
 		return tmp;
 	}
@@ -189,7 +189,7 @@ namespace Resources
 	TextureKey TextureKey::fromStream(sf::InputStream& stream, const sf::IntRect& area, const std::string& tag)
 	{
 		TextureKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Texture::loadFromStream, _1, tr1::ref(stream), area);
+		tmp.mLoader =	std::bind(&sf::Texture::loadFromStream, _1, std::ref(stream), area);
 		tmp.mKey =		detail::Tagger("Stream") << &stream << toString(area) << tag;
 		return tmp;
 	}
@@ -201,7 +201,7 @@ namespace Resources
 
 	void TextureKey::swap(TextureKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 
@@ -225,7 +225,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(const std::string&, sf::Shader::Type) = &sf::Shader::loadFromFile;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, fileName, static_cast<sf::Shader::Type>(shaderType));
+		tmp.mLoader =	std::bind(fnPtr, _1, fileName, static_cast<sf::Shader::Type>(shaderType));
 		tmp.mKey =		detail::Tagger("File") << fileName << shaderType << tag;
 		return tmp;
 	}
@@ -235,7 +235,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(const std::string&, const std::string&) = &sf::Shader::loadFromFile;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, vertexShaderFilename, fragmentShaderFilename);
+		tmp.mLoader =	std::bind(fnPtr, _1, vertexShaderFilename, fragmentShaderFilename);
 		tmp.mKey =		detail::Tagger("File") << vertexShaderFilename << fragmentShaderFilename << tag;
 		return tmp;
 	}	
@@ -245,7 +245,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(const std::string&, sf::Shader::Type) = &sf::Shader::loadFromMemory;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, shaderCode, static_cast<sf::Shader::Type>(shaderType));
+		tmp.mLoader =	std::bind(fnPtr, _1, shaderCode, static_cast<sf::Shader::Type>(shaderType));
 		tmp.mKey =		detail::Tagger("Memory") << shaderCode << shaderType << tag;
 		return tmp;
 	}
@@ -255,7 +255,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(const std::string&, const std::string&) = &sf::Shader::loadFromMemory;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, vertexShaderCode, fragmentShaderCode);
+		tmp.mLoader =	std::bind(fnPtr, _1, vertexShaderCode, fragmentShaderCode);
 		tmp.mKey =		detail::Tagger("Memory") << vertexShaderCode << fragmentShaderCode << tag;
 		return tmp;
 	}
@@ -265,7 +265,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(sf::InputStream&, sf::Shader::Type) = &sf::Shader::loadFromStream;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, tr1::ref(stream), static_cast<sf::Shader::Type>(shaderType));
+		tmp.mLoader =	std::bind(fnPtr, _1, std::ref(stream), static_cast<sf::Shader::Type>(shaderType));
 		tmp.mKey =		detail::Tagger("Stream") << &stream << shaderType << tag;
 		return tmp;
 	}
@@ -275,7 +275,7 @@ namespace Resources
 		bool (sf::Shader::*fnPtr)(sf::InputStream&, sf::InputStream&) = &sf::Shader::loadFromStream;
 
 		ShaderKey tmp;
-		tmp.mLoader =	tr1::bind(fnPtr, _1, tr1::ref(vertexShaderStream), tr1::ref(fragmentShaderStream));
+		tmp.mLoader =	std::bind(fnPtr, _1, std::ref(vertexShaderStream), std::ref(fragmentShaderStream));
 		tmp.mKey =		detail::Tagger("Stream") << &vertexShaderStream << &fragmentShaderStream << tag;
 		return tmp;
 	}
@@ -287,7 +287,7 @@ namespace Resources
 
 	void ShaderKey::swap(ShaderKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 
@@ -306,7 +306,7 @@ namespace Resources
 	FontKey FontKey::fromFile(const std::string& fileName, const std::string& tag)
 	{
 		FontKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Font::loadFromFile, _1, fileName);
+		tmp.mLoader =	std::bind(&sf::Font::loadFromFile, _1, fileName);
 		tmp.mKey =		detail::Tagger("File") << fileName << tag;
 		return tmp;
 	}
@@ -314,7 +314,7 @@ namespace Resources
 	FontKey FontKey::fromMemory(const void* data, std::size_t size, const std::string& tag)
 	{
 		FontKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Font::loadFromMemory, _1, data, size);
+		tmp.mLoader =	std::bind(&sf::Font::loadFromMemory, _1, data, size);
 		tmp.mKey =		detail::Tagger("Memory") << data << size << tag;
 		return tmp;
 	}
@@ -322,7 +322,7 @@ namespace Resources
 	FontKey FontKey::fromStream(sf::InputStream& stream, const std::string& tag)
 	{
 		FontKey tmp;
-		tmp.mLoader =	tr1::bind(&sf::Font::loadFromStream, _1, tr1::ref(stream));
+		tmp.mLoader =	std::bind(&sf::Font::loadFromStream, _1, std::ref(stream));
 		tmp.mKey =		detail::Tagger("Stream") << &stream << tag;
 		return tmp;
 	}
@@ -334,7 +334,7 @@ namespace Resources
 
 	void FontKey::swap(FontKey& other)
 	{
-		std::tr1::swap(mLoader, other.mLoader);
+		std::swap(mLoader, other.mLoader);
 		std::swap(mKey, other.mKey);
 	}
 

@@ -40,7 +40,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <vector>
 #include <utility>
 

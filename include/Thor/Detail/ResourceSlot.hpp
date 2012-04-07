@@ -29,7 +29,7 @@
 #include <Aurora/Tools/ForEach.hpp>
 #include <Thor/Config.hpp>
 
-#include AURORA_TR1_HEADER(memory)
+#include <memory>
 #include <cassert>
 
 
@@ -43,7 +43,7 @@ class ResourceManager;
 namespace detail
 {
 
-	// Deleter functor for std::tr1::shared_ptr
+	// Deleter functor for std::shared_ptr
 	// Is called when the last shared_ptr to a resource goes away, releases the resource.
 	// Note that the last shared_ptr can be inside a ResourceManager (explicit release policy)
 	// or an external shared_ptr to a resource (auto release policy).
@@ -56,7 +56,7 @@ namespace detail
 			typedef typename Manager::SlotIterator			SlotIterator;
 
 		public:
-			ResourceDeleter(std::tr1::weak_ptr<ResourceMap> map, SlotIterator iterator)
+			ResourceDeleter(std::weak_ptr<ResourceMap> map, SlotIterator iterator)
 			: mMap(map)
 			, mIterator(iterator)
 			{
@@ -69,14 +69,14 @@ namespace detail
 				delete pointer;
 
 				// Unregister resource slot, unless manager has been destroyed meanwhile
-				std::tr1::shared_ptr<ResourceMap> map = mMap.lock();
+				std::shared_ptr<ResourceMap> map = mMap.lock();
 				if (map)
 					map->erase(mIterator);
 			}
 
 		private:
-			std::tr1::weak_ptr<ResourceMap>		mMap;
-			SlotIterator						mIterator;
+			std::weak_ptr<ResourceMap>		mMap;
+			SlotIterator					mIterator;
 	};
 	
 	template <class Resource>
@@ -91,9 +91,9 @@ namespace detail
 			}
 
 			template <typename DeleterFn>
-			std::tr1::shared_ptr<Resource> initialize(Resource* newResource, DeleterFn deleter, bool explicitRelease)
+			std::shared_ptr<Resource> initialize(Resource* newResource, DeleterFn deleter, bool explicitRelease)
 			{
-				std::tr1::shared_ptr<Resource> result(newResource, deleter);
+				std::shared_ptr<Resource> result(newResource, deleter);
 				
 				// For explicit release policy, keep strong reference to resource and prevent automatic deletion
 				mWeakRef = result;
@@ -104,7 +104,7 @@ namespace detail
 			}
 
 			// Gives back a shared pointer to the resource
-			std::tr1::shared_ptr<Resource> share() const
+			std::shared_ptr<Resource> share() const
 			{
 				return mWeakRef.lock();
 			}
@@ -128,8 +128,8 @@ namespace detail
 			}
 
 		private:
-			std::tr1::shared_ptr<Resource>	mStrongRef;
-			std::tr1::weak_ptr<Resource>	mWeakRef;
+			std::shared_ptr<Resource>	mStrongRef;
+			std::weak_ptr<Resource>		mWeakRef;
 	};
 
 } // namespace detail

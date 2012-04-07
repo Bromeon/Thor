@@ -27,11 +27,11 @@
 
 #include <SFML/Window/Window.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <iterator>
 #include <algorithm>
 
-using namespace std::tr1::placeholders;
+using namespace std::placeholders;
 
 
 namespace thor
@@ -111,7 +111,7 @@ namespace detail
 
 		// Copy events that are really equal (e.g. same key) to the end of the output vector
 		std::size_t oldSize = out.size();
-		std::remove_copy_if(newEvents.begin(), newEvents.end(), std::back_inserter(out), std::tr1::bind(&ActionNode::filterOut, &filterNode, _1));
+		std::remove_copy_if(newEvents.begin(), newEvents.end(), std::back_inserter(out), std::bind(&ActionNode::filterOut, &filterNode, _1));
 		return oldSize != out.size();
 	}
 

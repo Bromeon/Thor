@@ -33,7 +33,7 @@
 
 #include <Aurora/Tools/SafeBool.hpp>
 
-#include AURORA_TR1_HEADER(memory)
+#include <memory>
 #include <cassert>
 
 
@@ -138,13 +138,13 @@ class ResourcePtr
 	// Implementation details
 	public:
 		// Construct from shared_ptr
-		explicit				ResourcePtr(std::tr1::shared_ptr<Resource> sharedPtr);
+		explicit				ResourcePtr(std::shared_ptr<Resource> sharedPtr);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::tr1::shared_ptr<Resource>	mPointer;
+		std::shared_ptr<Resource>	mPointer;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

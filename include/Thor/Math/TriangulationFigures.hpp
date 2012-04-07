@@ -33,7 +33,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include AURORA_TR1_HEADER(array)
+#include <array>
 #include <cassert>
 
 
@@ -92,7 +92,7 @@ class Edge
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Protected variables
 	protected:
-		std::tr1::array<const VertexType*, 2> mCorners;
+		std::array<const VertexType*, 2> mCorners;
 };
 
 
@@ -119,7 +119,7 @@ class Triangle
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::tr1::array<const VertexType*, 3>	mCorners;
+		std::array<const VertexType*, 3>	mCorners;
 };
 
 /// @}

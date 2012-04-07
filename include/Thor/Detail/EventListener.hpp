@@ -31,7 +31,7 @@
 #include <Thor/Events/Connection.hpp>
 #include <Thor/Detail/ConnectionImpl.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -50,7 +50,7 @@ namespace detail
 	{
 		private:
 			// Callback function type
-			typedef std::tr1::function<void(Parameter)> Function;
+			typedef std::function<void(Parameter)> Function;
 	
 		public:
 			// Constructor, initializes function with fn and creates a new unique id
@@ -69,8 +69,8 @@ namespace detail
 			// Swap instances
 			void swap(Listener& other)
 			{
-				std::tr1::swap(mFunction,	other.mFunction);
-				std::tr1::swap(mStrongRef, other.mStrongRef);
+				std::swap(mFunction,	other.mFunction);
+				std::swap(mStrongRef,	other.mStrongRef);
 			}
 		
 			// sets the container and iterator in which this Listener is hold (to be able to create
@@ -91,8 +91,8 @@ namespace detail
 			}
 	
 		private:
-			Function										mFunction;
-			std::tr1::shared_ptr<AbstractConnectionImpl>	mStrongRef;
+			Function								mFunction;
+			std::shared_ptr<AbstractConnectionImpl>	mStrongRef;
 	};
 
 

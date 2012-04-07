@@ -39,7 +39,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Config.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <string>
 
 
@@ -115,8 +115,8 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::Image&)>	mLoader;
-			std::string								mKey;
+			std::function<bool(sf::Image&)>	mLoader;
+			std::string						mKey;
 
 	
 		// ---------------------------------------------------------------------------------------------------------------------------
@@ -190,8 +190,8 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::Texture&)>	mLoader;
-			std::string								mKey;
+			std::function<bool(sf::Texture&)>	mLoader;
+			std::string							mKey;
 
 	
 		// ---------------------------------------------------------------------------------------------------------------------------
@@ -246,8 +246,8 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::Font&)>		mLoader;
-			std::string								mKey;
+			std::function<bool(sf::Font&)>		mLoader;
+			std::string							mKey;
 
 	
 		// ---------------------------------------------------------------------------------------------------------------------------
@@ -324,8 +324,8 @@ namespace Resources
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Private variables
 		private:
-			std::tr1::function<bool(sf::Shader&)>	mLoader;
-			std::string								mKey;
+			std::function<bool(sf::Shader&)>	mLoader;
+			std::string							mKey;
 
 	
 		// ---------------------------------------------------------------------------------------------------------------------------

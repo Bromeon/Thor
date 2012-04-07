@@ -40,8 +40,8 @@
 #include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
 
-#include AURORA_TR1_HEADER(functional)
-#include AURORA_TR1_HEADER(type_traits)
+#include <functional>
+#include <type_traits>
 #include <map>
 
 
@@ -120,11 +120,11 @@ class ResourceManager : private aur::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef typename std::tr1::remove_const<Resource>::type		MutableResource;
-		typedef detail::ResourceSlot<MutableResource>				ResourceSlot;
-		typedef std::map<ResourceKey, ResourceSlot>					ResourceMap;
-		typedef typename ResourceMap::iterator						SlotIterator;
-		typedef typename ResourceMap::const_iterator				SlotConstIterator;
+		typedef typename std::remove_const<Resource>::type		MutableResource;
+		typedef detail::ResourceSlot<MutableResource>			ResourceSlot;
+		typedef std::map<ResourceKey, ResourceSlot>				ResourceMap;
+		typedef typename ResourceMap::iterator					SlotIterator;
+		typedef typename ResourceMap::const_iterator			SlotConstIterator;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ class ResourceManager : private aur::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::tr1::shared_ptr<ResourceMap>		mMap;
+		std::shared_ptr<ResourceMap>			mMap;
 		Resources::ReleaseStrategy				mReleaseStrategy;
 		Resources::LoadingFailureStrategy		mLoadingFailureStrategy;
 

@@ -29,14 +29,13 @@
 #include <Thor/Multimedia/ToString.hpp>
 #include <Thor/Config.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <sstream>
 #include <cstring>
 
 // Using and namespace declarations
 // (this is okay here because this header is only included inside internal .cpp files)
-using namespace std::tr1::placeholders;
-namespace tr1 = std::tr1;
+using namespace std::placeholders;
 
 
 namespace thor
@@ -99,7 +98,7 @@ namespace detail
 
 	// Helper function to load resource
 	template <class Resource>
-	aur::CopiedPtr<Resource> LoadResource(const tr1::function<bool(Resource&)>& loader)
+	aur::CopiedPtr<Resource> LoadResource(const std::function<bool(Resource&)>& loader)
 	{
 		aur::CopiedPtr<Resource> resource(new Resource, NoCopy(), aur::OperatorDelete<Resource>());
 

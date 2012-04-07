@@ -52,7 +52,7 @@ class THOR_API ForceAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to ForceAffector objects
 		///
-		typedef std::tr1::shared_ptr<ForceAffector> Ptr;
+		typedef std::shared_ptr<ForceAffector> Ptr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ class THOR_API TorqueAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to TorqueAffector objects
 		///
-		typedef std::tr1::shared_ptr<TorqueAffector> Ptr;
+		typedef std::shared_ptr<TorqueAffector> Ptr;
 
 		
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ class THOR_API ScaleAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to ScaleAffector objects
 		///
-		typedef std::tr1::shared_ptr<ScaleAffector> Ptr;
+		typedef std::shared_ptr<ScaleAffector> Ptr;
 		
 		
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ class THOR_API FadeInAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to FadeInAffector objects
 		///
-		typedef std::tr1::shared_ptr<FadeInAffector> Ptr;
+		typedef std::shared_ptr<FadeInAffector> Ptr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -234,7 +234,7 @@ class THOR_API FadeOutAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to FadeOutAffector objects
 		///
-		typedef std::tr1::shared_ptr<FadeOutAffector> Ptr;
+		typedef std::shared_ptr<FadeOutAffector> Ptr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -280,7 +280,7 @@ class THOR_API ColorAffector : public Affector
 	public:
 		/// @brief Shared pointer type referring to ColorAffector objects
 		///
-		typedef std::tr1::shared_ptr<ColorAffector> Ptr;
+		typedef std::shared_ptr<ColorAffector> Ptr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

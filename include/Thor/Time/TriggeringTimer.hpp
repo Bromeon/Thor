@@ -52,7 +52,7 @@ class THOR_API TriggeringTimer : public Timer
 	public:
 		/// @brief Callback type for events being processed by TriggeringTimer.
 		///
-		typedef std::tr1::function< void(TriggeringTimer&) >	Listener;
+		typedef std::function< void(TriggeringTimer&) >		Listener;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

@@ -27,7 +27,7 @@
 
 #include <SFML/Config.hpp>
 
-#include AURORA_TR1_HEADER(random)
+#include <random>
 #include <ctime>
 #include <cassert>
 #include <climits>
@@ -38,14 +38,14 @@ namespace thor
 namespace
 {
 
-#ifdef THOR_USE_TR1_RANDOMENGINE
+#ifdef THOR_USE_STD_RANDOMENGINE
 
-	// Note: Don't use std::tr1::variate_generator, because it contains bugs.
+	// Note: Don't use std::variate_generator, because it contains bugs.
 	// If the distribution type is not unsigned long (like the engine's number type), a cast is performed,
 	// truncating values and leading to completely wrong random numbers.
 
-	// Use Mersenne Twister as default TR1 random engine
-	typedef std::tr1::mt19937 Engine;
+	// Use Mersenne Twister as default standard random engine
+	typedef std::mt19937 Engine;
 
 #else
 
@@ -54,7 +54,7 @@ namespace
 	class Engine
 	{
 		public:
-			// Type definition for usage inside TR1.Random
+			// Type definition for usage inside Std.Random
 			typedef sf::Uint32 result_type;
 
 
@@ -74,19 +74,19 @@ namespace
 				return static_cast<sf::Uint32>(x);
 			}
 
-			// set seed (compliant to TR1.Random)
+			// set seed (compliant to Std.Random)
 			void seed(sf::Uint32 seedVal = 0)
 			{
 				x = seedVal + !seedVal;
 			}
 
-			// Return minimal value (compliant to TR1.Random)
+			// Return minimal value (compliant to Std.Random)
 			sf::Uint32 min() const
 			{
 				return 0;
 			}
 
-			// Return maximal value (compliant to TR1.Random)
+			// Return maximal value (compliant to Std.Random)
 			sf::Uint32 max() const
 			{
 				return 0xffffffff;
@@ -96,7 +96,7 @@ namespace
 			sf::Uint64 x;
 	};
 
-#endif // THOR_USE_TR1_RANDOMENGINE
+#endif // THOR_USE_STD_RANDOMENGINE
 
 	// Function initializing the engine and its seed at startup time
 	Engine CreateInitialEngine()
@@ -109,7 +109,7 @@ namespace
 
 
 	// Uniform real distribution for type float
-	// Self-implemented, because std::tr1::uniform_real<float> is buggy on g++
+	// Self-implemented, because std::uniform_real<float> is buggy on g++
 	class UniformFloat
 	{
 		public:
@@ -145,7 +145,7 @@ namespace
 int random(int begin, int end)
 {
 	assert(begin <= end);
-	std::tr1::uniform_int<int> distribution(begin, end);
+	std::uniform_int_distribution<int> distribution(begin, end);
 	return distribution(globalEngine);
 }
 

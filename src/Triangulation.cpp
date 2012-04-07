@@ -27,7 +27,7 @@
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Config.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 #include <numeric>
 #include <stack>
 
@@ -38,7 +38,7 @@ namespace detail
 {
 
 	// Type definitions
-	typedef std::tr1::array<TriangleIterator, 3>			TriangleItrArray;
+	typedef std::array<TriangleIterator, 3>					TriangleItrArray;
 	typedef std::pair<unsigned int, unsigned int>			UintPair;
 	typedef std::pair<TriangleIterator, TriangleIterator>	TriangleItrPair;
 
@@ -394,7 +394,7 @@ namespace detail
 	void arrangeCorners(const AdvancedTriangle& first, const AdvancedTriangle& second, 
 		UintPair& sharedCornerIndices1, UintPair& sharedCornerIndices2, UintPair& disjointCornerIndices)
 	{
-		std::tr1::array<bool, 3> match;
+		std::array<bool, 3> match;
 	
 		// The triangle's corners are numbered in clockwise order. For example, to compare ABC and BAD,          A
 		// we need to reverse BAD to DAB. Here, the AB subsequences are equal in ABC and DAB.                 C  |  D
@@ -720,7 +720,7 @@ namespace detail
 		}
 	
 		// Remove currently flagged triangles. Don't do this earlier because of iterator invalidations.
-		triangles.remove_if(std::tr1::mem_fn(&AdvancedTriangle::isFlagged));
+		triangles.remove_if(std::mem_fn(&AdvancedTriangle::isFlagged));
 	}
 
 	// Creates 3 "dummy" vertices that form a huge triangle which later includes all other vertices
@@ -841,7 +841,7 @@ namespace detail
 	
 		// Remove all triangles marked as unused.
 		// We can't erase() during the stack iteration, because triangles' flags are still polled, so the iterators must be valid.
-		triangles.remove_if(std::tr1::mem_fn(&AdvancedTriangle::isFlagged));
+		triangles.remove_if(std::mem_fn(&AdvancedTriangle::isFlagged));
 	}
 
 	// Removes all triangles that are not directly required for the resulting triangulation (algorithm-supporting data).
