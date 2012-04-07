@@ -107,36 +107,6 @@ namespace
 	// Pseudo random number generator engine
 	Engine globalEngine = CreateInitialEngine();
 
-
-	// Uniform real distribution for type float
-	// Self-implemented, because std::uniform_real<float> is buggy on g++
-	class UniformFloat
-	{
-		public:
-			// Constructor
-			UniformFloat(float min, float max)
-			: mMin(min)
-			, mMax(max)
-			{
-				assert(min <= max);
-			}
-
-			// Create uniform distribution from engine
-			template <class Engine>
-			float operator() (Engine& e)
-			{
-				// Scale to [0.f, 1.f]
-				const float unit = static_cast<float>(e() - e.min()) / static_cast<float>(e.max() - e.min());
-
-				// Scale to [mMin, mMax]
-				return (mMax - mMin) * unit + mMin;
-			}
-
-		private:
-			float mMin;
-			float mMax;
-	};
-
 } // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -158,7 +128,7 @@ int randomDev(int middle, int deviation)
 float random(float begin, float end)
 {
 	assert(begin <= end);
-	UniformFloat distribution(begin, end);
+	std::uniform_real_distribution<float> distribution(begin, end);
 	return distribution(globalEngine);
 }
 
