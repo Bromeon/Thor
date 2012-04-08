@@ -133,11 +133,14 @@ void ParticleSystem::swap(ParticleSystem& other)
 	// Use ADL
 	using std::swap;
 
-	swap(mParticles, other.mParticles);
-	swap(mAffectors, other.mAffectors);
-	swap(mEmitters,  other.mEmitters);
-	swap(mTexture,	 other.mTexture); 
-	swap(mGlow,      other.mGlow);
+	swap(mParticles,		other.mParticles);
+	swap(mAffectors,		other.mAffectors);
+	swap(mEmitters,			other.mEmitters);
+	swap(mTexture,			other.mTexture); 
+	swap(mTexCoordsBegin,	other.mTexCoordsBegin); 
+	swap(mTexCoordsEnd,		other.mTexCoordsEnd); 
+	swap(mHalfSize,			other.mHalfSize); 
+	swap(mGlow,				other.mGlow);
 }
 
 void ParticleSystem::addAffector(Affector::Ptr affector)
