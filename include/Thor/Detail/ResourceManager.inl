@@ -26,34 +26,34 @@
 namespace thor
 {
 
-template <class Resource, class ResourceKey>
-ResourceManager<Resource, ResourceKey>::ResourceManager()
+template <class R>
+ResourceManager<R>::ResourceManager()
 : mMap(new ResourceMap())
 , mReleaseStrategy(Resources::ExplicitRelease)
 , mLoadingFailureStrategy(Resources::ThrowException)
 {
 }
 
-template <class Resource, class ResourceKey>
-std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key)
+template <class R>
+std::shared_ptr<R> ResourceManager<R>::search(const ResourceKey<R>& key)
 {
 	SlotConstIterator itr = mMap->find(key);
 	
 	// Return found resource or NULL if not found
 	if (itr == mMap->end())
-		return std::shared_ptr<Resource>();
+		return std::shared_ptr<R>();
 	else
-		return std::shared_ptr<Resource>(itr->second.share());
+		return std::shared_ptr<R>(itr->second.share());
 }
 
-template <class Resource, class ResourceKey>
-std::shared_ptr<const Resource> ResourceManager<Resource, ResourceKey>::search(const ResourceKey& key) const
+template <class R>
+std::shared_ptr<const R> ResourceManager<R>::search(const ResourceKey<R>& key) const
 {
 	return const_cast<ResourceManager*>(this)->search(key);
 }
 
-template <class Resource, class ResourceKey>
-std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::acquire(const ResourceKey& key)
+template <class R>
+std::shared_ptr<R> ResourceManager<R>::acquire(const ResourceKey<R>& key)
 {
 	SlotIterator itr = mMap->find(key);
 
@@ -62,11 +62,11 @@ std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::acquire(const 
 		return addResource(key);
 
 	// If resource is already stored, return pointer to it
-	return std::shared_ptr<Resource>(itr->second.share());
+	return std::shared_ptr<R>(itr->second.share());
 }
 
-template <class Resource, class ResourceKey>
-bool ResourceManager<Resource, ResourceKey>::release(const ResourceKey& key)
+template <class R>
+bool ResourceManager<R>::release(const ResourceKey<R>& key)
 {
 	// Find corresponding map entry
 	SlotIterator itr = mMap->find(key);
@@ -84,32 +84,32 @@ bool ResourceManager<Resource, ResourceKey>::release(const ResourceKey& key)
 	return unused;
 }
 
-template <class Resource, class ResourceKey>
-void ResourceManager<Resource, ResourceKey>::setLoadingFailureStrategy(Resources::LoadingFailureStrategy strategy)
+template <class R>
+void ResourceManager<R>::setLoadingFailureStrategy(Resources::LoadingFailureStrategy strategy)
 {
 	mLoadingFailureStrategy = strategy;
 }
 
-template <class Resource, class ResourceKey>
-void ResourceManager<Resource, ResourceKey>::setReleaseStrategy(Resources::ReleaseStrategy strategy)
+template <class R>
+void ResourceManager<R>::setReleaseStrategy(Resources::ReleaseStrategy strategy)
 {
 	mReleaseStrategy = strategy;
 }
 
-template <class Resource, class ResourceKey>
-std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::addResource(const ResourceKey& key)
+template <class R>
+std::shared_ptr<R> ResourceManager<R>::addResource(const ResourceKey<R>& key)
 {
 	// Try to load resource, react with strategy at failure
-	aur::CopiedPtr<Resource> resource = key.load();
+	std::unique_ptr<R> resource = key.load();
 	if (!resource)
 	{
 		switch (mLoadingFailureStrategy)
 		{
 			case Resources::ThrowException:
-				throw ResourceLoadingException("Failed to load resource \"" + detail::getKeyInfo(key) + "\"");
+				throw ResourceLoadingException("Failed to load resource \"" + key.getInfo() + "\"");
 
 			case Resources::ReturnNullPointer:
-				return std::shared_ptr<Resource>();
+				return std::shared_ptr<R>();
 		}
 	}
 
@@ -117,14 +117,14 @@ std::shared_ptr<Resource> ResourceManager<Resource, ResourceKey>::addResource(co
 	SlotIterator itr = mMap->insert( std::make_pair(key, ResourceSlot()) ).first;
 
 	// Create deleter able to call std::map::erase() and to release the resource
-	detail::ResourceDeleter<Resource, ResourceKey> deleter(mMap, itr);
+	detail::ResourceDeleter<R> deleter(mMap, itr);
 
 	// Post-initialize inserted slot, return shared pointer to resource
-	return std::shared_ptr<Resource>( itr->second.initialize(resource.release(), deleter, mReleaseStrategy == Resources::ExplicitRelease) );
+	return std::shared_ptr<R>( itr->second.initialize(resource.release(), deleter, mReleaseStrategy == Resources::ExplicitRelease) );
 }
 
-template <class Resource, class ResourceKey>
-void ResourceManager<Resource, ResourceKey>::removeResource(SlotIterator itr)
+template <class R>
+void ResourceManager<R>::removeResource(SlotIterator itr)
 {
 	// Deallocate and remove resource from map
 	mMap->erase(itr);

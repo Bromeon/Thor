@@ -33,7 +33,6 @@ set(THOR_SRC
 	Affector.cpp
 	Animator.cpp
 	Arrow.cpp
-	AudioKeys.cpp
 	BigSprite.cpp
 	BigTexture.cpp
 	ColorImpl.cpp
@@ -43,7 +42,6 @@ set(THOR_SRC
 	Distributions.cpp
 	Emitter.cpp
 	FrameAnimation.cpp
-	GraphicsKeys.cpp
 	InputNames.cpp
 	Particle.cpp
 	ParticleInterfaces.cpp

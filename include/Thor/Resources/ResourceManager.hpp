@@ -29,8 +29,8 @@
 #ifndef THOR_RESOURCEMANAGER_HPP
 #define THOR_RESOURCEMANAGER_HPP
 
+#include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
-#include <Thor/Resources/ResourceKeyTraits.hpp>
 #include <Thor/Resources/ResourceLoadingException.hpp>
 #include <Thor/Detail/ResourceSlot.hpp>
 #include <Thor/Config.hpp>
@@ -52,17 +52,10 @@ namespace thor
 
 /// @brief Class that is responsible for the management of resources like images, fonts or music.
 /// @details You can acquire and release resources. Access is granted through the key (an ID class).
-/// @tparam Resource The resource type to manage (for example sf::Image). Const-correctness is properly forwarded: If
+/// @tparam R The resource type to manage (for example sf::Texture). Const-correctness is properly forwarded: If
 ///  @a Resource is const-qualified, you cannot modify the resources after initialization (via std::shared_ptr).
 ///  @n @a Resource isn't required to be default-constructible or copy-constructible.
-/// @tparam ResourceKey The key class that is used to distinguish between resources (for example thor::Resources::ImageKey).
-///  By default, a library implementation supporting the SFML resource classes is used. If you want to specify your own
-///  key classes, they have to fulfill the following requirements:
-///   @arg <b>Value semantics.</b> Your key class must be copyable and assignable.
-///   @arg <b>thor::MovedPtr<Resource, thor::NoCopy> ResourceKey::load() const</b> loads the resource and returns a smart pointer to it
-///    (pointing to memory allocated with new). In case of loading failure, a null pointer shall be returned.
-///   @arg <b>bool operator< (const ResourceKey&, const ResourceKey&)</b> which supports strict weak ordering.
-template <class Resource, class ResourceKey = typename Resources::KeyTraits<Resource>::Type >
+template <class R>
 class ResourceManager : private aur::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -77,13 +70,13 @@ class ResourceManager : private aur::NonCopyable
 		/// @details This function does never load a new resource.
 		/// @param key The resource identifier to search for.
 		/// @return The corresponding std::shared_ptr, if found, or @a NULL otherwise.
-		std::shared_ptr<Resource>		search(const ResourceKey& key);
+		std::shared_ptr<R>			search(const ResourceKey<R>& key);
 		
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible (const overload).
 		/// @details This function does never load a new resource. 
 		/// @param key The resource identifier to search for.
 		/// @return The corresponding read-only std::shared_ptr, if found, or @a NULL otherwise.
-		std::shared_ptr<const Resource>	search(const ResourceKey& key) const;
+		std::shared_ptr<const R>	search(const ResourceKey<R>& key) const;
 
 		/// @brief Returns the resource mapped to @a key, loading the resource if required.
 		/// @details If the key is already stored, the corresponding resource is returned. Otherwise, the resource is loaded. The
@@ -93,7 +86,7 @@ class ResourceManager : private aur::NonCopyable
 		///  strategy is active, a null pointer is returned.
 		/// @throw ResourceLoadingException if the loading of the resource fails (and the @a ThrowException strategy is active).
 		/// @see setLoadingFailureStrategy(), SetReleaseStrategy()
-		std::shared_ptr<Resource>		acquire(const ResourceKey& key);
+		std::shared_ptr<R>			acquire(const ResourceKey<R>& key);
 
 		/// @brief Releases the resource as soon as possible.
 		/// @details If the resource is not in use (i.e. no std::shared_ptr references it), it is immediately released.
@@ -103,7 +96,7 @@ class ResourceManager : private aur::NonCopyable
 		///  To check for available resources, use Search().
 		/// @param key The resource identifier.
 		/// @return true, if the resource was immediately released; false, if it is in use.
-		bool						release(const ResourceKey& key);
+		bool						release(const ResourceKey<R>& key);
 
 		/// @brief Determines how to react to resources that cannot be loaded.
 		/// @details The strategy concerns all failing Acquire() calls.
@@ -119,21 +112,21 @@ class ResourceManager : private aur::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef typename std::remove_const<Resource>::type		MutableResource;
-		typedef detail::ResourceSlot<MutableResource>			ResourceSlot;
-		typedef std::map<ResourceKey, ResourceSlot>				ResourceMap;
-		typedef typename ResourceMap::iterator					SlotIterator;
-		typedef typename ResourceMap::const_iterator			SlotConstIterator;
+		typedef typename std::remove_const<R>::type		MutableResource;
+		typedef detail::ResourceSlot<MutableResource>	ResourceSlot;
+		typedef std::map<ResourceKey<R>, ResourceSlot>	ResourceMap;
+		typedef typename ResourceMap::iterator			SlotIterator;
+		typedef typename ResourceMap::const_iterator	SlotConstIterator;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
 	private:
 		// Loads and inserts a resource.
-		std::shared_ptr<Resource>					addResource(const ResourceKey& key);
+		std::shared_ptr<R>			addResource(const ResourceKey<R>& key);
 	
 		// Unloads and erases a resource.
-		void									removeResource(SlotIterator itr);
+		void						removeResource(SlotIterator itr);
 		
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +139,7 @@ class ResourceManager : private aur::NonCopyable
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Friends
-	friend class detail::ResourceDeleter<MutableResource, ResourceKey>;
+	friend class detail::ResourceDeleter<MutableResource>;
 };
 
 /// @}

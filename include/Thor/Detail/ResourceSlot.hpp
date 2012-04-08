@@ -36,7 +36,7 @@
 namespace thor
 {
 
-template <class Resource, class ResourceKey>
+template <class R>
 class ResourceManager;
 
 
@@ -47,13 +47,13 @@ namespace detail
 	// Is called when the last shared_ptr to a resource goes away, releases the resource.
 	// Note that the last shared_ptr can be inside a ResourceManager (explicit release policy)
 	// or an external shared_ptr to a resource (auto release policy).
-	template <class Resource, class ResourceKey>
+	template <class R>
 	class ResourceDeleter
 	{
 		private:
-			typedef ResourceManager<Resource, ResourceKey>	Manager;
-			typedef typename Manager::ResourceMap			ResourceMap;
-			typedef typename Manager::SlotIterator			SlotIterator;
+			typedef ResourceManager<R>				Manager;
+			typedef typename Manager::ResourceMap	ResourceMap;
+			typedef typename Manager::SlotIterator	SlotIterator;
 
 		public:
 			ResourceDeleter(std::weak_ptr<ResourceMap> map, SlotIterator iterator)
@@ -64,7 +64,7 @@ namespace detail
 
 			// Actual resource deletion - This operator is only invoked when the last shared_ptr to
 			// the resource (including the shared_ptr inside the manager) is destroyed.
-			void operator() (Resource* pointer)
+			void operator() (R* pointer)
 			{
 				delete pointer;
 
@@ -79,7 +79,7 @@ namespace detail
 			SlotIterator					mIterator;
 	};
 	
-	template <class Resource>
+	template <class R>
 	class ResourceSlot
 	{
 		public:
@@ -91,9 +91,9 @@ namespace detail
 			}
 
 			template <typename DeleterFn>
-			std::shared_ptr<Resource> initialize(Resource* newResource, DeleterFn deleter, bool explicitRelease)
+			std::shared_ptr<R> initialize(R* newResource, DeleterFn deleter, bool explicitRelease)
 			{
-				std::shared_ptr<Resource> result(newResource, deleter);
+				std::shared_ptr<R> result(newResource, deleter);
 				
 				// For explicit release policy, keep strong reference to resource and prevent automatic deletion
 				mWeakRef = result;
@@ -104,7 +104,7 @@ namespace detail
 			}
 
 			// Gives back a shared pointer to the resource
-			std::shared_ptr<Resource> share() const
+			std::shared_ptr<R> share() const
 			{
 				return mWeakRef.lock();
 			}
@@ -112,7 +112,7 @@ namespace detail
 			// Sets whether the slot keeps a strong reference to the resource or not.
 			void keepStrongReference(bool keepStrongRef)
 			{
-				// If mStrongRef is non-empty, resources cannot be released from outside - explicit ResourceManager::Release() calls
+				// If mStrongRef is non-empty, resources cannot be released from outside - explicit ResourceManager::release() calls
 				// are required. In contrast, for an empty mStrongRef, the last external shared_ptr releases the resource.
 				if (keepStrongRef)
 					mStrongRef = mWeakRef.lock();
@@ -128,8 +128,8 @@ namespace detail
 			}
 
 		private:
-			std::shared_ptr<Resource>	mStrongRef;
-			std::weak_ptr<Resource>		mWeakRef;
+			std::shared_ptr<R>		mStrongRef;
+			std::weak_ptr<R>		mWeakRef;
 	};
 
 } // namespace detail

@@ -10,18 +10,14 @@ int main()
 	thor::ResourceManager<sf::Texture> textureMgr;
 	thor::ResourceManager<sf::SoundBuffer> soundMgr;
 
-	// Import names for simplicity
-	using thor::Resources::TextureKey;
-	using thor::Resources::SoundBufferKey;
-
 	// Create sf::Image to load texture from
 	sf::Image image;
 	image.create(529, 100, sf::Color(130, 70, 0));
 
 	// Create keys to load resources
-	TextureKey textureKey1  = TextureKey::fromImage(image);
-	TextureKey textureKey2  = TextureKey::fromFile("Media/image.jpg");
-	SoundBufferKey soundKey = SoundBufferKey::fromFile("Media/click.wav");
+	thor::ResourceKey<sf::Texture> textureKey1  = thor::Resources::fromImage<sf::Texture>(image);
+	thor::ResourceKey<sf::Texture> textureKey2 = thor::Resources::fromFile<sf::Texture>("Media/image.jpg");
+	thor::ResourceKey<sf::SoundBuffer> soundKey = thor::Resources::fromFile<sf::SoundBuffer>("Media/click.wav");
 
 	// Create resource pointers to access the resources
 	std::shared_ptr<sf::Texture>     texture1, texture2;

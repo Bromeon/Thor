@@ -26,16 +26,27 @@
 #ifndef THOR_RESOURCEKEYHELPERS_HPP
 #define THOR_RESOURCEKEYHELPERS_HPP
 
+#include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Multimedia/ToString.hpp>
 #include <Thor/Config.hpp>
 
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+
 #include <functional>
+#include <memory>
 #include <sstream>
 #include <cstring>
+#include <type_traits>
 
-// Using and namespace declarations
-// (this is okay here because this header is only included inside internal .cpp files)
-using namespace std::placeholders;
+
+namespace sf
+{
+
+	class InputStream;
+	class Image;
+
+} // namespace sf
 
 
 namespace thor
@@ -54,6 +65,7 @@ namespace detail
 				stream << "[From" << text << "] ";
 		}
 
+		// Enable If to exclude sf::InputStream derivates
 		template <typename T>
 		Tagger& operator<< (const T& value)
 		{
@@ -72,6 +84,11 @@ namespace detail
 			return operator<< (toString(color));
 		}
 
+		Tagger& operator<< (const sf::IntRect& rect)
+		{
+			return operator<< (toString(rect));
+		}
+
 		operator std::string() const
 		{
 			// Remove last separator
@@ -81,31 +98,26 @@ namespace detail
 			return s;
 		}
 
-		std::ostringstream stream;
-		bool begin;
+		std::ostringstream	stream;
+		bool				begin;
 	};
 
-
-	// Forbids copies
-	struct NoCopy
+	// Creates a resource key by transforming the function
+	//      bool               boolLoader(R&)
+	// to:  std::unique_ptr<R> loader()
+	template <class R, typename Fn>
+	ResourceKey<R> makeResourceKey(Fn boolLoader, std::string key)
 	{
-		template <typename T>
-		T* operator() (const T*) const
+		auto loader = [=] () -> std::unique_ptr<R>
 		{
-			throw std::logic_error("No copy allowed");
-		}
-	};
+			std::unique_ptr<R> resource(new R());
+			if (boolLoader(*resource))
+				return resource;
+			else
+				return std::unique_ptr<R>();
+		};
 
-	// Helper function to load resource
-	template <class Resource>
-	aur::CopiedPtr<Resource> LoadResource(const std::function<bool(Resource&)>& loader)
-	{
-		aur::CopiedPtr<Resource> resource(new Resource, NoCopy(), aur::OperatorDelete<Resource>());
-
-		if (loader(*resource))
-			return resource;
-		else
-			return aur::CopiedPtr<Resource>();
+		return ResourceKey<R>(loader, key);
 	}
 
 } // namespace detail
