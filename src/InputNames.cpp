@@ -40,7 +40,7 @@ namespace
 	template <typename T>
 	class StringBimap
 	{
-		AURORA_STATIC_ASSERT(( !std::is_same<T, std::string>::value ));
+		static_assert(!std::is_same<T, std::string>::value, "Type different from std::string expected");
 
 		public:
 			explicit StringBimap(unsigned int size)
@@ -185,7 +185,7 @@ namespace
 		THOR_INSERT_MAPPING(F15);
 		THOR_INSERT_MAPPING(Pause);
 
-		AURORA_STATIC_ASSERT(sf::Keyboard::KeyCount == 101);
+		static_assert(sf::Keyboard::KeyCount == 101, "Number of SFML keys has changed");
 		#undef THOR_INSERT_MAPPING
 
 		return bimap;
@@ -203,7 +203,7 @@ namespace
 		THOR_INSERT_MAPPING(XButton1);
 		THOR_INSERT_MAPPING(XButton2);
 
-		AURORA_STATIC_ASSERT(sf::Mouse::ButtonCount == 5);
+		static_assert(sf::Mouse::ButtonCount == 5, "Number of SFML mouse buttons has changed");
 		#undef THOR_INSERT_MAPPING
 
 		return bimap;
