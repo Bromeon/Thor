@@ -69,13 +69,13 @@ class ResourceManager : private aur::NonCopyable
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible.
 		/// @details This function does never load a new resource.
 		/// @param key The resource identifier to search for.
-		/// @return The corresponding std::shared_ptr, if found, or @a NULL otherwise.
+		/// @return The corresponding std::shared_ptr, if found, or @a nullptr otherwise.
 		std::shared_ptr<R>			search(const ResourceKey<R>& key);
 		
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible (const overload).
 		/// @details This function does never load a new resource. 
 		/// @param key The resource identifier to search for.
-		/// @return The corresponding read-only std::shared_ptr, if found, or @a NULL otherwise.
+		/// @return The corresponding read-only std::shared_ptr, if found, or @a nullptr otherwise.
 		std::shared_ptr<const R>	search(const ResourceKey<R>& key) const;
 
 		/// @brief Returns the resource mapped to @a key, loading the resource if required.

@@ -251,7 +251,7 @@ namespace detail
 	// Helper function for CollateVerticesPolygon(); constructs an edge and adds it to the container and output iterator.
 	inline void addEdge(EdgeSet& constrainedEdges, const Vertex* previousVertex, const Vertex& currentVertex, const PolygonTrDetails&)
 	{
-		if (previousVertex != NULL)
+		if (previousVertex != nullptr)
 			constrainedEdges.insert(AdvancedEdge(*previousVertex, currentVertex));
 	}
 
@@ -259,7 +259,7 @@ namespace detail
 	template <typename OutputIterator, class VertexType>
 	void addEdge(EdgeSet& constrainedEdges, const Vertex* previousVertex, const Vertex& currentVertex, PolygonOutputTrDetails<OutputIterator, VertexType> details)
 	{
-		if (previousVertex != NULL)
+		if (previousVertex != nullptr)
 		{	
 			*details.edgesOut++ = Edge<VertexType>(
 				static_cast<const VertexType&>(*previousVertex),
@@ -279,7 +279,7 @@ namespace detail
 			return;
 
 		const Vertex& firstVertex = *verticesBegin;
-		const Vertex* previousVertex = NULL;
+		const Vertex* previousVertex = nullptr;
 	
 		for (; verticesBegin != verticesEnd; ++verticesBegin)
 		{	

@@ -101,7 +101,7 @@ namespace
 	// Function initializing the engine and its seed at startup time
 	Engine CreateInitialEngine()
 	{
-		return Engine( static_cast<unsigned long>(std::time(NULL)) );
+		return Engine( static_cast<unsigned long>(std::time(nullptr)) );
 	}
 
 	// Pseudo random number generator engine

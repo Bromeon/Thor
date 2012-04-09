@@ -62,7 +62,7 @@ struct ActionContext
 	}
 
 	/// @brief Pointer to sf::Window passed to the action map.
-	/// @details Use this variable to access the window inside a callback function. This pointer is never @a NULL.
+	/// @details Use this variable to access the window inside a callback function. This pointer is never @a nullptr.
 	sf::Window*					window;
 
 	/// @brief Pointer to a sf::Event that contributed to this action's activation.
@@ -73,7 +73,7 @@ struct ActionContext
 	///	 <tr><td>Keyboard/mouse/joystick actions constructed with @a PressOnce</td>		<td>KeyPressed, MouseButtonPressed or JoystickButtonPressed</td>		</tr>
 	///	 <tr><td>Keyboard/mouse/joystick actions constructed with @a ReleaseOnce</td>	<td>KeyReleased, MouseButtonReleased or JoystickButtonReleased</td>		</tr>
 	///	 <tr><td>Keyboard/mouse/joystick actions constructed with @a Once</td>			<td>Any of the six event types above</td>								</tr>
-	///	 <tr><td>Keyboard/mouse/joystick actions constructed with @a Realtime</td>		<td>The pointer is @a NULL and thus cannot be dereferenced</td>			</tr>
+	///	 <tr><td>Keyboard/mouse/joystick actions constructed with @a Realtime</td>		<td>The pointer is @a nullptr and thus cannot be dereferenced</td>		</tr>
 	///	 <tr><td>Miscellaneous SFML event actions</td>									<td>The sf::Event::EventType specified in the Action constructor</td>	</tr>
 	///	 <tr><td>Actions combined with || and && operators</td>							<td>Any of the operand's event types</td>								</tr>
 	/// </table>

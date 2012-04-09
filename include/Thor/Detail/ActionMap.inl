@@ -94,7 +94,7 @@ void ActionMap<ActionIdentifier>::invokeCallbacks(CallbackSystem& system) const
 
 		// If at least one realtime constellation triggers this action, invoke callback for it
 		if (result.nbRealtimeTriggers > 0)
-			system.triggerEvent( ActionContext<ActionIdentifier>(window, NULL, actionItr->first) );
+			system.triggerEvent( ActionContext<ActionIdentifier>(window, nullptr, actionItr->first) );
 
 		// Additionally, invoke callback once for every sf::Event
 		AURORA_CITR_FOREACH(std::vector<sf::Event>, result.eventContainer, eventItr)

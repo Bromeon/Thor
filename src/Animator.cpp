@@ -33,7 +33,7 @@ namespace thor
 
 Animator::Animator()
 : mAnimationMap()
-, mPlayingAnimation(NULL)
+, mPlayingAnimation(nullptr)
 , mDefaultAnimation()
 , mProgress(0.f)
 , mLoop(false)
@@ -60,7 +60,7 @@ void Animator::stopAnimation()
 	if (mDefaultAnimation.first)
 		playAnimation(mDefaultAnimation, true);
 	else
-		mPlayingAnimation = NULL;
+		mPlayingAnimation = nullptr;
 }
 
 void Animator::update(sf::Time dt)
@@ -100,7 +100,7 @@ void Animator::setDefaultAnimation(Animation::Ptr animation, sf::Time duration)
 {
 	// Invalidate old playing animation, if it refers to default animation (which might be destroyed)
 	if (mPlayingAnimation == &mDefaultAnimation)
-		mPlayingAnimation = NULL;
+		mPlayingAnimation = nullptr;
 
 	// Assign animation and duration
 	mDefaultAnimation.first = animation;

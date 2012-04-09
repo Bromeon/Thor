@@ -114,7 +114,7 @@ namespace detail
 			if (boolLoader(*resource))
 				return resource;
 			else
-				return std::unique_ptr<R>();
+				return nullptr;
 		};
 
 		return ResourceKey<R>(loader, key);

@@ -39,9 +39,9 @@ std::shared_ptr<R> ResourceManager<R>::search(const ResourceKey<R>& key)
 {
 	SlotConstIterator itr = mMap->find(key);
 	
-	// Return found resource or NULL if not found
+	// Return found resource or nullptr if not found
 	if (itr == mMap->end())
-		return std::shared_ptr<R>();
+		return nullptr;
 	else
 		return std::shared_ptr<R>(itr->second.share());
 }
@@ -109,7 +109,7 @@ std::shared_ptr<R> ResourceManager<R>::addResource(const ResourceKey<R>& key)
 				throw ResourceLoadingException("Failed to load resource \"" + key.getInfo() + "\"");
 
 			case Resources::ReturnNullPointer:
-				return std::shared_ptr<R>();
+				return nullptr;
 		}
 	}
 
