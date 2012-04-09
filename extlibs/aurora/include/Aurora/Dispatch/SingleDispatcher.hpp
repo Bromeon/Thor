@@ -37,7 +37,7 @@
 #include <Aurora/Tools/TypeInfo.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
 #include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Detail/Metaprogramming.hpp>
+#include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Config.hpp>
 
 #include <vector>
@@ -68,9 +68,10 @@ class SingleDispatcher : private NonCopyable
 	// Static assertions
 
 	// Make sure that B is either T* or T&, where T is a polymorphic base class (containing virtual functions).
-	AURORA_STATIC_ASSERT( 
-		std::tr1::is_pointer<B>::value && std::tr1::is_polymorphic< typename std::tr1::remove_pointer<B>::type >::value
-	 || std::tr1::is_reference<B>::value && std::tr1::is_polymorphic< typename std::tr1::remove_reference<B>::type >::value )
+	static_assert(
+		std::is_pointer<B>::value && std::is_polymorphic< typename std::remove_pointer<B>::type >::value
+	 || std::is_lvalue_reference<B>::value && std::is_polymorphic< typename std::remove_reference<B>::type >::value,
+		"Template argument B must be a pointer or reference to a polymorphic base class.");
 
 	 
 	// ---------------------------------------------------------------------------------------------------------------------------

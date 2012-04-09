@@ -46,7 +46,7 @@ namespace detail
 	};
 
 
-	// Concrete caller class for global functions and function objects (like std::tr1::function)
+	// Concrete caller class for global functions and function objects (like std::function)
 	// B: Base class of dispatched hierarchy
 	// D: Derived class of dispatched hierarchy
 	// Fn: Function type
