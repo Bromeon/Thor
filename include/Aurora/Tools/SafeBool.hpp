@@ -29,8 +29,6 @@
 #ifndef AURORA_SAFEBOOL_HPP
 #define AURORA_SAFEBOOL_HPP
 
-#include <cstddef> // NULL
-
 
 namespace aur
 {
@@ -63,7 +61,7 @@ const SafeBool SafeBoolTrue = &detail::SafeBoolHolder::Function;
 
 /// @brief SafeBool literal, evaluates to false
 /// @hideinitializer
-const SafeBool SafeBoolFalse = NULL;
+const SafeBool SafeBoolFalse = nullptr;
 
 /// @brief Conversion function from bool to SafeBool
 ///

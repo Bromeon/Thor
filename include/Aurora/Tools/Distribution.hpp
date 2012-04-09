@@ -29,63 +29,50 @@
 #ifndef AURORA_DISTRIBUTION_HPP
 #define AURORA_DISTRIBUTION_HPP
 
-#include <Aurora/Tools/Detail/Metaprogramming.hpp>
+#include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Config.hpp>
 
-#include AURORA_TR1_HEADER(functional)
+#include <functional>
 
 
 namespace aur
 {
-	namespace detail
-	{
-
-		template <typename T>
-		struct Constant
-		{
-			explicit Constant(T value)
-			: value(value)
-			{
-			}
-
-			T operator() () const
-			{
-				return value;
-			}
-
-			T value;
-		};
-
-	} // namespace detail
-
 
 /// @addtogroup Tools
 /// @{
 
 /// @brief Class holding a rule to create values with predefined properties
 /// @details Contains a callback that returns values on demand. These can be constant (always the same value), according to a
-///  random distribution, or be read from a value elsewhere in your code.
+///  random distribution, or be read from a value elsewhere in your code. Generally, the callback can be any function, member
+///  function or functor returning a value of type T and taking no arguments.
 template <typename T>
 class Distribution
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef std::tr1::function<T()> FactoryFn;
+		typedef std::function<T()> FactoryFn;
 	
 		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Implicit constructor from a constant value
-		/// @details
+		/// @brief Construct from constant
+		/// @param constant Constant value convertible to T.
 		template <typename U>
-									Distribution(U initializer)
-		: mFactory(typename detail::Conditional<
-				std::tr1::is_convertible<U, T>::value,
-				detail::Constant<T>,
-				FactoryFn
-			>::Type(initializer))
+									Distribution(U constant AURORA_ENABLE_IF(std::is_convertible<U, T>::value))
+		: mFactory()
+		{
+			// Convert to T first to avoid conversion happening at every function call.
+			T copy = constant;
+			mFactory = [copy] () { return copy; };
+		}
+
+		/// @brief Construct from distribution function
+		/// @param function Callable convertible to std::function<T()> in order to act as distribution function.
+		template <typename Fn>
+									Distribution(Fn function AURORA_ENABLE_IF(!std::is_convertible<Fn, T>::value))
+		: mFactory(function)
 		{
 		}
 
@@ -110,7 +97,7 @@ class Distribution
 		FactoryFn					mFactory;	
 };
 
-/// @relates 
+/// @relates Distribution
 /// @brief Swaps two Distribution<T> instances.
 template <typename T>
 void swap(Distribution<T>& lhs, Distribution<T>& rhs)

@@ -29,18 +29,6 @@
 #ifndef AURORA_CONFIG_HPP
 #define AURORA_CONFIG_HPP
 
-// Compiler-dependent include path for TR1 headers
-// If your standard library isn't covered by this macro, please inform me.
-#ifdef _MSC_VER
-	#define AURORA_TR1_HEADER(Header) <Header>
-#else
-	#define AURORA_TR1_HEADER(Header) <tr1/Header>
-#endif // _MSC_VER
-
-
-// C++11 support
-// Define AURORA_HAS_CPP11 to activate C++11 features.
-
 
 // Version of the library
 #define AURORA_VERSION_MAJOR 1

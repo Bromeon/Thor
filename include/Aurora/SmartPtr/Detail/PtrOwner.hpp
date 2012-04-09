@@ -28,7 +28,6 @@
 #include <Aurora/Tools/NonCopyable.hpp>
 
 #include <cassert>
-#include <cstddef>
 
 
 namespace aur
@@ -83,7 +82,7 @@ namespace detail
 
 		virtual void dismiss()
 		{
-			pointer = NULL;
+			pointer = nullptr;
 		}
 
 		U* pointer;

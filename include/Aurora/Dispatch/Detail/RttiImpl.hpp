@@ -44,7 +44,7 @@ namespace detail
 	{	
 		explicit RttiClassNode(TypeInfo type)
 		: type(type)
-		, base(NULL)
+		, base(nullptr)
 		{
 		}
 

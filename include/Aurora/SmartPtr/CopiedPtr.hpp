@@ -34,9 +34,9 @@
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Config.hpp>
 
-#include <cstddef>
 #include <algorithm>
-#include AURORA_TR1_HEADER(type_traits)
+#include <type_traits>
+
 
 namespace aur
 {
@@ -59,13 +59,13 @@ class CopiedPtr
 		/// @brief Default constructor
 		/// @details Initializes the smart pointer with a null pointer.
 		CopiedPtr()
-		: mOwner(NULL)
-		, mPointer(NULL)
+		: mOwner(nullptr)
+		, mPointer(nullptr)
 		{
 		}
 
 		/// @brief Construct from raw pointer
-		/// @param pointer Initial pointer value, can be NULL. Must be convertible to T*.
+		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		template <typename U>
 		explicit CopiedPtr(U* pointer)
 		: mOwner( detail::newPtrOwner<T>(pointer, OperatorNewCopy<U>(), OperatorDelete<U>()) )
@@ -74,7 +74,7 @@ class CopiedPtr
 		}
 
 		/// @brief Construct from raw pointer with cloner and deleter
-		/// @param pointer Initial pointer value, can be NULL. Must be convertible to T*.
+		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @param cloner Callable with signature <b>T*(const T*)</b> that is invoked during CopiedPtr copies.
 		///  Must return a pointer to a copy of the argument. 
 		/// @param deleter Callable with signature <b>void(T*)</b> that is invoked during CopiedPtr destruction.
@@ -87,17 +87,17 @@ class CopiedPtr
 
 		/// @brief Copy constructor
 		/// @param origin Original smart pointer
-		/// @details If the origin's pointer is NULL, this pointer will also be NULL.
+		/// @details If the origin's pointer is nullptr, this pointer will also be nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		CopiedPtr(const CopiedPtr& origin)
-		: mOwner(origin.mOwner ? origin.mOwner->clone() : NULL)
-		, mPointer(origin.mOwner ? mOwner->getPointer() : NULL)
+		: mOwner(origin.mOwner ? origin.mOwner->clone() : nullptr)
+		, mPointer(origin.mOwner ? mOwner->getPointer() : nullptr)
 		{
 		}
 
 		/// @brief Construct from different CopiedPtr
 		/// @param origin Original smart pointer, where U* convertible to T*. Can refer to a derived object.
-		/// @details If the origin's pointer is NULL, this pointer will also be NULL.
+		/// @details If the origin's pointer is nullptr, this pointer will also be nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		template <typename U>
 		CopiedPtr(const CopiedPtr<U>& origin)
@@ -106,7 +106,6 @@ class CopiedPtr
 		{
 		}
 
-#ifdef AURORA_HAS_CPP11
 		/// @brief Move constructor
 		/// @param source RValue reference to object of which the ownership is taken.
 		template <typename U>
@@ -114,10 +113,9 @@ class CopiedPtr
 		: mOwner(source.mOwner)
 		, mPointer(source.mPointer)
 		{
-			source.mOwner = NULL;
-			source.mPointer = NULL;
+			source.mOwner = nullptr;
+			source.mPointer = nullptr;
 		}
-#endif // AURORA_HAS_CPP11
 
 		/// @brief Copy assignment operator
 		/// @param origin Original smart pointer
@@ -138,7 +136,6 @@ class CopiedPtr
 			return *this;
 		}
 
-#ifdef AURORA_HAS_CPP11
 		/// @brief Move assignment operator
 		/// @param source RValue reference to object of which the ownership is taken.
 		template <typename U>
@@ -147,7 +144,6 @@ class CopiedPtr
 			CopiedPtr(std::move(source)).swap(*this);
 			return *this;
 		}
-#endif // AURORA_HAS_CPP11
 
 		/// @brief Destructor
 		/// @details Invokes the deleter with the stored pointer as argument.
@@ -167,7 +163,7 @@ class CopiedPtr
 		
 		/// @brief Dereferences the pointer.
 		/// 
-		AURORA_FAKE_DOC(typename std::tr1::add_reference<T>::type, T&) operator* () const
+		AURORA_FAKE_DOC(typename std::add_lvalue_reference<T>::type, T&) operator* () const
 		{
 			assert(mPointer);
 			return *mPointer;
@@ -181,12 +177,12 @@ class CopiedPtr
 			return mPointer;
 		}
 
-		/// @brief Checks if the smart pointer is not NULL.
+		/// @brief Checks if the smart pointer is not nullptr.
 		/// @details Allows expressions of the form <i>if (ptr)</i> or <i>if (!ptr)</i>.
 		/// @return Value convertible to true, if CopiedPtr is not empty; value convertible to false otherwise
 		operator SafeBool() const
 		{
-			return toSafeBool(mPointer != NULL);
+			return toSafeBool(mPointer != nullptr);
 		}
 
 		/// @brief Permits access to the internal pointer. Designed for rare use.
@@ -214,7 +210,7 @@ class CopiedPtr
 		}
 
 		/// @brief Reset to raw pointer
-		/// @param pointer Initial pointer value, can be NULL. Must be convertible to T*.
+		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @details If this instance currently holds a pointer, the old deleter is invoked.
 		template <typename U>
 		void reset(U* pointer)
@@ -223,7 +219,7 @@ class CopiedPtr
 		}
 
 		/// @brief Reset to raw pointer with cloner and deleter
-		/// @param pointer Initial pointer value, can be NULL. Must be convertible to T*.
+		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @param cloner Callable with signature <b>T*(const T*)</b> that is invoked during CopiedPtr copies.
 		///  Must return a pointer to a copy of the argument. 
 		/// @param deleter Callable with signature <b>void(T*)</b> that is invoked during CopiedPtr destruction.

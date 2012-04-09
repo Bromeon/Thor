@@ -32,7 +32,7 @@
 #include <Aurora/Config.hpp>
 
 #include <typeinfo>
-#include AURORA_TR1_HEADER(type_traits)
+#include <type_traits>
 
 
 namespace aur
@@ -102,7 +102,7 @@ namespace detail
 	template <typename T>
 	TypeInfo derefTypeid()
 	{
-		return typeid(typename std::tr1::remove_pointer<T>::type);
+		return typeid(typename std::remove_pointer<T>::type);
 	}
 
 } // namespace detail
