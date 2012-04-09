@@ -32,7 +32,7 @@
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Detail/ResourceKeyHelpers.hpp>
 
-#include <Aurora/Tools/Detail/Metaprogramming.hpp>
+#include <Aurora/Tools/Metaprogramming.hpp>
 
 
 namespace thor
@@ -124,7 +124,7 @@ namespace Resources
 	/// @param arg1 An additional argument (for example sf::IntRect at sf::Texture or std::string / sf::Shader::Type at sf::Shader).
 	/// @return Resource key which is going to invoke <i>loadFromStream(stream, arg1)</i>.
 	template <class R, typename T>
-	ResourceKey<R> fromStream(sf::InputStream& stream, T arg1,
+	ResourceKey<R> fromStream(sf::InputStream& stream, T arg1
 		AURORA_ENABLE_IF(!std::is_base_of<sf::InputStream, T>::value))
 	{
 		return detail::makeResourceKey<R>(
