@@ -102,15 +102,9 @@ else()
 endif()
 
 
-# Find OpenGL
-find_package(OpenGL REQUIRED)
-message(STATUS "SFML and OpenGL found.")
-
-
-# Macro for easy linkage of SFML and OpenGL
-macro(thor_link_sfml_opengl THOR_TARGET)
+# Macro for easy linkage of SFML
+macro(thor_link_sfml THOR_TARGET)
 	target_link_libraries(${THOR_TARGET} ${SFML_LIBRARIES})
-	target_link_libraries(${THOR_TARGET} ${OPENGL_gl_LIBRARY})
 endmacro()
 
 

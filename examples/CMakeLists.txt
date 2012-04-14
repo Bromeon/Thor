@@ -36,7 +36,7 @@ macro(thor_example THOR_EXAMPLE_NAME)
 	endif()
 
 	thor_link_thor(${THOR_EXAMPLE_NAME})
-	thor_link_sfml_opengl(${THOR_EXAMPLE_NAME})
+	thor_link_sfml(${THOR_EXAMPLE_NAME})
 
 	install(TARGETS ${THOR_EXAMPLE_NAME}
 			RUNTIME DESTINATION ${THOR_EXAMPLE_INSTALL_DIR}/examples)
