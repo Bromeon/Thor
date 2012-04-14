@@ -75,37 +75,37 @@ void UniversalEmitter::setEmissionRate(float particlesPerSecond)
 	mEmissionRate = particlesPerSecond;
 }
 
-void UniversalEmitter::setLifetime(aur::Distribution<sf::Time> particleLifetime)
+void UniversalEmitter::setLifetime(thor::Distribution<sf::Time> particleLifetime)
 {
 	mParticleLifetime.swap(particleLifetime);
 }
 
-void UniversalEmitter::setPosition(aur::Distribution<sf::Vector2f> particlePosition)
+void UniversalEmitter::setPosition(thor::Distribution<sf::Vector2f> particlePosition)
 {
 	mParticlePosition.swap(particlePosition);
 }
 
-void UniversalEmitter::setVelocity(aur::Distribution<sf::Vector2f> particleVelocity)
+void UniversalEmitter::setVelocity(thor::Distribution<sf::Vector2f> particleVelocity)
 {
 	mParticleVelocity.swap(particleVelocity);
 }
 
-void UniversalEmitter::setRotation(aur::Distribution<float> particleRotation)
+void UniversalEmitter::setRotation(thor::Distribution<float> particleRotation)
 {
 	mParticleRotation.swap(particleRotation);
 }
 
-void UniversalEmitter::setRotationSpeed(aur::Distribution<float> particleRotationSpeed)
+void UniversalEmitter::setRotationSpeed(thor::Distribution<float> particleRotationSpeed)
 {
 	mParticleRotationSpeed.swap(particleRotationSpeed);
 }
 
-void UniversalEmitter::setScale(aur::Distribution<sf::Vector2f> particleScale)
+void UniversalEmitter::setScale(thor::Distribution<sf::Vector2f> particleScale)
 {
 	mParticleScale.swap(particleScale);
 }
 
-void UniversalEmitter::setColor(aur::Distribution<sf::Color> particleColor)
+void UniversalEmitter::setColor(thor::Distribution<sf::Color> particleColor)
 {
 	mParticleColor.swap(particleColor);
 }

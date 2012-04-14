@@ -29,6 +29,8 @@
 #ifndef THOR_MODULE_MATH_HPP
 #define THOR_MODULE_MATH_HPP
 
+#include <Thor/Math/Distribution.hpp>
+#include <Thor/Math/Distributions.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Math/Trigonometry.hpp>
 #include <Thor/Math/Triangulation.hpp>

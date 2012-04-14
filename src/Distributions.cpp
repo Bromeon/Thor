@@ -135,35 +135,35 @@ namespace
 namespace Distributions
 {
 	
-	aur::Distribution<float> uniform(float begin, float end)
+	thor::Distribution<float> uniform(float begin, float end)
 	{
 		assert(begin <= end);
 
 		return UniformFloat(begin, end);
 	}
 
-	aur::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
+	thor::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
 	{
 		assert(begin <= end);
 
 		return UniformTime(begin, end);
 	}
 
-	aur::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
+	thor::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
 	{
 		assert(halfSize.x >= 0.f && halfSize.y >= 0.f);
 
 		return Rect(center, halfSize);
 	}
 
-	aur::Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
+	thor::Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
 	{
 		assert(radius >= 0.f);
 
 		return Circle(center, radius);
 	}
 
-	aur::Distribution<sf::Vector2f> deflect(sf::Vector2f direction, float maxRotation)
+	thor::Distribution<sf::Vector2f> deflect(sf::Vector2f direction, float maxRotation)
 	{
 		return Deflect(direction, maxRotation);
 	}

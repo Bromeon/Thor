@@ -29,9 +29,8 @@
 #ifndef THOR_DISTRIBUTIONS_HPP
 #define THOR_DISTRIBUTIONS_HPP
 
+#include <Thor/Math/Distribution.hpp>
 #include <Thor/Config.hpp>
-
-#include <Aurora/Tools/Distribution.hpp>
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Time.hpp>
@@ -50,23 +49,23 @@ namespace Distributions
 
 	/// @brief %Uniform random distribution in a float interval
 	///
-	aur::Distribution<float> THOR_API			uniform(float begin, float end);
+	thor::Distribution<float> THOR_API			uniform(float begin, float end);
 
 	/// @brief %Uniform random distribution in a time interval
 	///
-	aur::Distribution<sf::Time> THOR_API		uniform(sf::Time begin, sf::Time end);
+	thor::Distribution<sf::Time> THOR_API		uniform(sf::Time begin, sf::Time end);
 
 	/// @brief %Uniform random distribution in a rectangle
 	/// 
-	aur::Distribution<sf::Vector2f> THOR_API	rect(sf::Vector2f center, sf::Vector2f halfSize);
+	thor::Distribution<sf::Vector2f> THOR_API	rect(sf::Vector2f center, sf::Vector2f halfSize);
 
 	/// @brief %Uniform random distribution in a circle
 	/// 
-	aur::Distribution<sf::Vector2f> THOR_API	circle(sf::Vector2f center, float radius);
+	thor::Distribution<sf::Vector2f> THOR_API	circle(sf::Vector2f center, float radius);
 
 	/// @brief Vector rotation with a random angle
 	/// 
-	aur::Distribution<sf::Vector2f> THOR_API	deflect(sf::Vector2f direction, float maxRotation);
+	thor::Distribution<sf::Vector2f> THOR_API	deflect(sf::Vector2f direction, float maxRotation);
 
 } // namespace Distributions
 

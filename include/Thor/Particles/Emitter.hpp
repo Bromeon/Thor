@@ -30,9 +30,8 @@
 #define THOR_EMITTER_HPP
 
 #include <Thor/Particles/ParticleInterfaces.hpp>
+#include <Thor/Math/Distribution.hpp>
 #include <Thor/Config.hpp>
-
-#include <Aurora/Tools/Distribution.hpp>
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -83,31 +82,31 @@ class THOR_API UniversalEmitter : public Emitter
 
 		/// @brief Sets the lifetime (time between emission and death) of the particle.
 		/// @param particleLifetime Constant or function returning the particle lifetime.
-		void						setLifetime(aur::Distribution<sf::Time> particleLifetime);
+		void						setLifetime(thor::Distribution<sf::Time> particleLifetime);
 
 		/// @brief Sets the initial particle position.
 		/// @param particlePosition Constant or function returning the initial particle position.
-		void						setPosition(aur::Distribution<sf::Vector2f> particlePosition);
+		void						setPosition(thor::Distribution<sf::Vector2f> particlePosition);
 
 		/// @brief Sets the initial particle velocity.
 		/// @param particleVelocity Constant or function returning the initial particle velocity.
-		void						setVelocity(aur::Distribution<sf::Vector2f> particleVelocity);
+		void						setVelocity(thor::Distribution<sf::Vector2f> particleVelocity);
 
 		/// @brief Sets the initial particle rotation.
 		/// @param particleRotation Constant or function returning the initial particle rotation.
-		void						setRotation(aur::Distribution<float> particleRotation);
+		void						setRotation(thor::Distribution<float> particleRotation);
 
 		/// @brief Sets the initial particle rotation speed.
 		/// @param particleRotationSpeed Constant or function returning the initial particle rotation speed.
-		void						setRotationSpeed(aur::Distribution<float> particleRotationSpeed);
+		void						setRotationSpeed(thor::Distribution<float> particleRotationSpeed);
 
 		/// @brief Sets the initial particle scale.
 		/// @param particleScale Constant or function returning the initial particle scale.
-		void						setScale(aur::Distribution<sf::Vector2f> particleScale);
+		void						setScale(thor::Distribution<sf::Vector2f> particleScale);
 
 		/// @brief Sets the initial particle color.
 		/// @param particleColor Constant or function returning the initial particle color.
-		void						setColor(aur::Distribution<sf::Color> particleColor);
+		void						setColor(thor::Distribution<sf::Color> particleColor);
 
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -120,16 +119,16 @@ class THOR_API UniversalEmitter : public Emitter
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		float							mEmissionRate;
-		float							mEmissionDifference;
+		float								mEmissionRate;
+		float								mEmissionDifference;
 
-		aur::Distribution<sf::Time>		mParticleLifetime;
-		aur::Distribution<sf::Vector2f>	mParticlePosition;
-		aur::Distribution<sf::Vector2f>	mParticleVelocity;
-		aur::Distribution<float>		mParticleRotation;
-		aur::Distribution<float>		mParticleRotationSpeed;
-		aur::Distribution<sf::Vector2f>	mParticleScale;
-		aur::Distribution<sf::Color>	mParticleColor;
+		thor::Distribution<sf::Time>		mParticleLifetime;
+		thor::Distribution<sf::Vector2f>	mParticlePosition;
+		thor::Distribution<sf::Vector2f>	mParticleVelocity;
+		thor::Distribution<float>			mParticleRotation;
+		thor::Distribution<float>			mParticleRotationSpeed;
+		thor::Distribution<sf::Vector2f>	mParticleScale;
+		thor::Distribution<sf::Color>		mParticleColor;
 };
 
 /// @}
