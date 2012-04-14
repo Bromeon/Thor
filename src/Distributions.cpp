@@ -33,105 +33,6 @@
 
 namespace thor
 {
-namespace
-{
-
-	// Functor for uniform distribution
-	struct UniformFloat
-	{
-		UniformFloat(float begin, float end)
-		: begin(begin)
-		, end(end)
-		{
-		}
-
-		float operator() ()
-		{
-			return random(begin, end);
-		}
-
-		float begin;
-		float end;
-	};
-
-	// Functor for uniform distribution
-	struct UniformTime
-	{
-		UniformTime(sf::Time begin, sf::Time end)
-		: distribution(begin.asSeconds(), end.asSeconds())
-		{
-		}
-
-		sf::Time operator() ()
-		{
-			return sf::seconds(distribution());
-		}
-
-		UniformFloat distribution;
-	};
-
-	// Functor for rect distribution
-	struct Rect
-	{
-		Rect(sf::Vector2f center, sf::Vector2f halfSize)
-		: center(center)
-		, halfSize(halfSize)
-		{
-		}
-
-		sf::Vector2f operator() ()
-		{
-			return sf::Vector2f(
-				randomDev(center.x, halfSize.x),
-				randomDev(center.y, halfSize.y));
-		}
-
-		sf::Vector2f center;
-		sf::Vector2f halfSize;
-	};
-
-	// Functor for circle distribution
-	struct Circle
-	{
-		Circle(sf::Vector2f center, float radius)
-		: center(center)
-		, radius(radius)
-		{
-		}
-
-		sf::Vector2f operator() ()
-		{
-			sf::Vector2f radiusVector = PolarVector2f(radius * std::sqrt(random(0.f, 1.f)), random(0.f, 360.f));
-			return center + radiusVector;
-		}
-
-		sf::Vector2f center;
-		float radius;
-	};
-
-	// Functor for deflection
-	struct Deflect
-	{
-		Deflect(sf::Vector2f direction, float maxRotation)
-		: direction(direction)
-		, maxRotation(maxRotation)
-		{
-		}
-
-		sf::Vector2f operator() ()
-		{
-			return rotatedVector(direction, randomDev(0.f, maxRotation));
-		}
-
-		sf::Vector2f direction;
-		float maxRotation;
-	};
-
-} // namespace
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-
 namespace Distributions
 {
 	
@@ -139,33 +40,54 @@ namespace Distributions
 	{
 		assert(begin <= end);
 
-		return UniformFloat(begin, end);
+		return [=] () -> float
+		{
+			return random(begin, end);
+		};
 	}
 
 	thor::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
 	{
 		assert(begin <= end);
 
-		return UniformTime(begin, end);
+		const float floatBegin = begin.asSeconds();
+		const float floatEnd = end.asSeconds();
+
+		return [=] () -> sf::Time
+		{
+			return sf::seconds(random(floatBegin, floatEnd));
+		};
 	}
 
 	thor::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
 	{
 		assert(halfSize.x >= 0.f && halfSize.y >= 0.f);
 
-		return Rect(center, halfSize);
+		return [=] () -> sf::Vector2f
+		{
+			return sf::Vector2f(
+				randomDev(center.x, halfSize.x),
+				randomDev(center.y, halfSize.y));
+		};
 	}
 
 	thor::Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
 	{
 		assert(radius >= 0.f);
 
-		return Circle(center, radius);
+		return [=] () -> sf::Vector2f
+		{
+			sf::Vector2f radiusVector = PolarVector2f(radius * std::sqrt(random(0.f, 1.f)), random(0.f, 360.f));
+			return center + radiusVector;
+		};
 	}
 
 	thor::Distribution<sf::Vector2f> deflect(sf::Vector2f direction, float maxRotation)
 	{
-		return Deflect(direction, maxRotation);
+		return [=] () -> sf::Vector2f
+		{
+			return rotatedVector(direction, randomDev(0.f, maxRotation));
+		};
 	}
 
 } // namespace Distributions
