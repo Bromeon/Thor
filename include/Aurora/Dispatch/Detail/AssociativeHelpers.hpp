@@ -29,7 +29,7 @@
 #include <algorithm>
 
 
-namespace aur
+namespace aurora
 {
 namespace detail
 {
@@ -81,6 +81,6 @@ namespace detail
 	}
 
 } // namespace detail
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_ASSOCIATIVEHELPERS_HPP

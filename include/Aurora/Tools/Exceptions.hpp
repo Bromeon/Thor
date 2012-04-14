@@ -35,7 +35,7 @@
 #include <string>
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Tools
@@ -65,7 +65,7 @@ class Exception : public std::runtime_error
 
 
 /// @brief %Exception class for failed function calls.
-/// @details Is used inside aur::SingleDispatcher and aur::DoubleDispatcher.
+/// @details Is used inside aurora::SingleDispatcher and aurora::DoubleDispatcher.
 class FunctionCallException : public Exception
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +85,6 @@ class FunctionCallException : public Exception
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_EXCEPTIONS_HPP

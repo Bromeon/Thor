@@ -33,7 +33,7 @@
 #include <Aurora/Config.hpp>
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Dispatch
@@ -61,7 +61,7 @@ namespace aur
 ///   AURORA_RTTI_DERIVED(Submarine);
 /// @endcode
 /// @hideinitializer
-#define AURORA_RTTI_BASE(BaseClass)			::aur::detail::RttiClass(typeid(BaseClass))
+#define AURORA_RTTI_BASE(BaseClass)			::aurora::detail::RttiClass(typeid(BaseClass))
 
 /// @brief Register runtime type information for a derived class
 /// @see AURORA_RTTI_BASE
@@ -70,6 +70,6 @@ namespace aur
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_RTTI_HPP

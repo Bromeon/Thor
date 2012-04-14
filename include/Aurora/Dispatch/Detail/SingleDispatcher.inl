@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-namespace aur
+namespace aurora
 {
 
 template <class B, typename R>
@@ -134,4 +134,4 @@ void SingleDispatcher<B, R>::ensureCacheUpdate() const
 	}
 }
 
-} // namespace aur
+} // namespace aurora

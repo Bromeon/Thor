@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class template aur::DoubleDispatcher
+/// @brief Class template aurora::DoubleDispatcher
 
 #ifndef AURORA_DOUBLEDISPATCHER_HPP
 #define AURORA_DOUBLEDISPATCHER_HPP
@@ -45,7 +45,7 @@
 #include <cassert>
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Dispatch
@@ -220,7 +220,7 @@ class DoubleDispatcher : private NonCopyable
 /// void func(Derived2* lhs, Derived2* rhs);
 ///
 /// // Create dispatcher and register functions
-/// aur::DoubleDispatcher<Base*> dispatcher;
+/// aurora::DoubleDispatcher<Base*> dispatcher;
 /// dispatcher.add<Derived1, Derived1>(&func);
 /// dispatcher.add<Derived1, Derived2>(&func);
 /// dispatcher.add<Derived2, Derived2>(&func);
@@ -233,7 +233,7 @@ class DoubleDispatcher : private NonCopyable
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #include <Aurora/Dispatch/Detail/DoubleDispatcher.inl>
 #endif // AURORA_DOUBLEDISPATCHER_HPP
