@@ -34,7 +34,7 @@ namespace thor
 
 UniversalEmitter::Ptr UniversalEmitter::create()
 {
-	return Ptr(new UniversalEmitter());
+	return std::make_shared<UniversalEmitter>();
 }
 
 UniversalEmitter::UniversalEmitter()

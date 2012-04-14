@@ -35,7 +35,7 @@ namespace thor
 	
 ForceAffector::Ptr ForceAffector::create(sf::Vector2f acceleration)
 {
-	return Ptr( new ForceAffector(acceleration) );
+	return std::make_shared<ForceAffector>(acceleration);
 }
 
 ForceAffector::ForceAffector(sf::Vector2f acceleration)
@@ -63,7 +63,7 @@ sf::Vector2f ForceAffector::getAcceleration() const
 
 TorqueAffector::Ptr TorqueAffector::create(float angularAcceleration)
 {
-	return Ptr( new TorqueAffector(angularAcceleration) );
+	return std::make_shared<TorqueAffector>(angularAcceleration);
 }
 
 TorqueAffector::TorqueAffector(float angularAcceleration)
@@ -91,7 +91,7 @@ float TorqueAffector::getAngularAcceleration() const
 
 ScaleAffector::Ptr ScaleAffector::create(sf::Vector2f scaleFactor)
 {
-	return Ptr( new ScaleAffector(scaleFactor) );
+	return std::make_shared<ScaleAffector>(scaleFactor);
 }
 
 ScaleAffector::ScaleAffector(sf::Vector2f scaleFactor)
@@ -119,7 +119,7 @@ sf::Vector2f ScaleAffector::getScaleFactor() const
 
 FadeInAffector::Ptr FadeInAffector::create(float timeRatio)
 {
-	return Ptr( new FadeInAffector(timeRatio) );
+	return std::make_shared<FadeInAffector>(timeRatio);
 }
 
 FadeInAffector::FadeInAffector(float timeRatio)
@@ -152,7 +152,7 @@ float FadeInAffector::getTimeRatio() const
 
 FadeOutAffector::Ptr FadeOutAffector::create(float timeRatio)
 {
-	return Ptr( new FadeOutAffector(timeRatio) );
+	return std::make_shared<FadeOutAffector>(timeRatio);
 }
 
 FadeOutAffector::FadeOutAffector(float timeRatio)
@@ -185,7 +185,7 @@ float FadeOutAffector::getTimeRatio() const
 
 ColorAffector::Ptr ColorAffector::create(const ColorGradient& gradient)
 {
-	return Ptr( new ColorAffector(gradient) );
+	return std::make_shared<ColorAffector>(gradient);
 }
 
 ColorAffector::ColorAffector(const ColorGradient& gradient)

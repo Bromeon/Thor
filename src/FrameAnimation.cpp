@@ -35,7 +35,7 @@ namespace thor
 
 FrameAnimation::Ptr FrameAnimation::create()
 {
-	return Ptr( new FrameAnimation() );
+	return std::make_shared<FrameAnimation>();
 }
 
 FrameAnimation::FrameAnimation()
