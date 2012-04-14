@@ -40,7 +40,7 @@ namespace thor
 
 /// @brief %Exception class for failed resource allocation.
 /// @details Is thrown by thor::ResourceManager in case of resources that cannot be loaded.
-class ResourceLoadingException : public aur::Exception
+class ResourceLoadingException : public aurora::Exception
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
@@ -48,7 +48,7 @@ class ResourceLoadingException : public aur::Exception
 		/// @brief Constructor
 		/// @param message The exception message (how the error occurred).
 		explicit ResourceLoadingException(const std::string& message)
-		: aur::Exception(message)
+		: aurora::Exception(message)
 		{
 		}
 };

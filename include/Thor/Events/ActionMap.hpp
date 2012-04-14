@@ -57,7 +57,7 @@ class EventSystem;
 /// @tparam ActionIdentifier The type of ID you want to map to actions. This can be a string, an enum, or anything with a < operator
 ///  and value semantics.
 template <typename ActionIdentifier>
-class ActionMap : private aur::NonCopyable
+class ActionMap : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public types

@@ -56,7 +56,7 @@ namespace thor
 ///  @a Resource is const-qualified, you cannot modify the resources after initialization (via std::shared_ptr).
 ///  @n @a Resource isn't required to be default-constructible or copy-constructible.
 template <class R>
-class ResourceManager : private aur::NonCopyable
+class ResourceManager : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions

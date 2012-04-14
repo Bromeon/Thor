@@ -92,7 +92,7 @@ std::string					toString(const PolarVector2<T>& vector);
 
 /// @brief %Exception class for failed string conversions.
 /// @details Is used if a string cannot be meaningfully converted to a value or vice versa.
-class StringConversionException : public aur::Exception
+class StringConversionException : public aurora::Exception
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
@@ -100,7 +100,7 @@ class StringConversionException : public aur::Exception
 		/// @brief Constructor
 		/// @param message The exception message (how the error occurred).
 		explicit StringConversionException(const std::string& message)
-		: aur::Exception(message)
+		: aurora::Exception(message)
 		{
 		}
 };

@@ -80,7 +80,7 @@ struct ConcaveShape::TriangleGenerator
 		for (unsigned int i = 0; i < 3; ++i)
 			shape->setPoint(i, triangle[i].getPosition());
 		
-		triangles.push_back( aur::CopiedPtr<sf::Shape>(shape) );
+		triangles.push_back( aurora::CopiedPtr<sf::Shape>(shape) );
 		return *this;
 	}
 
@@ -265,8 +265,8 @@ void ConcaveShape::formOutline() const
 		line.setPosition(first.getPosition());
 
 		// Add shapes
-		mEdgeShapes.push_back( aur::CopiedPtr<sf::Shape>(circle) );
-		mEdgeShapes.push_back( aur::CopiedPtr<sf::Shape>(new sf::ConvexShape(line)) );
+		mEdgeShapes.push_back( aurora::CopiedPtr<sf::Shape>(circle) );
+		mEdgeShapes.push_back( aurora::CopiedPtr<sf::Shape>(new sf::ConvexShape(line)) );
 	}
 }
 

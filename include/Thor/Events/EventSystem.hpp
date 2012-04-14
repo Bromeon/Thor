@@ -48,7 +48,7 @@ namespace thor
 ///  <b>EventIdentifier extractEventIdentifier(const Event&)</b> in the namespace of the @a Event type definition. Besides, the
 ///  event system requires less-than operator < for @a EventIdentifier (enums can use the implicit conversion to int).
 template <typename Event, typename EventIdentifier = Event>
-class EventSystem : private aur::NonCopyable
+class EventSystem : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public types

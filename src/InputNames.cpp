@@ -77,7 +77,7 @@ namespace
 			std::map<std::string, T> tMap;
 	};
 
-	StringBimap<sf::Keyboard::Key> InitMap(aur::Type<sf::Keyboard::Key>)
+	StringBimap<sf::Keyboard::Key> InitMap(aurora::Type<sf::Keyboard::Key>)
 	{
 		StringBimap<sf::Keyboard::Key> bimap(sf::Keyboard::KeyCount);
 
@@ -191,7 +191,7 @@ namespace
 		return bimap;
 	}
 
-	StringBimap<sf::Mouse::Button> InitMap(aur::Type<sf::Mouse::Button>)
+	StringBimap<sf::Mouse::Button> InitMap(aurora::Type<sf::Mouse::Button>)
 	{
 		StringBimap<sf::Mouse::Button> bimap(sf::Mouse::ButtonCount);
 
@@ -212,7 +212,7 @@ namespace
 	template <typename T>
 	StringBimap<T>& MapInstance()
 	{
-		static StringBimap<T> instance = InitMap(aur::Type<T>());
+		static StringBimap<T> instance = InitMap(aurora::Type<T>());
 		return instance;
 	}
 

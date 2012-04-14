@@ -103,7 +103,7 @@ namespace detail
 	class ActionNode
 	{
 		public:
-			typedef aur::CopiedPtr<ActionNode>	CopiedPtr;
+			typedef aurora::CopiedPtr<ActionNode>	CopiedPtr;
 
 		public:
 			virtual						~ActionNode();
