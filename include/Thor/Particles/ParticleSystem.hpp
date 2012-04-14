@@ -39,7 +39,6 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-#include <functional>
 #include <vector>
 #include <utility>
 #include <memory>
@@ -161,15 +160,6 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 		/// @brief Removes all particles that are currently in the system.
 		///
 		void						clearParticles();
-		
-		/// @brief Enables/disables glow effect.
-		/// @details Specifies whether particles should be drawn with a glow effect.
-		///  Glowing particles are especially visible on dark backgrounds.
-		void						setGlowing(bool glow);
-		
-		/// @brief Returns whether particles are currently drawn with a glow effect.
-		///
-		bool						isGlowing() const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -178,18 +168,9 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 		/// @brief Adds a particle to the system.
 		/// @param particle Particle to add.
 		virtual void				addParticle(const Particle& particle);
-				
-		// Saves SFML's OpenGL state and prepares the particle system for rendering.
-		void						pushOpenGLStates(sf::RenderWindow& target) const;
-		
-		// Restores SFML's OpenGL state.
-		void						popOpenGLStates() const;
 			
 		// Updates a single particle.
 		void						updateParticle(Particle& particle, sf::Time dt);
-
-		// Draws a single particle.
-		void						drawParticle(const Particle& particle) const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -200,10 +181,7 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 		EmitterContainer					mEmitters;
 
 		std::shared_ptr<const sf::Texture>	mTexture;
-		sf::Vector2f						mTexCoordsBegin;
-		sf::Vector2f						mTexCoordsEnd;
-		sf::Vector2f						mHalfSize;
-		bool								mGlow;
+		sf::IntRect							mTextureRect;
 };
 
 /// @relates ParticleSystem

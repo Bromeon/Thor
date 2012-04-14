@@ -25,15 +25,16 @@
 
 #include <Thor/Particles/ParticleSystem.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
-#include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Exceptions.hpp>
 
-#include <SFML/OpenGL.hpp>
+#include <Aurora/Tools/ForEach.hpp>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 
 
@@ -41,27 +42,6 @@ namespace thor
 {
 namespace
 {
-
-	// Function to setup the OpenGL view according to the passed parameter
-	void setupOpenGL2DView(const sf::View& view)
-	{
-		// Precondition: The following statements have been executed:
-		// glMatrixMode(GL_PROJECTION);
-		// glLoadIdentity();
-
-		const sf::Vector2f size = view.getSize();
-		const sf::Vector2f center = view.getCenter();
-		const sf::Vector2f position = center - size / 2.f;
-
-		// setup translation (according to left-upper corner) and scale
-		glOrtho(0., size.x, size.y, 0., -1., 1.);
-		glTranslatef(-position.x, -position.y, 0.f);
-	
-		// Setup rotation 
-		glTranslatef(center.x, center.y, 0.f);
-		glRotatef(view.getRotation(), 0.f, 0.f, -1.f);
-		glTranslatef(-center.x, -center.y, 0.f);
-	}
 
 	// Functor as argument for std::find_if()
 	template <typename First>
@@ -92,7 +72,7 @@ namespace
 			++itr;
 	}
 
-} // namespace detail
+} // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -102,10 +82,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture)
 , mAffectors()
 , mEmitters()
 , mTexture()
-, mTexCoordsBegin(0.f, 0.f)
-, mTexCoordsEnd(1.f, 1.f)
-, mHalfSize(sf::Vector2f(texture->getSize()) / 2.f)
-, mGlow(false)
+, mTextureRect(0, 0, texture->getSize().x, texture->getSize().y)
 {
 	mTexture.swap(texture);
 }
@@ -115,17 +92,9 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture, const
 , mAffectors()
 , mEmitters()
 , mTexture()
-, mTexCoordsBegin()
-, mTexCoordsEnd()
-, mHalfSize(sf::Vector2f(texture->getSize()) / 2.f)
-, mGlow(false)
+, mTextureRect(textureRect)
 {
 	mTexture.swap(texture);
-
-	mTexCoordsBegin.x = static_cast<float>(textureRect.left)                     / mTexture->getSize().x;
-	mTexCoordsBegin.y = static_cast<float>(textureRect.top)                      / mTexture->getSize().y;
-	mTexCoordsEnd.x	  = static_cast<float>(textureRect.left + textureRect.width) / mTexture->getSize().x;
-	mTexCoordsEnd.y   = static_cast<float>(textureRect.top + textureRect.height) / mTexture->getSize().y;
 }
 
 void ParticleSystem::swap(ParticleSystem& other)
@@ -137,10 +106,7 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mAffectors,		other.mAffectors);
 	swap(mEmitters,			other.mEmitters);
 	swap(mTexture,			other.mTexture); 
-	swap(mTexCoordsBegin,	other.mTexCoordsBegin); 
-	swap(mTexCoordsEnd,		other.mTexCoordsEnd); 
-	swap(mHalfSize,			other.mHalfSize); 
-	swap(mGlow,				other.mGlow);
+	swap(mTextureRect,		other.mTextureRect);
 }
 
 void ParticleSystem::addAffector(Affector::Ptr affector)
@@ -250,81 +216,51 @@ void ParticleSystem::update(sf::Time dt)
 
 void ParticleSystem::draw(sf::RenderWindow& target) const
 {
-	pushOpenGLStates(target);
+	// Compute offsets to vertex positions in rendering coordinates
+	const sf::Vector2f halfSize = sf::Vector2f(mTexture->getSize()) / 2.f;
+	const std::array<sf::Vector2f, 4> positionOffsets =
+	{
+		-halfSize,
+		perpendicularVector(halfSize),
+		halfSize,
+		-perpendicularVector(halfSize)
+	};
 
+	// Compute absolute positions of vertex texture coordinates
+	const float left	= static_cast<float>(mTextureRect.left);
+	const float right	= static_cast<float>(mTextureRect.left + mTextureRect.width);
+	const float top		= static_cast<float>(mTextureRect.top);
+	const float bottom	= static_cast<float>(mTextureRect.top + mTextureRect.height);
+	const std::array<sf::Vector2f, 4> texCoords =
+	{
+		sf::Vector2f(left,	top),
+		sf::Vector2f(right,	top),
+		sf::Vector2f(right,	bottom),
+		sf::Vector2f(left,	bottom)
+	};
+
+	// Create vertex array and fill it
+	sf::VertexArray vertices(sf::Quads);
 	AURORA_CITR_FOREACH(ParticleContainer, mParticles, itr)
-		drawParticle(*itr);
+	{
+		for (unsigned int i = 0; i < 4; ++i)
+		{
+			sf::Transform transform;
+			transform.translate(itr->position);
+			transform.rotate(itr->rotation);
+			transform.scale(itr->scale);
 
-	popOpenGLStates();
+			vertices.append(sf::Vertex(transform.transformPoint(positionOffsets[i]), itr->color, texCoords[i]) );
+		}
+	}
+
+	// Draw the vertex array with our texture
+	target.draw(vertices, mTexture.get());
 }
 
 void ParticleSystem::clearParticles()
 {
 	mParticles.clear();
-}
-
-void ParticleSystem::setGlowing(bool glow)
-{
-	mGlow = glow;
-}
-
-bool ParticleSystem::isGlowing() const
-{
-	return mGlow;
-}
-
-void ParticleSystem::pushOpenGLStates(sf::RenderWindow& target) const
-{
-	// Activate SFML window for OpenGL rendering
-	target.setActive();
-	
-	// Store SFML attributes
-	glPushAttrib(GL_COLOR_BUFFER_BIT | GL_TEXTURE_BIT | GL_TRANSFORM_BIT | GL_ENABLE_BIT);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-
-	// Set blend function depending on glow effect
-	if (mGlow)
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	else
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// Bind texture - instead of glBindTexture(GL_TEXTURE_2D, id)
-	mTexture->bind();
-
-	// Push and initialize projection matrix (2D view)
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	setupOpenGL2DView(target.getView());
-
-	// Push and initialize texture matrix
-	glMatrixMode(GL_TEXTURE);
-	glPushMatrix();
-	glLoadIdentity();
-
-	// Push modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-}
-
-void ParticleSystem::popOpenGLStates() const
-{
-	// Restore modelview matrix
-	glMatrixMode(GL_MODELVIEW); 
-	glPopMatrix();
-
-	// Restore texture matrix
-	glMatrixMode(GL_TEXTURE);
-	glPopMatrix();
-
-	// Restore projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	// Restore attributes
-	glPopAttrib();
 }
 
 void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
@@ -333,30 +269,6 @@ void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
 
 	particle.position += dt.asSeconds() * particle.velocity;
 	particle.rotation += dt.asSeconds() * particle.rotationSpeed;
-}
-
-void ParticleSystem::drawParticle(const Particle& particle) const
-{
-	// Note: At the moment, the GL_MODELVIEW matrix is being edited
-
-	// Reset transforms
-	glLoadIdentity();
-
-	// Apply translation, rotation, scale
-	glTranslatef(particle.position.x, particle.position.y, 0.f);
-	glRotatef(particle.rotation, 0.f, 0.f, 1.f);
-	glScalef(particle.scale.x, particle.scale.y, 1.f);
-
-	// Set color
-	glColor4ub(particle.color.r, particle.color.g, particle.color.b, particle.color.a);
-
-	// Draw vertices
-	glBegin(GL_TRIANGLE_STRIP);
-		glTexCoord2f(mTexCoordsEnd.x,   mTexCoordsEnd.y);			glVertex2f(+mHalfSize.x, +mHalfSize.y);
-		glTexCoord2f(mTexCoordsBegin.x, mTexCoordsEnd.y);			glVertex2f(-mHalfSize.x, +mHalfSize.y);
-		glTexCoord2f(mTexCoordsEnd.x,   mTexCoordsBegin.y);			glVertex2f(+mHalfSize.x, -mHalfSize.y);
-		glTexCoord2f(mTexCoordsBegin.x, mTexCoordsBegin.y);			glVertex2f(-mHalfSize.x, -mHalfSize.y);
-	glEnd();
 }
 
 } // namespace thor

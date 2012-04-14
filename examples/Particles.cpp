@@ -62,8 +62,7 @@ int main()
 
 	// Instruction text
 	sf::Text instructions(
-		"Left click: Enable/disable glow effect\n"
-		"Right click: Pause\n"
+		"Left click: Pause\n"
 		"Mouse wheel: Change direction\n");
 	instructions.setCharacterSize(12);
 	instructions.setColor(sf::Color::White);
@@ -92,8 +91,6 @@ int main()
 				// Left mouse button: Enable/disable glow
 				case sf::Event::MouseButtonPressed:
 					if (event.mouseButton.button == sf::Mouse::Left)
-						system.setGlowing(!system.isGlowing());
-					else if (event.mouseButton.button == sf::Mouse::Right)
 						paused = !paused;
 					break;
 
@@ -104,9 +101,6 @@ int main()
 			}
 		}
 		
-		// Get mouse position
-		position = window.convertCoords(sf::Mouse::getPosition(window));
-
 		// Update particle system and emitter
 		const sf::Time frameTime = frameClock.restart();
 		if (!paused)
