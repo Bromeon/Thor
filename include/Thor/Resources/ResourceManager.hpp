@@ -85,7 +85,7 @@ class ResourceManager : private aur::NonCopyable
 		/// @return std::shared_ptr that allows access to the resource. If the resource allocation fails and the @a ReturnNullPointer
 		///  strategy is active, a null pointer is returned.
 		/// @throw ResourceLoadingException if the loading of the resource fails (and the @a ThrowException strategy is active).
-		/// @see setLoadingFailureStrategy(), SetReleaseStrategy()
+		/// @see setLoadingFailureStrategy(), setReleaseStrategy()
 		std::shared_ptr<R>			acquire(const ResourceKey<R>& key);
 
 		/// @brief Releases the resource as soon as possible.
@@ -93,19 +93,19 @@ class ResourceManager : private aur::NonCopyable
 		///  Otherwise, it is released as soon as the last std::shared_ptr loses ownership. Calling this function
 		///  has no effect when the @a AutoRelease strategy is active, since the resource is released ASAP anyway.
 		/// @pre @a key must be a valid resource key (the corresponding resource must be stored inside this manager).
-		///  To check for available resources, use Search().
+		///  To check for available resources, use search().
 		/// @param key The resource identifier.
 		/// @return true, if the resource was immediately released; false, if it is in use.
 		bool						release(const ResourceKey<R>& key);
 
 		/// @brief Determines how to react to resources that cannot be loaded.
-		/// @details The strategy concerns all failing Acquire() calls.
+		/// @details The strategy concerns all failing acquire() calls.
 		void						setLoadingFailureStrategy(Resources::LoadingFailureStrategy strategy);
 
 		/// @brief Determines whether resources are automatically released or not.
 		/// @details This function sets the strategy for each resource that will be acquired in the future.
 		///  %Resources that have already been allocated are not concerned! This allows you to set the release
-		///  behaviour specificially for each resource before you call Acquire().
+		///  behaviour specificially for each resource before you call acquire().
 		void						setReleaseStrategy(Resources::ReleaseStrategy strategy);
 
 

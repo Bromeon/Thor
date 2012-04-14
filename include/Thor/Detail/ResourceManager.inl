@@ -62,7 +62,7 @@ std::shared_ptr<R> ResourceManager<R>::acquire(const ResourceKey<R>& key)
 		return addResource(key);
 
 	// If resource is already stored, return pointer to it
-	return std::shared_ptr<R>(itr->second.share());
+	return itr->second.share();
 }
 
 template <class R>
@@ -120,7 +120,7 @@ std::shared_ptr<R> ResourceManager<R>::addResource(const ResourceKey<R>& key)
 	detail::ResourceDeleter<R> deleter(mMap, itr);
 
 	// Post-initialize inserted slot, return shared pointer to resource
-	return std::shared_ptr<R>( itr->second.initialize(resource.release(), deleter, mReleaseStrategy == Resources::ExplicitRelease) );
+	return itr->second.initialize(std::move(resource), deleter, mReleaseStrategy == Resources::ExplicitRelease);
 }
 
 template <class R>

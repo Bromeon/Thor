@@ -27,6 +27,7 @@
 #define THOR_RESOURCESLOT_HPP
 
 #include <Aurora/Tools/ForEach.hpp>
+#include <Aurora/Tools/Metaprogramming.hpp>
 #include <Thor/Config.hpp>
 
 #include <memory>
@@ -57,15 +58,17 @@ namespace detail
 
 		public:
 			ResourceDeleter(std::weak_ptr<ResourceMap> map, SlotIterator iterator)
-			: mMap(map)
+			: mMap()
 			, mIterator(iterator)
 			{
+				mMap.swap(map);
 			}
 
 			// Actual resource deletion - This operator is only invoked when the last shared_ptr to
 			// the resource (including the shared_ptr inside the manager) is destroyed.
 			void operator() (R* pointer)
 			{
+				AURORA_REQUIRE_COMPLETE_TYPE(R);
 				delete pointer;
 
 				// Unregister resource slot, unless manager has been destroyed meanwhile
@@ -91,9 +94,9 @@ namespace detail
 			}
 
 			template <typename DeleterFn>
-			std::shared_ptr<R> initialize(R* newResource, DeleterFn deleter, bool explicitRelease)
+			std::shared_ptr<R> initialize(std::unique_ptr<R> newResource, DeleterFn deleter, bool explicitRelease)
 			{
-				std::shared_ptr<R> result(newResource, deleter);
+				std::shared_ptr<R> result(newResource.release(), deleter);
 				
 				// For explicit release policy, keep strong reference to resource and prevent automatic deletion
 				mWeakRef = result;
