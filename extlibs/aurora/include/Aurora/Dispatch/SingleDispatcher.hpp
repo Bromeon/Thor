@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class template aur::SingleDispatcher
+/// @brief Class template aurora::SingleDispatcher
 
 #ifndef AURORA_SINGLEDISPATCHER_HPP
 #define AURORA_SINGLEDISPATCHER_HPP
@@ -45,7 +45,7 @@
 #include <cassert>
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Dispatch
@@ -201,7 +201,7 @@ class SingleDispatcher : private NonCopyable
 /// void func(Derived2* d);
 ///
 /// // Create dispatcher and register functions
-/// aur::SingleDispatcher<Base*> dispatcher;
+/// aurora::SingleDispatcher<Base*> dispatcher;
 /// dispatcher.add<Derived1>(&func);
 /// dispatcher.add<Derived2>(&func);
 ///
@@ -213,7 +213,7 @@ class SingleDispatcher : private NonCopyable
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #include <Aurora/Dispatch/Detail/SingleDispatcher.inl>
 #endif // AURORA_SINGLEDISPATCHER_HPP

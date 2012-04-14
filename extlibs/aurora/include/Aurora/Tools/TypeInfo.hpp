@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class aur::TypeInfo
+/// @brief Class aurora::TypeInfo
 
 #ifndef AURORA_TYPEINFO_HPP
 #define AURORA_TYPEINFO_HPP
@@ -35,7 +35,7 @@
 #include <type_traits>
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Tools
@@ -106,6 +106,6 @@ namespace detail
 	}
 
 } // namespace detail
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_TYPEINFO_HPP

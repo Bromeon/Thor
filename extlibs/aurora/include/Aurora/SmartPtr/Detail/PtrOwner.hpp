@@ -30,11 +30,15 @@
 #include <cassert>
 
 
-namespace aur
+namespace aurora
 {
 namespace detail
 {
 	
+	// Types to differ between move and copy semantics
+	struct CopyTag {};
+	struct MoveTag {};
+
 	// Abstract base class for pointer owners
 	template <typename T>
 	struct PtrOwnerBase
@@ -46,9 +50,6 @@ namespace detail
 
 		// Returns the stored pointer
 		virtual T*					getPointer() const = 0;
-		
-		// Deactivates the invocation of the deleter
-		virtual void				dismiss() = 0;
 	};
 
 
@@ -80,11 +81,6 @@ namespace detail
 			return pointer;
 		}
 
-		virtual void dismiss()
-		{
-			pointer = nullptr;
-		}
-
 		U* pointer;
 		C cloner;
 		D deleter;
@@ -94,8 +90,13 @@ namespace detail
 	template <typename T, typename U>
 	struct PtrIndirection : PtrOwnerBase<T>
 	{
-		explicit PtrIndirection(const PtrOwnerBase<U>* originBase)
+		explicit PtrIndirection(const PtrOwnerBase<U>* originBase, CopyTag)
 		: base(originBase->clone())
+		{
+		}
+
+		explicit PtrIndirection(PtrOwnerBase<U>* sourceBase, MoveTag)
+		: base(sourceBase)
 		{
 		}
 
@@ -106,17 +107,12 @@ namespace detail
 
 		virtual PtrIndirection<T, U>* clone() const
 		{
-			return new PtrIndirection<T, U>(base);
+			return new PtrIndirection<T, U>(base, CopyTag());
 		}
 
 		virtual T* getPointer() const
 		{
 			return base->getPointer();
-		}
-
-		virtual void dismiss()
-		{
-			base->dismiss();
 		}
 
 		PtrOwnerBase<U>* base;
@@ -129,4 +125,4 @@ namespace detail
 	}
 
 } // namespace detail
-} // namespace aur
+} // namespace aurora

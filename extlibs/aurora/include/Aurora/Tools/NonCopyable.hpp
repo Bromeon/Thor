@@ -24,13 +24,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class aur::NonCopyable
+/// @brief Class aurora::NonCopyable
 
 #ifndef AURORA_NONCOPYABLE_HPP
 #define AURORA_NONCOPYABLE_HPP
 
 
-namespace aur
+namespace aurora
 {
 
 /// @addtogroup Tools
@@ -60,6 +60,6 @@ class NonCopyable
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_NONCOPYABLE_HPP

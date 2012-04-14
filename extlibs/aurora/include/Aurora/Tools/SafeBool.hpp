@@ -24,13 +24,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Type aur::SafeBool and corresponding functionality
+/// @brief Type aurora::SafeBool and corresponding functionality
 
 #ifndef AURORA_SAFEBOOL_HPP
 #define AURORA_SAFEBOOL_HPP
 
 
-namespace aur
+namespace aurora
 {
 namespace detail
 {
@@ -72,6 +72,6 @@ inline SafeBool toSafeBool(bool condition)
 
 /// @}
 
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_SAFEBOOL_HPP

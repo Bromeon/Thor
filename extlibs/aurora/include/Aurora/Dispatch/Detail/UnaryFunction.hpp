@@ -27,7 +27,7 @@
 #define AURORA_UNARYFUNCTION_HPP
 
 
-namespace aur
+namespace aurora
 {
 namespace detail
 {
@@ -101,6 +101,6 @@ namespace detail
 	};
 
 } // namespace detail
-} // namespace aur
+} // namespace aurora
 
 #endif // AURORA_UNARYFUNCTION_HPP

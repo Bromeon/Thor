@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-namespace aur
+namespace aurora
 {
 
 template <class B, typename R>
@@ -171,4 +171,4 @@ typename DoubleDispatcher<B, R>::Key DoubleDispatcher<B, R>::makeArgumentPair(Ty
 	return Key(key1, key2);
 }
 
-} // namespace aur
+} // namespace aurora
