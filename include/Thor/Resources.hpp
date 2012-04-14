@@ -29,7 +29,7 @@
 #ifndef THOR_MODULE_RESOURCES_HPP
 #define THOR_MODULE_RESOURCES_HPP
 
-#include <Thor/Resources/ResourceManager.hpp>
+#include <Thor/Resources/ResourceCache.hpp>
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
 #include <Thor/Resources/SfmlLoaders.hpp>

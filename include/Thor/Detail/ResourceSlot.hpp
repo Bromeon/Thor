@@ -38,7 +38,7 @@ namespace thor
 {
 
 template <class R>
-class ResourceManager;
+class ResourceCache;
 
 
 namespace detail
@@ -46,15 +46,15 @@ namespace detail
 
 	// Deleter functor for std::shared_ptr
 	// Is called when the last shared_ptr to a resource goes away, releases the resource.
-	// Note that the last shared_ptr can be inside a ResourceManager (explicit release policy)
+	// Note that the last shared_ptr can be inside a ResourceCache (explicit release policy)
 	// or an external shared_ptr to a resource (auto release policy).
 	template <class R>
 	class ResourceDeleter
 	{
 		private:
-			typedef ResourceManager<R>				Manager;
-			typedef typename Manager::ResourceMap	ResourceMap;
-			typedef typename Manager::SlotIterator	SlotIterator;
+			typedef ResourceCache<R>				Cache;
+			typedef typename Cache::ResourceMap		ResourceMap;
+			typedef typename Cache::SlotIterator	SlotIterator;
 
 		public:
 			ResourceDeleter(std::weak_ptr<ResourceMap> map, SlotIterator iterator)
@@ -65,13 +65,13 @@ namespace detail
 			}
 
 			// Actual resource deletion - This operator is only invoked when the last shared_ptr to
-			// the resource (including the shared_ptr inside the manager) is destroyed.
+			// the resource (including the shared_ptr inside the cache) is destroyed.
 			void operator() (R* pointer)
 			{
 				AURORA_REQUIRE_COMPLETE_TYPE(R);
 				delete pointer;
 
-				// Unregister resource slot, unless manager has been destroyed meanwhile
+				// Unregister resource slot, unless cache has been destroyed meanwhile
 				std::shared_ptr<ResourceMap> map = mMap.lock();
 				if (map)
 					map->erase(mIterator);
@@ -115,7 +115,7 @@ namespace detail
 			// Sets whether the slot keeps a strong reference to the resource or not.
 			void keepStrongReference(bool keepStrongRef)
 			{
-				// If mStrongRef is non-empty, resources cannot be released from outside - explicit ResourceManager::release() calls
+				// If mStrongRef is non-empty, resources cannot be released from outside - explicit ResourceCache::release() calls
 				// are required. In contrast, for an empty mStrongRef, the last external shared_ptr releases the resource.
 				if (keepStrongRef)
 					mStrongRef = mWeakRef.lock();

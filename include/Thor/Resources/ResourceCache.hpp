@@ -24,10 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class template thor::ResourceManager
+/// @brief Class template thor::ResourceCache
 
-#ifndef THOR_RESOURCEMANAGER_HPP
-#define THOR_RESOURCEMANAGER_HPP
+#ifndef THOR_RESOURCECACHE_HPP
+#define THOR_RESOURCECACHE_HPP
 
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
@@ -56,7 +56,7 @@ namespace thor
 ///  @a Resource is const-qualified, you cannot modify the resources after initialization (via std::shared_ptr).
 ///  @n @a Resource isn't required to be default-constructible or copy-constructible.
 template <class R>
-class ResourceManager : private aurora::NonCopyable
+class ResourceCache : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
@@ -64,7 +64,7 @@ class ResourceManager : private aurora::NonCopyable
 		/// @brief Default constructor
 		/// @details Initially, the object owns no allocated resources. By default, the loading failure strategy
 		///  Resources::ThrowException and the release strategy Resources::ExplicitRelease are used.
-									ResourceManager();
+									ResourceCache();
 			
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible.
 		/// @details This function does never load a new resource.
@@ -92,7 +92,7 @@ class ResourceManager : private aurora::NonCopyable
 		/// @details If the resource is not in use (i.e. no std::shared_ptr references it), it is immediately released.
 		///  Otherwise, it is released as soon as the last std::shared_ptr loses ownership. Calling this function
 		///  has no effect when the @a AutoRelease strategy is active, since the resource is released ASAP anyway.
-		/// @pre @a key must be a valid resource key (the corresponding resource must be stored inside this manager).
+		/// @pre @a key must be a valid resource key (the corresponding resource must be stored inside this cache).
 		///  To check for available resources, use search().
 		/// @param key The resource identifier.
 		/// @return true, if the resource was immediately released; false, if it is in use.
@@ -146,5 +146,5 @@ class ResourceManager : private aurora::NonCopyable
 
 } // namespace thor
 
-#include <Thor/Detail/ResourceManager.inl>
-#endif // THOR_RESOURCEMANAGER_HPP
+#include <Thor/Detail/ResourceCache.inl>
+#endif // THOR_RESOURCECACHE_HPP

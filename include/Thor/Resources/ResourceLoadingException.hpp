@@ -39,7 +39,7 @@ namespace thor
 /// @{
 
 /// @brief %Exception class for failed resource allocation.
-/// @details Is thrown by thor::ResourceManager in case of resources that cannot be loaded.
+/// @details Is thrown by thor::ResourceCache in case of resources that cannot be loaded.
 class ResourceLoadingException : public aurora::Exception
 {
 	// ---------------------------------------------------------------------------------------------------------------------------

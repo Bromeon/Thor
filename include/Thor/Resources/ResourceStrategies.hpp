@@ -36,9 +36,9 @@ namespace Resources
 {
 
 /// @brief Specifies the behavior when resources can't be loaded.
-/// @details This strategy determines what happens when a call to ResourceManager::acquire() fails (e.g. because
+/// @details This strategy determines what happens when a call to ResourceCache::acquire() fails (e.g. because
 ///  of a wrong filename).
-/// @see ResourceManager::setLoadingFailureStrategy()
+/// @see ResourceCache::setLoadingFailureStrategy()
 enum LoadingFailureStrategy
 {
 	ThrowException,		///< Throws an exception of type ResourceLoadingException.
@@ -48,12 +48,12 @@ enum LoadingFailureStrategy
 
 /// @brief Specifies the release behavior of unused resources.
 /// @details A resource is unused when no more std::shared_ptr references it. With this type, you can determine
-///  if the resource manager should try to cache the resources or to keep the allocation as low as possible.
-/// @see ResourceManager::setReleaseStrategy()
+///  if the resource cache should try to cache the resources or to keep the allocation as low as possible.
+/// @see ResourceCache::setReleaseStrategy()
 enum ReleaseStrategy
 {
 	AutoRelease,		///< %Resources are immediately released as soon as they are unused.
-	ExplicitRelease,	///< Unused resources are kept in memory until they are explicitly released or the ResourceManager is destroyed.
+	ExplicitRelease,	///< Unused resources are kept in memory until they are explicitly released or the ResourceCache is destroyed.
 };
 
 } // namespace Resources

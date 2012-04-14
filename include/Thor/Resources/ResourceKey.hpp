@@ -102,7 +102,7 @@ class ResourceKey
 };
 
 /// @relates ResourceKey
-/// @brief Compares resource keys, used for sorting inside ResourceManager.
+/// @brief Compares resource keys, used for sorting inside ResourceCache.
 template <class R>
 bool operator< (const ResourceKey<R>& lhs, const ResourceKey<R>& rhs)
 {

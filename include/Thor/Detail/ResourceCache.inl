@@ -27,7 +27,7 @@ namespace thor
 {
 
 template <class R>
-ResourceManager<R>::ResourceManager()
+ResourceCache<R>::ResourceCache()
 : mMap(new ResourceMap())
 , mReleaseStrategy(Resources::ExplicitRelease)
 , mLoadingFailureStrategy(Resources::ThrowException)
@@ -35,7 +35,7 @@ ResourceManager<R>::ResourceManager()
 }
 
 template <class R>
-std::shared_ptr<R> ResourceManager<R>::search(const ResourceKey<R>& key)
+std::shared_ptr<R> ResourceCache<R>::search(const ResourceKey<R>& key)
 {
 	SlotConstIterator itr = mMap->find(key);
 	
@@ -47,13 +47,13 @@ std::shared_ptr<R> ResourceManager<R>::search(const ResourceKey<R>& key)
 }
 
 template <class R>
-std::shared_ptr<const R> ResourceManager<R>::search(const ResourceKey<R>& key) const
+std::shared_ptr<const R> ResourceCache<R>::search(const ResourceKey<R>& key) const
 {
-	return const_cast<ResourceManager*>(this)->search(key);
+	return const_cast<ResourceCache*>(this)->search(key);
 }
 
 template <class R>
-std::shared_ptr<R> ResourceManager<R>::acquire(const ResourceKey<R>& key)
+std::shared_ptr<R> ResourceCache<R>::acquire(const ResourceKey<R>& key)
 {
 	SlotIterator itr = mMap->find(key);
 
@@ -66,7 +66,7 @@ std::shared_ptr<R> ResourceManager<R>::acquire(const ResourceKey<R>& key)
 }
 
 template <class R>
-bool ResourceManager<R>::release(const ResourceKey<R>& key)
+bool ResourceCache<R>::release(const ResourceKey<R>& key)
 {
 	// Find corresponding map entry
 	SlotIterator itr = mMap->find(key);
@@ -85,19 +85,19 @@ bool ResourceManager<R>::release(const ResourceKey<R>& key)
 }
 
 template <class R>
-void ResourceManager<R>::setLoadingFailureStrategy(Resources::LoadingFailureStrategy strategy)
+void ResourceCache<R>::setLoadingFailureStrategy(Resources::LoadingFailureStrategy strategy)
 {
 	mLoadingFailureStrategy = strategy;
 }
 
 template <class R>
-void ResourceManager<R>::setReleaseStrategy(Resources::ReleaseStrategy strategy)
+void ResourceCache<R>::setReleaseStrategy(Resources::ReleaseStrategy strategy)
 {
 	mReleaseStrategy = strategy;
 }
 
 template <class R>
-std::shared_ptr<R> ResourceManager<R>::addResource(const ResourceKey<R>& key)
+std::shared_ptr<R> ResourceCache<R>::addResource(const ResourceKey<R>& key)
 {
 	// Try to load resource, react with strategy at failure
 	std::unique_ptr<R> resource = key.load();
@@ -124,7 +124,7 @@ std::shared_ptr<R> ResourceManager<R>::addResource(const ResourceKey<R>& key)
 }
 
 template <class R>
-void ResourceManager<R>::removeResource(SlotIterator itr)
+void ResourceCache<R>::removeResource(SlotIterator itr)
 {
 	// Deallocate and remove resource from map
 	mMap->erase(itr);

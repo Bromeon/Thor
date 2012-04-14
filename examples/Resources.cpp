@@ -7,8 +7,8 @@
 int main()
 {
 	// Create texture and sound manager
-	thor::ResourceManager<sf::Texture> textureMgr;
-	thor::ResourceManager<sf::SoundBuffer> soundMgr;
+	thor::ResourceCache<sf::Texture> textureMgr;
+	thor::ResourceCache<sf::SoundBuffer> soundMgr;
 
 	// Create sf::Image to load texture from
 	sf::Image image;
