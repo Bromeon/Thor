@@ -82,31 +82,31 @@ class THOR_API UniversalEmitter : public Emitter
 
 		/// @brief Sets the lifetime (time between emission and death) of the particle.
 		/// @param particleLifetime Constant or function returning the particle lifetime.
-		void						setLifetime(thor::Distribution<sf::Time> particleLifetime);
+		void						setParticleLifetime(thor::Distribution<sf::Time> particleLifetime);
 
 		/// @brief Sets the initial particle position.
 		/// @param particlePosition Constant or function returning the initial particle position.
-		void						setPosition(thor::Distribution<sf::Vector2f> particlePosition);
+		void						setParticlePosition(thor::Distribution<sf::Vector2f> particlePosition);
 
 		/// @brief Sets the initial particle velocity.
 		/// @param particleVelocity Constant or function returning the initial particle velocity.
-		void						setVelocity(thor::Distribution<sf::Vector2f> particleVelocity);
+		void						setParticleVelocity(thor::Distribution<sf::Vector2f> particleVelocity);
 
 		/// @brief Sets the initial particle rotation.
 		/// @param particleRotation Constant or function returning the initial particle rotation.
-		void						setRotation(thor::Distribution<float> particleRotation);
+		void						setParticleRotation(thor::Distribution<float> particleRotation);
 
 		/// @brief Sets the initial particle rotation speed.
 		/// @param particleRotationSpeed Constant or function returning the initial particle rotation speed.
-		void						setRotationSpeed(thor::Distribution<float> particleRotationSpeed);
+		void						setParticleRotationSpeed(thor::Distribution<float> particleRotationSpeed);
 
 		/// @brief Sets the initial particle scale.
 		/// @param particleScale Constant or function returning the initial particle scale.
-		void						setScale(thor::Distribution<sf::Vector2f> particleScale);
+		void						setParticleScale(thor::Distribution<sf::Vector2f> particleScale);
 
 		/// @brief Sets the initial particle color.
 		/// @param particleColor Constant or function returning the initial particle color.
-		void						setColor(thor::Distribution<sf::Color> particleColor);
+		void						setParticleColor(thor::Distribution<sf::Color> particleColor);
 
 	
 	// ---------------------------------------------------------------------------------------------------------------------------

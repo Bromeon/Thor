@@ -35,8 +35,8 @@ int main()
 	// Create emitter
 	thor::UniversalEmitter::Ptr emitter = thor::UniversalEmitter::create();
 	emitter->setEmissionRate(30.f);
-	emitter->setLifetime(sf::seconds(5.f));
-	emitter->setPosition(MousePosition(window));
+	emitter->setParticleLifetime(sf::seconds(5.f));
+	emitter->setParticlePosition(MousePosition(window));
 
 	// Create particle system
 	thor::ParticleSystem system(texture);
@@ -107,7 +107,7 @@ int main()
 			system.update(frameTime);
 
 		// Set initial particle velocity, rotate vector randomly by maximal 10 degrees
-		emitter->setVelocity( thor::Distributions::deflect(velocity, 10.f) );
+		emitter->setParticleVelocity( thor::Distributions::deflect(velocity, 10.f) );
 
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));
