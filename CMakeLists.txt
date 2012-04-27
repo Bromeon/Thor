@@ -97,8 +97,8 @@ find_package(SFML 2 COMPONENTS audio graphics window system)
 if(SFML_FOUND)
 	include_directories(${SFML_INCLUDE_DIR})
 else()
-	set(SFMLDIR "" CACHE PATH "SFML top-level directory")
-	message(FATAL_ERROR "SFML directory not found. Set SFMLDIR to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
+	message(FATAL_ERROR "SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
 endif()
 
 
