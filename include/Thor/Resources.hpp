@@ -29,6 +29,7 @@
 #ifndef THOR_MODULE_RESOURCES_HPP
 #define THOR_MODULE_RESOURCES_HPP
 
+#include <Thor/Resources/MultiResourceCache.hpp>
 #include <Thor/Resources/ResourceCache.hpp>
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
