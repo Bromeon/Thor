@@ -6,9 +6,8 @@
 
 int main()
 {
-	// Create texture and sound manager
-	thor::ResourceCache<sf::Texture> textureMgr;
-	thor::ResourceCache<sf::SoundBuffer> soundMgr;
+	// Create resource cache for both sf::Texture and sf::SoundBuffer
+	thor::MultiResourceCache cache;
 
 	// Create sf::Image to load texture from
 	sf::Image image;
@@ -26,9 +25,9 @@ int main()
 	// Actually load resources, store them in resource pointers and react to loading errors
 	try
 	{
-		texture1    = textureMgr.acquire(textureKey1);
-		texture2    = textureMgr.acquire(textureKey2);
-		soundBuffer = soundMgr.acquire(soundKey);
+		texture1    = cache.acquire(textureKey1);
+		texture2    = cache.acquire(textureKey2);
+		soundBuffer = cache.acquire(soundKey);
 	}
 	catch (thor::ResourceLoadingException& e)
 	{
