@@ -26,12 +26,11 @@
 #ifndef AURORA_RTTIIMPL_HPP
 #define AURORA_RTTIIMPL_HPP
 
-#include <Aurora/Tools/TypeInfo.hpp>
-
 #include <vector>
 #include <set>
 #include <algorithm>
 #include <cassert>
+#include <typeindex>
 
 
 namespace aurora
@@ -42,13 +41,13 @@ namespace detail
 	// Stores a RTTI class type and links to base classes
 	struct RttiClassNode
 	{	
-		explicit RttiClassNode(TypeInfo type)
+		explicit RttiClassNode(std::type_index type)
 		: type(type)
 		, base(nullptr)
 		{
 		}
 
-		TypeInfo						type;
+		std::type_index					type;
 		mutable const RttiClassNode*	base;
 	};
 
@@ -72,13 +71,13 @@ namespace detail
 		}
 
 		// Add type information for a base class
-		const RttiClassNode& insertBase(TypeInfo base)
+		const RttiClassNode& insertBase(std::type_index base)
 		{
 			return *types.insert(RttiClassNode(base)).first;
 		}
 
 		// Add type information for a derived class (and its base class)
-		void insertDerived(TypeInfo derived, const RttiClassNode& base)
+		void insertDerived(std::type_index derived, const RttiClassNode& base)
 		{
 			std::set<RttiClassNode>::iterator itr = types.insert(RttiClassNode(derived)).first;
 			assert(!itr->base);
@@ -87,7 +86,7 @@ namespace detail
 
 		// Fill container with direct and indirect base classes, if available.
 		// The container front contains the direct base, the back the indirect ones.
-		void getBases(TypeInfo derived, std::vector<TypeInfo>& out)
+		void getBases(std::type_index derived, std::vector<std::type_index>& out)
 		{
 			// Add class itself
 			out.push_back(derived);
@@ -116,12 +115,12 @@ namespace detail
 	// Class used to build a class hierarchy based on runtime type informations
 	struct RttiClass
 	{
-		explicit RttiClass(TypeInfo type)
+		explicit RttiClass(std::type_index type)
 		: base(RttiClassManager::instance().insertBase(type))
 		{
 		}
 
-		RttiClass& derived(TypeInfo derived)
+		RttiClass& derived(std::type_index derived)
 		{
 			RttiClassManager::instance().insertDerived(derived, base);
 			return *this;
@@ -140,7 +139,7 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 	// Collects base classes of a class, registered with the AURORA_RTTI_... macros
-	inline void getRttiBaseClasses(TypeInfo derived, std::vector<TypeInfo>& out)
+	inline void getRttiBaseClasses(std::type_index derived, std::vector<std::type_index>& out)
 	{
 		RttiClassManager::instance().getBases(derived, out);
 	}
@@ -154,6 +153,23 @@ namespace detail
 		const int end = std::min(nbFirst-1, indirectionLevel);
 		for (int i = std::max(indirectionLevel-nbSecond+1, 0); i <= end; ++i)
 			out.push_back( IndirectionPair(i, indirectionLevel-i) );
+	}
+	
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
+	
+	// Type-information for dereferenced type
+	// Important: Do not const-qualify parameters, or the first overload will accept const U*
+	template <typename T>
+	std::type_index derefTypeid(T& reference)
+	{
+		return typeid(reference);
+	}
+
+	template <typename T>
+	std::type_index derefTypeid(T* pointer)
+	{
+		return typeid(*pointer);
 	}
 
 } // namespace detail

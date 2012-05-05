@@ -271,6 +271,19 @@ void swap(CopiedPtr<T>& lhs, CopiedPtr<T>& rhs)
 	return lhs.swap(rhs);
 }
 
+/// @relates CopiedPtr
+/// @brief Creates a CopiedPtr<T> without the need to explicitly specify T.
+/// @details Use case:
+/// @code
+///  auto ptr = aurora::copied(new MyClass); // is the same as
+///  aurora::CopiedPtr<MyClass> ptr(new MyClass);
+/// @endcode
+template <typename T>
+CopiedPtr<T> copied(T* pointer)
+{
+	return CopiedPtr<T>(pointer);
+}
+
 /// @}
 
 } // namespace aurora

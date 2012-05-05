@@ -34,7 +34,6 @@
 #include <Aurora/Dispatch/Detail/AssociativeHelpers.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
 #include <Aurora/Tools/NonCopyable.hpp>
-#include <Aurora/Tools/TypeInfo.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
 #include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/Tools/Metaprogramming.hpp>
@@ -43,6 +42,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <typeindex>
 
 
 namespace aurora
@@ -161,7 +161,7 @@ class SingleDispatcher : private NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef TypeInfo										Key;
+		typedef std::type_index									Key;
 		typedef CopiedPtr< detail::UnaryFunctionBase<B, R> >	Value;
 		typedef detail::KeyValuePair<Key, Value>				Pair;
 		typedef std::vector<Pair>								FnMap;
@@ -171,10 +171,10 @@ class SingleDispatcher : private NonCopyable
 	// Private member functions
 	private:
 		// Registers the type-id key with its associated function value
-		void							registerFunction(FnMap& fnMap, TypeInfo key, Value value) const;
+		void							registerFunction(FnMap& fnMap, std::type_index key, Value value) const;
 
 		// Finds the key in the map. Returns end() if not found.
-		typename FnMap::const_iterator	findFunction(TypeInfo key, bool useCache = false) const;
+		typename FnMap::const_iterator	findFunction(std::type_index key, bool useCache = false) const;
 
 		// Make sure the cached map is updated
 		void							ensureCacheUpdate() const;

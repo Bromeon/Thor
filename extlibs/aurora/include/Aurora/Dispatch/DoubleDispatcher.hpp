@@ -36,13 +36,13 @@
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
 #include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/TypeInfo.hpp>
 #include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Config.hpp>
 
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <typeindex>
 
 
 namespace aurora
@@ -175,7 +175,7 @@ class DoubleDispatcher : private NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef std::pair<TypeInfo, TypeInfo>					Key;
+		typedef std::pair<std::type_index, std::type_index>		Key;
 		typedef CopiedPtr< detail::BinaryFunctionBase<B, R> >	Value;
 		typedef detail::KeyValuePair<Key, Value>				Pair;
 		typedef std::vector<Pair>								FnMap;
@@ -185,16 +185,16 @@ class DoubleDispatcher : private NonCopyable
 	// Private member functions
 	private:
 		// Registers the type-id key with its associated function value.
-		void							registerFunction(FnMap& fnMap, TypeInfo key1, TypeInfo key2, Value value) const;
+		void							registerFunction(FnMap& fnMap, std::type_index key1, std::type_index key2, Value value) const;
 
 		// Finds the key in the map. Returns end() if not found.
-		typename FnMap::const_iterator	findFunction(TypeInfo key1, TypeInfo key2, bool useCache = false) const;
+		typename FnMap::const_iterator	findFunction(std::type_index key1, std::type_index key2, bool useCache = false) const;
 
 		// Make sure the cached map is updated
 		void							ensureCacheUpdate() const;
 
 		// Makes sure that the keys are sorted in case we use symmetric argument dispatching.
-		Key								makeArgumentPair(TypeInfo key1, TypeInfo key2) const;
+		Key								makeArgumentPair(std::type_index key1, std::type_index key2) const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
