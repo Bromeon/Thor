@@ -38,6 +38,7 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Drawable.hpp>
 
 #include <vector>
 #include <utility>
@@ -64,7 +65,7 @@ namespace thor
 /// @details Like sprites, particles are represented as sub-rectangles of sf::Texture. During their
 ///  lifetime, the particles can be affected in translation, rotation, scale and coloring.
 /// @n@n This class is noncopyable.
-class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
+class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private Emitter::Adder
 {		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
@@ -153,10 +154,6 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 		/// @param dt Frame duration.
 		void						update(sf::Time dt);
 		
-		/// @brief Draws all particles in the system.
-		/// @param target The render window on which the particles are drawn.
-		void						draw(sf::RenderWindow& target) const;
-		
 		/// @brief Removes all particles that are currently in the system.
 		///
 		void						clearParticles();
@@ -165,6 +162,11 @@ class THOR_API ParticleSystem : private sf::NonCopyable, private Emitter::Adder
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
 	private:
+		/// @brief Draws all particles in the system.
+		/// @param target The render target to which the particles are drawn.
+		/// @param states Current render states (shader, blend mode, ...)
+		virtual void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		
 		/// @brief Adds a particle to the system.
 		/// @param particle Particle to add.
 		virtual void				addParticle(const Particle& particle);

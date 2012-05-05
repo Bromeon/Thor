@@ -171,11 +171,6 @@ bool ParticleSystem::containsEmitter(Emitter::Ptr emitter) const
 	return std::find_if(mEmitters.begin(), mEmitters.end(), FirstFinder<Emitter::Ptr>(emitter)) != mEmitters.end();
 }
 
-void ParticleSystem::addParticle(const Particle& particle)
-{
-	mParticles.push_back(particle);
-}
-
 void ParticleSystem::update(sf::Time dt)
 {
 	// Emit new particles and remove expiring emitters
@@ -214,7 +209,12 @@ void ParticleSystem::update(sf::Time dt)
 	}
 }
 
-void ParticleSystem::draw(sf::RenderWindow& target) const
+void ParticleSystem::clearParticles()
+{
+	mParticles.clear();
+}
+
+void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// Compute offsets to vertex positions in rendering coordinates
 	const sf::Vector2f halfSize = sf::Vector2f(mTexture->getSize()) / 2.f;
@@ -255,12 +255,13 @@ void ParticleSystem::draw(sf::RenderWindow& target) const
 	}
 
 	// Draw the vertex array with our texture
-	target.draw(vertices, mTexture.get());
+	states.texture = mTexture.get();
+	target.draw(vertices, states);
 }
 
-void ParticleSystem::clearParticles()
+void ParticleSystem::addParticle(const Particle& particle)
 {
-	mParticles.clear();
+	mParticles.push_back(particle);
 }
 
 void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)

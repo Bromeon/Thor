@@ -112,7 +112,7 @@ int main()
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));
 		window.draw(instructions);
-		system.draw(window);
+		window.draw(system);
 		window.display();
 	}
 }
