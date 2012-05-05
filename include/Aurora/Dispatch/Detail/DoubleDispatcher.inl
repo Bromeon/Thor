@@ -66,8 +66,8 @@ R DoubleDispatcher<B, R>::call(B arg1, B arg2) const
 {
 	ensureCacheUpdate();
 
-	TypeInfo key1 = detail::derefTypeid(arg1);
-	TypeInfo key2 = detail::derefTypeid(arg2);
+	std::type_index key1 = detail::derefTypeid(arg1);
+	std::type_index key2 = detail::derefTypeid(arg2);
 	typename FnMap::const_iterator directDispatchItr = findFunction(key1, key2, true);
 
 	// If function is directly found, call it
@@ -77,7 +77,7 @@ R DoubleDispatcher<B, R>::call(B arg1, B arg2) const
 	// If derived-to-base conversions are enabled, look for base class functions to dispatch
 	if (mDerivedToBase)
 	{
-		std::vector<TypeInfo> bases1, bases2;
+		std::vector<std::type_index> bases1, bases2;
 		detail::getRttiBaseClasses(key1, bases1);
 		detail::getRttiBaseClasses(key2, bases2);
 
@@ -103,7 +103,7 @@ R DoubleDispatcher<B, R>::call(B arg1, B arg2) const
 				if (dispatchItr != mMap.end())
 				{
 					throw FunctionCallException(std::string("DoubleDispatcher::Call() - overload resolution of parameters \"")
-						+ key1.getName() +  "\" and \"" + key2.getName() + "\" is ambiguous");
+						+ key1.name() +  "\" and \"" + key2.name() + "\" is ambiguous");
 				}
 
 				dispatchItr = currentItr;
@@ -120,11 +120,11 @@ R DoubleDispatcher<B, R>::call(B arg1, B arg2) const
 	}
 
 	throw FunctionCallException(std::string("DoubleDispatcher::Call() - function with parameters \"")
-		+ key1.getName() +  "\" and \"" + key2.getName() + "\" not registered");
+		+ key1.name() +  "\" and \"" + key2.name() + "\" not registered");
 }
 
 template <class B, typename R>
-void DoubleDispatcher<B, R>::registerFunction(FnMap& fnMap, TypeInfo key1, TypeInfo key2, Value value) const
+void DoubleDispatcher<B, R>::registerFunction(FnMap& fnMap, std::type_index key1, std::type_index key2, Value value) const
 {
 	// If we update the normal map, the cache becomes invalid
 	if (&fnMap == &mMap)
@@ -141,7 +141,8 @@ void DoubleDispatcher<B, R>::registerFunction(FnMap& fnMap, TypeInfo key1, TypeI
 }
 
 template <class B, typename R>
-typename DoubleDispatcher<B, R>::FnMap::const_iterator DoubleDispatcher<B, R>::findFunction(TypeInfo key1, TypeInfo key2, bool useCache) const
+typename DoubleDispatcher<B, R>::FnMap::const_iterator DoubleDispatcher<B, R>::findFunction(
+	std::type_index key1, std::type_index key2, bool useCache) const
 {
 	const FnMap& fnMap = useCache ? mCachedMap : mMap;
 
@@ -162,7 +163,7 @@ void DoubleDispatcher<B, R>::ensureCacheUpdate() const
 }
 
 template <class B, typename R>
-typename DoubleDispatcher<B, R>::Key DoubleDispatcher<B, R>::makeArgumentPair(TypeInfo key1, TypeInfo key2) const
+typename DoubleDispatcher<B, R>::Key DoubleDispatcher<B, R>::makeArgumentPair(std::type_index key1, std::type_index key2) const
 {
 	// When symmetric, (key1,key2) and (key2,key1) are the same -> sort so that we always have (key1,key2)
 	if (mSymmetric && key2 < key1)

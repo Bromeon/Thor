@@ -35,6 +35,5 @@
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Tools/Swap.hpp>
-#include <Aurora/Tools/TypeInfo.hpp>
 
 #endif // AURORA_MODULE_TOOLS_HPP

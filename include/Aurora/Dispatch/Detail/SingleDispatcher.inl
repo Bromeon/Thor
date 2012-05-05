@@ -65,7 +65,7 @@ R SingleDispatcher<B, R>::call(B arg) const
 {
 	ensureCacheUpdate();
 
-	TypeInfo key = detail::derefTypeid(arg);
+	std::type_index key = detail::derefTypeid(arg);
 	typename FnMap::const_iterator directDispatchItr = findFunction(key, true);
 
 	// If function is directly found, call it
@@ -75,11 +75,11 @@ R SingleDispatcher<B, R>::call(B arg) const
 	// If derived-to-base conversions are enabled, look for base class functions to dispatch
 	if (mDerivedToBase)
 	{
-		std::vector<TypeInfo> bases;
+		std::vector<std::type_index> bases;
 		detail::getRttiBaseClasses(key, bases);
 
 		// Iterate through all direct and indirect base classes
-		AURORA_CITR_FOREACH(std::vector<TypeInfo>, bases, baseItr)
+		AURORA_CITR_FOREACH(std::vector<std::type_index>, bases, baseItr)
 		{
 			typename FnMap::const_iterator dispatchItr = findFunction(*baseItr);
 
@@ -94,11 +94,11 @@ R SingleDispatcher<B, R>::call(B arg) const
 	}
 
 	// If no corresponding class (or base class) has been found, throw exception
-	throw FunctionCallException(std::string("SingleDispatcher::Call() - function with parameter \"") + key.getName() +  "\" not registered");
+	throw FunctionCallException(std::string("SingleDispatcher::Call() - function with parameter \"") + key.name() +  "\" not registered");
 }
 
 template <class B, typename R>
-void SingleDispatcher<B, R>::registerFunction(FnMap& fnMap, TypeInfo key, Value value) const
+void SingleDispatcher<B, R>::registerFunction(FnMap& fnMap, std::type_index key, Value value) const
 {
 	// If we update the normal map, the cache becomes invalid
 	if (&fnMap == &mMap)
@@ -115,7 +115,7 @@ void SingleDispatcher<B, R>::registerFunction(FnMap& fnMap, TypeInfo key, Value 
 }
 
 template <class B, typename R>
-typename SingleDispatcher<B, R>::FnMap::const_iterator SingleDispatcher<B, R>::findFunction(TypeInfo key, bool useCache) const
+typename SingleDispatcher<B, R>::FnMap::const_iterator SingleDispatcher<B, R>::findFunction(std::type_index key, bool useCache) const
 {
 	const FnMap& fnMap = useCache ? mCachedMap : mMap;
 
