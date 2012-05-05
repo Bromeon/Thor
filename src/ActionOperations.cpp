@@ -302,11 +302,9 @@ namespace detail
 	
 	OrNode::OrNode(ActionNode::CopiedPtr lhs, ActionNode::CopiedPtr rhs)
 	: ActionNode()
-	, mLhs()
-	, mRhs()
+	, mLhs(std::move(lhs))
+	, mRhs(std::move(rhs))
 	{
-		mLhs.swap(lhs);
-		mRhs.swap(rhs);
 	}
 
 	bool OrNode::isActionActive(const EventBuffer& buffer) const
@@ -328,11 +326,9 @@ namespace detail
 
 	AndNode::AndNode(ActionNode::CopiedPtr lhs, ActionNode::CopiedPtr rhs)
 	: ActionNode()
-	, mLhs()
-	, mRhs()
+	, mLhs(std::move(lhs))
+	, mRhs(std::move(rhs))
 	{
-		mLhs.swap(lhs);
-		mRhs.swap(rhs);
 	}
 
 	bool AndNode::isActionActive(const EventBuffer& buffer) const

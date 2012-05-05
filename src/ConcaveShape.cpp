@@ -73,14 +73,14 @@ struct ConcaveShape::TriangleGenerator
 	// Assignment from triangle
 	TriangleGenerator& operator= (const Triangle<Vertex>& triangle)
 	{
-		sf::ConvexShape* shape = new sf::ConvexShape();
+		aurora::CopiedPtr<sf::ConvexShape> shape(new sf::ConvexShape());
 		shape->setPointCount(3);
 		shape->setFillColor(color);
 		
 		for (unsigned int i = 0; i < 3; ++i)
 			shape->setPoint(i, triangle[i].getPosition());
 		
-		triangles.push_back( aurora::CopiedPtr<sf::Shape>(shape) );
+		triangles.push_back(std::move(shape));
 		return *this;
 	}
 
@@ -255,7 +255,7 @@ void ConcaveShape::formOutline() const
 		const float radius = mOutlineThickness / 2.f;
 
 		// Insert circles at the polygon points to round the outline off
-		sf::CircleShape* circle = new sf::CircleShape();
+		aurora::CopiedPtr<sf::CircleShape> circle(new sf::CircleShape());
 		circle->setPosition(first.getPosition() - sf::Vector2f(radius, radius));
 		circle->setRadius(radius);
 		circle->setFillColor(mOutlineColor);
@@ -265,8 +265,8 @@ void ConcaveShape::formOutline() const
 		line.setPosition(first.getPosition());
 
 		// Add shapes
-		mEdgeShapes.push_back( aurora::CopiedPtr<sf::Shape>(circle) );
-		mEdgeShapes.push_back( aurora::CopiedPtr<sf::Shape>(new sf::ConvexShape(line)) );
+		mEdgeShapes.push_back( std::move(circle) );
+		mEdgeShapes.push_back( aurora::copied(new sf::ConvexShape(line)) );
 	}
 }
 
