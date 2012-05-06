@@ -39,6 +39,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 #include <vector>
 #include <utility>
@@ -184,6 +185,8 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 
 		std::shared_ptr<const sf::Texture>	mTexture;
 		sf::IntRect							mTextureRect;
+
+		mutable sf::VertexArray				mVertices;
 };
 
 /// @relates ParticleSystem

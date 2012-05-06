@@ -31,7 +31,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/VertexArray.hpp>
 
 #include <algorithm>
 #include <array>
@@ -83,6 +82,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture)
 , mEmitters()
 , mTexture()
 , mTextureRect(0, 0, texture->getSize().x, texture->getSize().y)
+, mVertices(sf::Quads)
 {
 	mTexture.swap(texture);
 }
@@ -93,6 +93,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture, const
 , mEmitters()
 , mTexture()
 , mTextureRect(textureRect)
+, mVertices(sf::Quads)
 {
 	mTexture.swap(texture);
 }
@@ -107,6 +108,7 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mEmitters,			other.mEmitters);
 	swap(mTexture,			other.mTexture); 
 	swap(mTextureRect,		other.mTextureRect);
+	swap(mVertices,			other.mVertices);
 }
 
 void ParticleSystem::addAffector(Affector::Ptr affector)
@@ -239,8 +241,7 @@ void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) con
 		sf::Vector2f(left,	bottom)
 	};
 
-	// Create vertex array and fill it
-	sf::VertexArray vertices(sf::Quads);
+	// Fill vertex array
 	AURORA_CITR_FOREACH(ParticleContainer, mParticles, itr)
 	{
 		for (unsigned int i = 0; i < 4; ++i)
@@ -250,13 +251,16 @@ void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) con
 			transform.rotate(itr->rotation);
 			transform.scale(itr->scale);
 
-			vertices.append(sf::Vertex(transform.transformPoint(positionOffsets[i]), itr->color, texCoords[i]) );
+			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), itr->color, texCoords[i]) );
 		}
 	}
 
 	// Draw the vertex array with our texture
 	states.texture = mTexture.get();
-	target.draw(vertices, states);
+	target.draw(mVertices, states);
+
+	// Clear vertex array for next frame (keeps memory allocated)
+	mVertices.clear();
 }
 
 void ParticleSystem::addParticle(const Particle& particle)
