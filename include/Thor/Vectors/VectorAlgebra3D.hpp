@@ -27,10 +27,10 @@
 /// @brief Algebraic operations on three-dimensional vectors (dot and cross product, vector length and angles, ...)
 /// @details Here is an overview over the functionality:
 /// <table>
-///	 <tr><td>DotProduct(v,w)</td>				<td>length(v)</td>				<td>UnitVector(v)</td>				</tr>
-///	 <tr><td>CrossProduct(v,w)</td>				<td>SquaredLength(v)</td>		<td>ToVector3(v)</td>				</tr>
-///	 <tr><td>ComponentwiseProduct(v,w)</td>		<td>PolarAngle(v)</td>												</tr>
-///	 <tr><td>ComponentwiseQuotient(v,w)</td>	<td>ElevationAngle(v)</td>											</tr>
+///	 <tr><td>dotProduct(v,w)</td>				<td>length(v)</td>				<td>unitVector(v)</td>				</tr>
+///	 <tr><td>crossProduct(v,w)</td>				<td>squaredLength(v)</td>		<td>toVector3(v)</td>				</tr>
+///	 <tr><td>componentwiseProduct(v,w)</td>		<td>polarAngle(v)</td>												</tr>
+///	 <tr><td>componentwiseQuotient(v,w)</td>	<td>elevationAngle(v)</td>											</tr>
 /// </table>
 
 #ifndef THOR_VECTORALGEBRA3D_HPP

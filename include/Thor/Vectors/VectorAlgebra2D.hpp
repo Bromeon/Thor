@@ -28,16 +28,16 @@
 /// @details Here is an overview over the functionality:
 /// <table>
 ///  <tr><th>Operation</th>				<th>Translation</th>		<th>Scale</th>				<th>Rotation</th>				</tr>
-///	 <tr><td>get</td>					<td>v</td>					<td>length(v)</td>			<td>PolarAngle(v)</td>			</tr>
-///	 <tr><td>set, absolute</td>			<td>v = w</td>				<td>setLength(v,l)</td>		<td>SetPolarAngle(v,a)</td>		</tr>
-///	 <tr><td>set, relative</td>			<td>v += w</td>				<td>v *= l</td>				<td>rotate(v,a)</td>			</tr>
-///	 <tr><td>Copy, relative</td>		<td>v + w</td>				<td>v * l</td>				<td>RotatedVector(v,a)</td>		</tr>
+///	 <tr><td>Get</td>					<td>v</td>					<td>length(v)</td>			<td>polarAngle(v)</td>			</tr>
+///	 <tr><td>Set, absolute</td>			<td>v = w</td>				<td>setLength(v,l)</td>		<td>setPolarAngle(v,a)</td>		</tr>
+///	 <tr><td>Set, relative</td>			<td>v += w</td>				<td>v *= l</td>				<td>rotate(v,a)</td>			</tr>
+///	 <tr><td>Copy, relative</td>		<td>v + w</td>				<td>v * l</td>				<td>rotatedVector(v,a)</td>		</tr>
 /// </table>
 /// Other functions:
 /// <table>
-///	 <tr><td>DotProduct(v,w)</td>				<td>UnitVector(v)</td>					<td>SquaredLength(v)</td>		</tr>
-///	 <tr><td>CrossProduct(v,w)</td>				<td>PerpendicularVector(v)</td>			<td>Angle(v,w)</td>				</tr>
-///	 <tr><td>ComponentwiseProduct(v,w)</td>		<td>ComponentwiseQuotient(v,w)</td>										</tr>
+///	 <tr><td>dotProduct(v,w)</td>				<td>unitVector(v)</td>					<td>squaredLength(v)</td>		</tr>
+///	 <tr><td>crossProduct(v,w)</td>				<td>perpendicularVector(v)</td>			<td>angle(v,w)</td>				</tr>
+///	 <tr><td>componentwiseProduct(v,w)</td>		<td>componentwiseQuotient(v,w)</td>										</tr>
 /// </table>
 
 #ifndef THOR_VECTORALGEBRA2D_HPP
