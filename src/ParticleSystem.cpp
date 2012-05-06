@@ -83,6 +83,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture)
 , mTexture()
 , mTextureRect(0, 0, texture->getSize().x, texture->getSize().y)
 , mVertices(sf::Quads)
+, mNeedsVertexUpdate(true)
 {
 	mTexture.swap(texture);
 }
@@ -94,6 +95,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture, const
 , mTexture()
 , mTextureRect(textureRect)
 , mVertices(sf::Quads)
+, mNeedsVertexUpdate(true)
 {
 	mTexture.swap(texture);
 }
@@ -103,12 +105,13 @@ void ParticleSystem::swap(ParticleSystem& other)
 	// Use ADL
 	using std::swap;
 
-	swap(mParticles,		other.mParticles);
-	swap(mAffectors,		other.mAffectors);
-	swap(mEmitters,			other.mEmitters);
-	swap(mTexture,			other.mTexture); 
-	swap(mTextureRect,		other.mTextureRect);
-	swap(mVertices,			other.mVertices);
+	swap(mParticles,			other.mParticles);
+	swap(mAffectors,			other.mAffectors);
+	swap(mEmitters,				other.mEmitters);
+	swap(mTexture,				other.mTexture); 
+	swap(mTextureRect,			other.mTextureRect);
+	swap(mVertices,				other.mVertices);
+	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
 }
 
 void ParticleSystem::addAffector(Affector::Ptr affector)
@@ -175,6 +178,9 @@ bool ParticleSystem::containsEmitter(Emitter::Ptr emitter) const
 
 void ParticleSystem::update(sf::Time dt)
 {
+	// Invalidate stored vertices
+	mNeedsVertexUpdate = true;
+
 	// Emit new particles and remove expiring emitters
 	for (EmitterContainer::iterator itr = mEmitters.begin(); itr != mEmitters.end(); )
 	{
@@ -218,6 +224,35 @@ void ParticleSystem::clearParticles()
 
 void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	if (mNeedsVertexUpdate)
+	{
+		computeVertices();
+		mNeedsVertexUpdate = false;
+	}
+
+	// Draw the vertex array with our texture
+	states.texture = mTexture.get();
+	target.draw(mVertices, states);
+}
+
+void ParticleSystem::addParticle(const Particle& particle)
+{
+	mParticles.push_back(particle);
+}
+
+void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
+{
+	particle.passedLifetime += dt;
+
+	particle.position += dt.asSeconds() * particle.velocity;
+	particle.rotation += dt.asSeconds() * particle.rotationSpeed;
+}
+
+void ParticleSystem::computeVertices() const
+{
+	// Clear vertex array (keeps memory allocated)
+	mVertices.clear();
+
 	// Compute offsets to vertex positions in rendering coordinates
 	const sf::Vector2f halfSize = sf::Vector2f(mTexture->getSize()) / 2.f;
 	const std::array<sf::Vector2f, 4> positionOffsets =
@@ -254,26 +289,6 @@ void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) con
 			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), itr->color, texCoords[i]) );
 		}
 	}
-
-	// Draw the vertex array with our texture
-	states.texture = mTexture.get();
-	target.draw(mVertices, states);
-
-	// Clear vertex array for next frame (keeps memory allocated)
-	mVertices.clear();
-}
-
-void ParticleSystem::addParticle(const Particle& particle)
-{
-	mParticles.push_back(particle);
-}
-
-void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
-{
-	particle.passedLifetime += dt;
-
-	particle.position += dt.asSeconds() * particle.velocity;
-	particle.rotation += dt.asSeconds() * particle.rotationSpeed;
 }
 
 } // namespace thor

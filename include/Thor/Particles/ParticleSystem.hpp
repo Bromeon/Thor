@@ -175,6 +175,9 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		// Updates a single particle.
 		void						updateParticle(Particle& particle, sf::Time dt);
 
+		// Recomputes the vertex array.
+		void						computeVertices() const;
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
@@ -187,6 +190,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		sf::IntRect							mTextureRect;
 
 		mutable sf::VertexArray				mVertices;
+		mutable bool						mNeedsVertexUpdate;
 };
 
 /// @relates ParticleSystem
