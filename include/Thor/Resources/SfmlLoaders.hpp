@@ -186,7 +186,7 @@ namespace Resources
 	ResourceKey<R> fromImage(const sf::Image& image, const sf::IntRect area = sf::IntRect())
 	{
 		return detail::makeResourceKey<R>(
-			std::bind(&R::loadFromImage, _1, std::cref(image), area),
+			[&image, area] (R& resource) { return resource.loadFromImage(image, area); },
 			detail::Tagger("Image") << &image << area);
 	}
 
