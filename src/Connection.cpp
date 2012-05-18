@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Events/Connection.hpp>
-#include <Thor/Detail/ConnectionImpl.hpp>
+#include <Thor/Events/Detail/ConnectionImpl.hpp>
 
 
 namespace thor

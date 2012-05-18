@@ -30,7 +30,7 @@
 #define THOR_TRIGGERINGTIMER_HPP
 
 #include <Thor/Time/Timer.hpp>
-#include <Thor/Detail/EventListener.hpp>
+#include <Thor/Events/Detail/EventListener.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/System/Time.hpp>

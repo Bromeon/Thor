@@ -29,7 +29,7 @@
 #ifndef THOR_COLORS_HPP
 #define THOR_COLORS_HPP
 
-#include <Thor/Detail/ColorImpl.hpp>
+#include <Thor/Multimedia/Detail/ColorImpl.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/Graphics/Color.hpp>

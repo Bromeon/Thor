@@ -109,5 +109,5 @@ class StringConversionException : public aurora::Exception
 
 } // namespace thor
 
-#include <Thor/Detail/ToString.inl>
+#include <Thor/Multimedia/Detail/ToString.inl>
 #endif // THOR_TOSTRING_HPP

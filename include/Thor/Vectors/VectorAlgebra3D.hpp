@@ -117,5 +117,5 @@ sf::Vector3<T>				toVector3(const sf::Vector2<T>& vector2);
 
 } // namespace thor
 
-#include <Thor/Detail/VectorAlgebra3D.inl>
+#include <Thor/Vectors/Detail/VectorAlgebra3D.inl>
 #endif // THOR_VECTORALGEBRA3D_HPP

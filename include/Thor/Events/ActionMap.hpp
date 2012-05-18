@@ -31,7 +31,7 @@
 
 #include <Thor/Events/Action.hpp>
 #include <Thor/Events/ActionContext.hpp>
-#include <Thor/Detail/ActionOperations.hpp>
+#include <Thor/Events/Detail/ActionOperations.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/ForEach.hpp>
@@ -166,5 +166,5 @@ class ActionMap : private aurora::NonCopyable
 
 } // namespace thor
 
-#include <Thor/Detail/ActionMap.inl>
+#include <Thor/Events/Detail/ActionMap.inl>
 #endif // THOR_ACTIONMAP_HPP

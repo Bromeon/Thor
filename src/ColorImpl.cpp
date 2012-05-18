@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Detail/ColorImpl.hpp>
+#include <Thor/Multimedia/Detail/ColorImpl.hpp>
 
 #include <cassert>
 

@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Detail/ActionOperations.hpp>
+#include <Thor/Events/Detail/ActionOperations.hpp>
 
 #include <SFML/Window/Window.hpp>
 

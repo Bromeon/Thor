@@ -121,5 +121,5 @@ class MultiResourceCache
 
 } // namespace thor
 
-#include <Thor/Detail/MultiResourceCache.inl>
+#include <Thor/Resources/Detail/MultiResourceCache.inl>
 #endif // THOR_MULTIRESOURCECACHE_HPP

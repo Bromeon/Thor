@@ -30,7 +30,7 @@
 #define THOR_SFMLLOADERS_HPP
 
 #include <Thor/Resources/ResourceKey.hpp>
-#include <Thor/Detail/ResourceKeyHelpers.hpp>
+#include <Thor/Resources/Detail/ResourceKeyHelpers.hpp>
 
 #include <Aurora/Tools/Metaprogramming.hpp>
 

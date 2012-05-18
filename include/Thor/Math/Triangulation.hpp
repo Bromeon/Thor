@@ -105,5 +105,5 @@ OutputIterator1 triangulatePolygon(InputIterator verticesBegin, InputIterator ve
 
 } // namespace thor
 
-#include <Thor/Detail/Triangulation.inl>
+#include <Thor/Math/Detail/Triangulation.inl>
 #endif // THOR_TRIANGULATION_HPP

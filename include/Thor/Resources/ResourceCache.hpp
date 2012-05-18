@@ -32,7 +32,7 @@
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/ResourceStrategies.hpp>
 #include <Thor/Resources/ResourceLoadingException.hpp>
-#include <Thor/Detail/ResourceSlot.hpp>
+#include <Thor/Resources/Detail/ResourceSlot.hpp>
 #include <Thor/Config.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
@@ -146,5 +146,5 @@ class ResourceCache : private aurora::NonCopyable
 
 } // namespace thor
 
-#include <Thor/Detail/ResourceCache.inl>
+#include <Thor/Resources/Detail/ResourceCache.inl>
 #endif // THOR_RESOURCECACHE_HPP

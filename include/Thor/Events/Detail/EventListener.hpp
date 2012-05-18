@@ -29,7 +29,7 @@
 #include <Thor/Config.hpp>
 #include <Aurora/Tools/ForEach.hpp>
 #include <Thor/Events/Connection.hpp>
-#include <Thor/Detail/ConnectionImpl.hpp>
+#include <Thor/Events/Detail/ConnectionImpl.hpp>
 
 #include <functional>
 #include <vector>

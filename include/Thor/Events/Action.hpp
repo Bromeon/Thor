@@ -29,7 +29,7 @@
 #ifndef THOR_ACTION_HPP
 #define THOR_ACTION_HPP
 
-#include <Thor/Detail/ActionOperations.hpp>
+#include <Thor/Events/Detail/ActionOperations.hpp>
 #include <Thor/Config.hpp>
 
 

@@ -142,5 +142,5 @@ sf::Vector2<T>				componentwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vec
 
 } // namespace thor
 
-#include <Thor/Detail/VectorAlgebra2D.inl>
+#include <Thor/Vectors/Detail/VectorAlgebra2D.inl>
 #endif // THOR_VECTORALGEBRA2D_HPP

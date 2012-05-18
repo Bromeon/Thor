@@ -86,5 +86,5 @@ T polarAngle(const PolarVector2<T>& vector);
 
 } // namespace thor
 
-#include <Thor/Detail/PolarVector.inl>
+#include <Thor/Vectors/Detail/PolarVector.inl>
 #endif // THOR_POLARVECTOR_HPP

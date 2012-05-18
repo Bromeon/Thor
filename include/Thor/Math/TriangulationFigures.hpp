@@ -126,5 +126,5 @@ class Triangle
 
 } // namespace thor
 
-#include <Thor/Detail/TriangulationFigures.inl>
+#include <Thor/Math/Detail/TriangulationFigures.inl>
 #endif // THOR_TRIANGULATIONFIGURES_HPP
