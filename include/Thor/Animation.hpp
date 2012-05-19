@@ -29,7 +29,6 @@
 #ifndef THOR_MODULE_ANIMATION_HPP
 #define THOR_MODULE_ANIMATION_HPP
 
-#include <Thor/Animation/Animation.hpp>
 #include <Thor/Animation/Animator.hpp>
 #include <Thor/Animation/FrameAnimation.hpp>
 

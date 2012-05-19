@@ -24,19 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Animation/FrameAnimation.hpp>
-#include <Aurora/Tools/ForEach.hpp>
-
-#include <algorithm>
-#include <cassert>
 
 
 namespace thor
 {
-
-FrameAnimation::Ptr FrameAnimation::create()
-{
-	return std::make_shared<FrameAnimation>();
-}
 
 FrameAnimation::FrameAnimation()
 : mFrames()
@@ -46,31 +37,8 @@ FrameAnimation::FrameAnimation()
 
 void FrameAnimation::addFrame(float relativeDuration, const sf::IntRect& subrect)
 {
-	addFrame(relativeDuration, std::shared_ptr<sf::Texture>(), subrect);
-}
-
-void FrameAnimation::addFrame(float relativeDuration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect)
-{
-	mFrames.push_back(Frame(relativeDuration, texture, subrect));
+	mFrames.push_back(detail::Frame(relativeDuration, subrect));
 	mNormalized = false;
-}
-
-void FrameAnimation::apply(sf::Sprite& target, float progress) const
-{
-	assert(!mFrames.empty());
-	assert(progress >= 0.f && progress <= 1.f);
-
-	ensureNormalized();
-	std::vector<Frame>::const_iterator currentFrame = std::find_if(mFrames.begin(), mFrames.end(), ExhaustTime(progress));
-	if (currentFrame == mFrames.end())
-		return;
-
-	// Set texture, if necessary - don't adjust sub-rect to whole image
-	if (currentFrame->texture)
-		target.setTexture(*currentFrame->texture);
-
-	// Set sub-rect
-	target.setTextureRect(currentFrame->subrect);
 }
 
 void FrameAnimation::ensureNormalized() const
@@ -79,34 +47,13 @@ void FrameAnimation::ensureNormalized() const
 		return;
 
 	float sum = 0.f;
-	AURORA_CITR_FOREACH(std::vector<Frame>, mFrames, itr)
+	AURORA_CITR_FOREACH(std::vector<detail::Frame>, mFrames, itr)
 		sum += itr->duration;
 
-	AURORA_CITR_FOREACH(std::vector<Frame>, mFrames, itr)
+	AURORA_CITR_FOREACH(std::vector<detail::Frame>, mFrames, itr)
 		itr->duration /= sum;
 
 	mNormalized = true;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-
-FrameAnimation::Frame::Frame(float duration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect)
-: duration(duration)
-, texture(texture)
-, subrect(subrect)
-{
-}
-
-FrameAnimation::ExhaustTime::ExhaustTime(float time)
-: time(time)
-{
-}
-
-bool FrameAnimation::ExhaustTime::operator() (const Frame& frame)
-{
-	time -= frame.duration;
-	return time < 0.f;
 }
 
 } // namespace thor

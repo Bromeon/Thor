@@ -23,15 +23,14 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Animation/Animator.hpp>
-
 #include <cassert>
 
 
 namespace thor
 {
 
-Animator::Animator()
+template <class Animated, typename Id>
+Animator<Animated, Id>::Animator()
 : mAnimationMap()
 , mPlayingAnimation(nullptr)
 , mDefaultAnimation()
@@ -40,21 +39,24 @@ Animator::Animator()
 {
 }
 
-void Animator::addAnimation(const std::string& name, Animation::Ptr animation, sf::Time duration)
+template <class Animated, typename Id>
+void Animator<Animated, Id>::addAnimation(const Id& id, const AnimationFunction& animation, sf::Time duration)
 {
-	assert(mAnimationMap.find(name) == mAnimationMap.end());
-	mAnimationMap.insert( std::make_pair(name, ScaledAnimation(animation, duration)) );
+	assert(mAnimationMap.find(id) == mAnimationMap.end());
+	mAnimationMap.insert( std::make_pair(id, ScaledAnimation(animation, duration)) );
 }
 
-void Animator::playAnimation(const std::string& name, bool loop)
+template <class Animated, typename Id>
+void Animator<Animated, Id>::playAnimation(const Id& id, bool loop)
 {
-	AnimationMap::iterator itr = mAnimationMap.find(name);
+	AnimationMap::iterator itr = mAnimationMap.find(id);
 	assert(itr != mAnimationMap.end());
 
 	playAnimation(itr->second, loop);
 }
 
-void Animator::stopAnimation()
+template <class Animated, typename Id>
+void Animator<Animated, Id>::stopAnimation()
 {
 	// Animations stopped: Play default animation if available
 	if (mDefaultAnimation.first)
@@ -63,7 +65,8 @@ void Animator::stopAnimation()
 		mPlayingAnimation = nullptr;
 }
 
-void Animator::update(sf::Time dt)
+template <class Animated, typename Id>
+void Animator<Animated, Id>::update(sf::Time dt)
 {
 	// No animation playing (no default animation available): Do nothing
 	if (!mPlayingAnimation)
@@ -82,21 +85,24 @@ void Animator::update(sf::Time dt)
 	}
 }
 
-void Animator::animate(sf::Sprite& target) const
+template <class Animated, typename Id>
+void Animator<Animated, Id>::animate(Animated& animated) const
 {
 	// If animation is playing, apply it (includes default animation, if others are stopped)
 	if (mPlayingAnimation)
-		mPlayingAnimation->first->apply(target, mProgress);
+		mPlayingAnimation->first(animated, mProgress);
 }
 
-void Animator::playAnimation(ScaledAnimation& animation, bool loop)
+template <class Animated, typename Id>
+void Animator<Animated, Id>::playAnimation(ScaledAnimation& animation, bool loop)
 {
 	mPlayingAnimation = &animation;
 	mProgress = 0.f;
 	mLoop = loop;
 }
 
-void Animator::setDefaultAnimation(Animation::Ptr animation, sf::Time duration)
+template <class Animated, typename Id>
+void Animator<Animated, Id>::setDefaultAnimation(const AnimationFunction& animation, sf::Time duration)
 {
 	// Invalidate old playing animation, if it refers to default animation (which might be destroyed)
 	if (mPlayingAnimation == &mDefaultAnimation)

@@ -29,41 +29,46 @@
 #ifndef THOR_FRAMEANIMATION_HPP
 #define THOR_FRAMEANIMATION_HPP
 
-#include <Thor/Animation/Animation.hpp>
 #include <Thor/Config.hpp>
+#include <Aurora/Tools/ForEach.hpp>
 
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 #include <vector>
+#include <cassert>
 
 
 namespace thor
 {
+namespace detail
+{
+
+	// Class that stores a single frame of FrameAnimation
+	struct Frame
+	{
+		Frame(float duration, const sf::IntRect& subrect)
+		: duration(duration)
+		, subrect(subrect)
+		{
+		}
+
+		mutable float			duration;
+		sf::IntRect				subrect;
+	};
+
+} // namespace detail
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 
 /// @addtogroup Animation
 /// @{
 
 /// @brief Changes a sprite's subrect over time. 
-/// @details This class stores multiple frames that represent the sub-rectangle of a sf::Texture. The resulting animation consists
+/// @details This class stores multiple frames that represent the sub-rectangle of a texture. The resulting animation consists
 ///  of a sequence of frames that are drawn one after another.
-class THOR_API FrameAnimation : public Animation
+class THOR_API FrameAnimation
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type to FrameAnimation objects
-		/// 
-		typedef std::shared_ptr<FrameAnimation>		Ptr;
-		
-		
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Returns a shared pointer to a newly created FrameAnimation.
-		/// @copydetails FrameAnimation::FrameAnimation()
-		static Ptr					create();
-		
-		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -76,53 +81,51 @@ class THOR_API FrameAnimation : public Animation
 		/// @param subrect %Rectangle of the sf::Texture that is used for the new frame.
 		void						addFrame(float relativeDuration, const sf::IntRect& subrect);
 
-		/// @brief Adds a frame to the animation, changes both texture and sub-rect.
-		/// @param relativeDuration Duration of the frame relative to the other durations.
-		/// @param texture Smart pointer to sf::Texture that is used for the new frame.
-		/// @param subrect %Rectangle of the sf::Texture that is used for the new frame.
-		void						addFrame(float relativeDuration, std::shared_ptr<const sf::Texture> texture,
-										const sf::IntRect& subrect);
+		/// @brief Animates the object.
+		/// @param animated Object to animate.
+		/// @param progress Value in [0,1] determining the progress of the animation.
+		/// @tparam Animated Class with member function <i>void setTextureRect(sf::IntRect)</i>, for example sf::Sprite.
+		template <class Animated>
+		void						operator() (Animated& animated, float progress) const;
 
-		virtual void				apply(sf::Sprite& target, float progress) const;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Private types
-	private:
-		// Frame with sub-rectangle and duration
-		struct Frame
-		{
-											Frame(float duration, std::shared_ptr<const sf::Texture> texture, const sf::IntRect& subrect);
-
-			mutable float					duration;
-			sf::IntRect						subrect;
-			std::shared_ptr<const sf::Texture>	texture;
-		};
-
-		// Functor to find current frame
-		struct ExhaustTime
-		{
-			explicit					ExhaustTime(float time);
-			bool						operator() (const Frame& frame);
-
-			float						time;
-		};
-
+	
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
 	private:
-		void							ensureNormalized() const;
+		void						ensureNormalized() const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::vector<Frame>			mFrames;
+		std::vector<detail::Frame>	mFrames;
 		mutable bool				mNormalized;
 };
 
 /// @}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+
+template <class Animated>
+void FrameAnimation::operator() (Animated& target, float progress) const
+{
+	assert(!mFrames.empty());
+	assert(progress >= 0.f && progress <= 1.f);
+
+	ensureNormalized();
+	AURORA_CITR_FOREACH(std::vector<detail::Frame>, mFrames, itr)
+	{
+		progress -= itr->duration;
+		
+		if (progress < 0.f)
+		{
+			target.setTextureRect(itr->subrect);
+			break;
+		}
+	}
+}
 
 } // namespace thor
 

@@ -31,21 +31,21 @@ int main()
 	// Create sprite and object that animates it
 	sf::Sprite sprite(texture);
 	sprite.setPosition(100.f, 100.f);
-	thor::Animator animator;
+	thor::Animator<sf::Sprite, std::string> animator;
 
 	// Specify static subrect which is shown unless an other animation is active
-	thor::FrameAnimation::Ptr defaultAnim = thor::FrameAnimation::create();
-	defaultAnim->addFrame(1.f, sf::IntRect(0, 21, 44, 21));
+	thor::FrameAnimation defaultAnim;
+	defaultAnim.addFrame(1.f, sf::IntRect(0, 21, 44, 21));
 
 	// Create first animation: Drive
-	thor::FrameAnimation::Ptr drive = thor::FrameAnimation::create();
+	thor::FrameAnimation drive;
 	for (unsigned int i = 0; i < 3; ++i)
-		drive->addFrame(1.f, sf::IntRect(0, 21*i, 44, 21));
+		drive.addFrame(1.f, sf::IntRect(0, 21*i, 44, 21));
 
 	// Create second animation: Fire
-	thor::FrameAnimation::Ptr fire = thor::FrameAnimation::create();
+	thor::FrameAnimation fire;
 	for (unsigned int i = 0; i < 4; ++i)
-		fire->addFrame(1.f, sf::IntRect(44, 21*i, 49, 21));
+		fire.addFrame(1.f, sf::IntRect(44, 21*i, 49, 21));
 
 	// Register animations with their corresponding durations
 	animator.setDefaultAnimation(defaultAnim, sf::seconds(1.f));

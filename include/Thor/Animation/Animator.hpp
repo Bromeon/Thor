@@ -24,19 +24,17 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::Animator
+/// @brief Class template thor::Animator
 
 #ifndef THOR_ANIMATOR_HPP
 #define THOR_ANIMATOR_HPP
 
-#include <Thor/Animation/Animation.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/System/Time.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 
 #include <map>
-#include <string>
+#include <functional>
 
 
 namespace thor
@@ -45,11 +43,22 @@ namespace thor
 /// @addtogroup Animation
 /// @{
 
-/// @brief Class that stores the progress of a sprite's animation 
-/// @details The Animator class takes care of multiple Animation instances which are registered by a string. The registered
-///  animations can be played at any time. Animator updates their progress and applies it to sf::Sprite instances.
-class THOR_API Animator
+/// @brief Class that stores the progress of an object's animation.
+/// @details The Animator class takes care of multiple animations which are registered by a ID. The animations can be played
+///  at any time. Animator updates their progress and applies it to animated objects.
+template <class Animated, typename Id>
+class Animator
 {
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public types
+	public:
+		/// @brief Functor to animate the objects.
+		/// @details Signature: <b>void (Animated& animated, float progress)</b>
+		///  @arg @a animated is the object being animated.
+		///  @arg @a progress is a number in [0,1] determining the animation state.
+		typedef std::function<void(Animated&, float)>	AnimationFunction;
+
+		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -58,18 +67,18 @@ class THOR_API Animator
 									Animator();
 
 		/// @brief Registers an animation with a given name.
-		/// @param name String to assign to the animation (may not be registered yet).
+		/// @param id Value that identifies the animation (must not be registered yet).
 		/// @param animation Animation to add to the animator.
 		/// @param duration Duration of the animation.
-		void						addAnimation(const std::string& name, Animation::Ptr animation, sf::Time duration);
+		void						addAnimation(const Id& id, const AnimationFunction& animation, sf::Time duration);
 
 		/// @brief Plays the animation with the given name.
-		/// @param name Name of the animation to play (std::string). An animation with this name must have been added before.
+		/// @param id Value that identifies the animation (must already be registered).
 		/// @param loop True if the animation is played repeatedly.
-		void						playAnimation(const std::string& name, bool loop = false);
+		void						playAnimation(const Id& id, bool loop = false);
 
 		/// @brief Interrupts the animation that is currently active.
-		/// @details If a static frame has been specified, it is shown. Otherwise, the last visible frame of the stopped
+		/// @details If a default animation has been specified, it is shown. Otherwise, the last visible frame of the stopped
 		///  animation is shown.
 		void						stopAnimation();
 
@@ -77,24 +86,24 @@ class THOR_API Animator
 		/// @param dt Frame time.
 		void						update(sf::Time dt);
 
-		/// @brief Applies the stored animations to a sf::Sprite.
-		/// @param target Sprite whose subrect is changed according to the current animation. If no animation is active,
-		///  the sprite is left unchanged or set to the static frame, if previously specified.
-		void						animate(sf::Sprite& target) const;
+		/// @brief Applies the stored animations to an object.
+		/// @param animated Object which is animated by the current animation. If no animation is active, the default animation
+		///  is applied (if specified), otherwise the object is left unchanged.
+		void						animate(Animated& animated) const;
 
 		/// @brief Sets an animation that is active when all others are stopped.
 		/// @param animation Default animation to set. Will be played in a loop if no other animation is currently active.
-		///  @a animation can be empty to reset the default animation. In this case, the sprite is not affected when
+		///  @a animation can be empty to reset the default animation. In this case, the object is not affected when
 		///  no animation is playing.
 		/// @param duration Duration of the animation.
-		void						setDefaultAnimation(Animation::Ptr animation, sf::Time duration);
+		void						setDefaultAnimation(const AnimationFunction& animation, sf::Time duration);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef std::pair<Animation::Ptr, sf::Time>		ScaledAnimation;
-		typedef std::map<std::string, ScaledAnimation>	AnimationMap;
+		typedef std::pair<AnimationFunction, sf::Time>		ScaledAnimation;
+		typedef std::map<Id, ScaledAnimation>				AnimationMap;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -117,4 +126,5 @@ class THOR_API Animator
 
 } // namespace thor
 
+#include <Thor/Animation/Detail/Animator.inl>
 #endif // THOR_ANIMATOR_HPP

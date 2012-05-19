@@ -31,7 +31,6 @@ set(THOR_SRC
 	Action.cpp
 	ActionOperations.cpp
 	Affector.cpp
-	Animator.cpp
 	Arrow.cpp
 	BigSprite.cpp
 	BigTexture.cpp
