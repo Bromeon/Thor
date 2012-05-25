@@ -49,7 +49,7 @@ void Animator<Animated, Id>::addAnimation(const Id& id, const AnimationFunction&
 template <class Animated, typename Id>
 void Animator<Animated, Id>::playAnimation(const Id& id, bool loop)
 {
-	AnimationMap::iterator itr = mAnimationMap.find(id);
+	typename AnimationMap::iterator itr = mAnimationMap.find(id);
 	assert(itr != mAnimationMap.end());
 
 	playAnimation(itr->second, loop);
