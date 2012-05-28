@@ -50,6 +50,7 @@ include_directories(${CMAKE_SOURCE_DIR}/extlibs/aurora/include)
 # Predefined configuration options
 set(THOR_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
 set(THOR_BUILD_EXAMPLES FALSE CACHE BOOL "Build example projects")
+set(THOR_BUILD_DOC FALSE CACHE BOOL "Create HTML documentation (requires Doxygen)")
 
 # Windows: Choose to link CRT libraries statically or dynamically
 if(WIN32)
@@ -71,11 +72,9 @@ endif()
 
 
 # C++11 support
-add_definitions(-DAURORA_HAS_CPP11)
 if(CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
-
 
 
 # Variable for install directory
@@ -102,7 +101,8 @@ if(SFML_FOUND)
 	include_directories(${SFML_INCLUDE_DIR})
 else()
 	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-	message(FATAL_ERROR "SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+	message(FATAL_ERROR "SFML directory not found. Set SFML_ROOT to SFML's top-level path	(containing \"include\" and \"lib\" directories).
+			Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.")
 endif()
 
 
@@ -118,6 +118,12 @@ macro(thor_link_thor THOR_TARGET)
 endmacro()
 
 
+# Documentation
+if(THOR_BUILD_DOC)
+	add_subdirectory(doc)
+endif()
+
+
 # C++ source code
 add_subdirectory(src)
 
@@ -128,12 +134,10 @@ endif()
 
 # Install include directory and license file
 install(DIRECTORY include
-		DESTINATION .
-		REGEX "\\.svn|_svn" EXCLUDE)
+		DESTINATION .)
 
 install(FILES license.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
 
 install(DIRECTORY extlibs/aurora/include
-		DESTINATION .
-		REGEX "\\.svn|_svn" EXCLUDE)
+		DESTINATION .)
