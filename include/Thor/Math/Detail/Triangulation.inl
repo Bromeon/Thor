@@ -33,13 +33,7 @@ namespace detail
 	class AdvancedVertex;
 	class AdvancedEdge;
 
-	// Functor to compare Vertex pointers (the original instance must be kept, no copies) in std::set.
-	struct THOR_API CompareRawVertexPtrs
-	{
-		bool operator() (const Vertex* lhs, const Vertex* rhs) const;
-	};
-
-	// The same for advanced vertices. Since AdvancedVertex is not derived from Vertex, this is necessary.
+	// Functor to sort advanced vertices by their positions, needed to store them inside std::set.
 	struct THOR_API CompareVertexPtrs
 	{
 		bool operator() (const AdvancedVertex* lhs, const AdvancedVertex* rhs) const;
@@ -55,11 +49,9 @@ namespace detail
 
 
 	// Type definitions of containers
-	typedef std::vector<Vertex>								VertexCtr;
-	typedef std::deque<AdvancedVertex>						AdvancedVertexCtr;
-	typedef std::set<const Vertex*, CompareRawVertexPtrs>	RawVertexPtrSet;
+	typedef std::deque<AdvancedVertex>						VertexCtr;
 	typedef std::set<AdvancedVertex*, CompareVertexPtrs>	VertexPtrSet;
-	typedef std::set<AdvancedEdge, CompareEdges>			EdgeSet; 
+	typedef std::set<AdvancedEdge, CompareEdges>			EdgeSet;
 	typedef std::list<AdvancedTriangle>						TriangleList;
 
 	// Type definitions of often used iterators
@@ -69,6 +61,18 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
+	// Iterator to a triangle which can be explicitly invalid ("opt" stands for "optional").
+	struct THOR_API OptTriangleIterator
+	{
+									OptTriangleIterator();
+									OptTriangleIterator(TriangleIterator target);
+									OptTriangleIterator(const OptTriangleIterator& origin);
+		OptTriangleIterator&		operator= (const OptTriangleIterator& origin);
+
+		bool						valid;
+		TriangleIterator			target;
+	};
+	
 	// Circle class, needed for circumcircle
 	struct Circle
 	{
@@ -78,66 +82,110 @@ namespace detail
 		float						squaredRadius;
 	};
 
-	// Meta-information vertex, for algorithm internals
-	class THOR_API AdvancedVertex 
+	// Metafunction to get a CV-qualified iterator value type (std::iterator_traits<T>::value_type is not const)
+	template <typename T>
+	struct DereferencedIterator
+	{
+		typedef typename std::remove_pointer<
+			typename std::iterator_traits<T>::pointer
+			>::type value_type;
+	};
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+
+	// Type-erased base class to access user vertices
+	class VertexHolder
 	{
 		public:
-										AdvancedVertex(const Vertex& userVertex, TriangleIterator surroundingTriangle);
+			// Virtual destructor
+			virtual						~VertexHolder() {}
+	
+			// Returns the vertex's position.
+			virtual sf::Vector2f		getPosition() const = 0;
+
+			// Returns the derived object.
+			template <typename V>
+			V&							getUserVertex();
+	};
+
+	// Concrete vertex holder to access user vertices
+	template <typename V>
+	class UserVertexHolder : public VertexHolder
+	{
+		public:
+			// Constructs a vertex referencing a user-defined vertex.
+			explicit					UserVertexHolder(V& userVertex);
+	
+			// Returns the vertex's position.
+			virtual sf::Vector2f		getPosition() const;
+
+			// Returns the user-defined vertex
+			V&							getUserVertex();
+
+		private:
+			V*							mUserVertex;
+	};
+
+	// Special vertex holder not referring to user vertices, but boundaries
+	class CoordVertexHolder : public VertexHolder
+	{
+		public:
+			// Constructs a vertex with a given coordinate
+										CoordVertexHolder(float x, float y);
+
+			// Returns the vertex's position.
+			virtual sf::Vector2f		getPosition() const;
+
+		private:
+			sf::Vector2f				mPosition;
+	};
+
+	// Class to represent a vertex for algorithm internals
+	class AdvancedVertex
+	{
+		public:
+			template <typename V>
+										AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle);
+
+										AdvancedVertex(float x, float y);
+
 			sf::Vector2f				getPosition() const;
 			void						setSurroundingTriangle(TriangleIterator target);
 			TriangleIterator			getSurroundingTriangle() const;
-			const Vertex&				getUserVertex() const;
+
+			template <typename V>
+			V&							getUserVertex() const;
 		
 		private:
-			const Vertex*				mUserVertex;
-			TriangleIterator			mSurroundingTriangle;
+			aurora::CopiedPtr<VertexHolder>	mVertexHolder;
+			OptTriangleIterator			mSurroundingTriangle;
 	};
 
 	// Meta-information edge, for algorithm internals
-	class THOR_API AdvancedEdge : public Edge<Vertex>
+	class THOR_API AdvancedEdge : public Edge<AdvancedVertex>
 	{
 		public:
-										AdvancedEdge(const Vertex& startPoint, const Vertex& endPoint);
+										AdvancedEdge(AdvancedVertex& startPoint, AdvancedVertex& endPoint);
 		
-			template <typename UserVertex>
-										AdvancedEdge(const Edge<UserVertex>& userEdge)
-			: Edge<Vertex>(userEdge[0], userEdge[1])
-			{
-				orderCorners();
-			}
-	
 		private:
 			// Sorts the corners by vector-component-sum to allow faster access inside std::set.
-			void orderCorners();
-	};
-
-	// Iterator to a triangle which can be explicitly invalid ("opt" stands for "optional").
-	struct THOR_API OptTriangleIterator
-	{
-									OptTriangleIterator();
-									OptTriangleIterator(TriangleIterator target);
-									OptTriangleIterator(const OptTriangleIterator& origin);
-
-		OptTriangleIterator&		operator= (const OptTriangleIterator& origin);
-
-		// Members
-		bool						valid;
-		TriangleIterator			target;
+			void						orderCorners();
 	};
 
 	// A triangle that carries advanced information in order to efficiently support the algorithm.
-	class THOR_API AdvancedTriangle : public Triangle<Vertex>
+	class THOR_API AdvancedTriangle : public Triangle<AdvancedVertex>
 	{	
 		public:
-										AdvancedTriangle(const Vertex& corner0, const Vertex& corner1, const Vertex& corner2);
+										AdvancedTriangle(AdvancedVertex& corner0, AdvancedVertex& corner1, AdvancedVertex& corner2);
 		
 			void						addVertex(AdvancedVertex& vertexRef);
 
-			void						removeVertex(AdvancedVertex& vertexRef);	
+			void						removeVertex(AdvancedVertex& vertexRef);
 			void						removeVertex(VertexPtrIterator vertexItr);
 		
-			VertexPtrIterator			Begin();		
-			VertexPtrIterator			End();
+			VertexPtrIterator			begin();
+			VertexPtrIterator			end();
 		
 			// Sets/returns the adjacent triangle on the opposite side of the corner #index.
 			void						setAdjacentTriangle(unsigned int index, const OptTriangleIterator& adjacentTriangle);
@@ -153,20 +201,70 @@ namespace detail
 			bool									mFlagged;
 	};
 
+	
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
-	// Function declarations
-	float				THOR_API sumVectorComponents(sf::Vector2f vector);
-	void 				THOR_API insertPoint(TriangleList& triangles, AdvancedVertex& vertex, const VertexCtr& boundaryVertices, const EdgeSet& constrainedEdges);
-	void 				THOR_API createBoundaryPoints(AdvancedVertexCtr& allVertices, VertexCtr& boundaryVertices, TriangleList& triangles);
-	void 				THOR_API setBoundaryPositions(const AdvancedVertexCtr& allVertices, VertexCtr& boundaryVertices);
-	bool 				THOR_API has1Of3Corners(const AdvancedTriangle& triangle, const VertexCtr& corners);
-	bool 				THOR_API isClockwiseOriented(sf::Vector2f v0, sf::Vector2f v1, sf::Vector2f v2);
-	bool 				THOR_API isEdgeConstrained(const EdgeSet& constrainedEdges, const Vertex& startPoint, const Vertex& endPoint);
-	OptTriangleIterator THOR_API hasUnusedAdjacent(const AdvancedTriangle& triangle, unsigned int index, const VertexCtr& boundaryVertices, const EdgeSet& constrainedEdges);
-	void				THOR_API removeOuterPolygonTriangles(TriangleList& triangles, TriangleIterator current, const EdgeSet& constrainedEdges);
-	void				THOR_API removeUnusedTriangles(TriangleList& triangles, const VertexCtr& boundaryVertices, const EdgeSet& constrainedEdges, bool limitToPolygon);
+	template <typename V>
+	V& VertexHolder::getUserVertex()
+	{
+		typedef UserVertexHolder<V> Derived;
+
+		assert(dynamic_cast<Derived*>(this));
+		return static_cast<Derived*>(this)->getUserVertex();
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+
+	template <typename V>
+	UserVertexHolder<V>::UserVertexHolder(V& userVertex)
+		: mUserVertex(&userVertex)
+	{
+	}
+
+	template <typename V>
+	sf::Vector2f UserVertexHolder<V>::getPosition() const
+	{
+		return getVertexPosition(*mUserVertex);
+	}
+
+	template <typename V>
+	V& UserVertexHolder<V>::getUserVertex()
+	{
+		return *mUserVertex;
+	}
+
+	template <typename V>
+	V& AdvancedVertex::getUserVertex() const
+	{
+		return mVertexHolder->getUserVertex<V>();
+	}
+
+	
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
+	template <typename V>
+	AdvancedVertex::AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle)
+	: mVertexHolder(new UserVertexHolder<V>(userVertex))
+	, mSurroundingTriangle(surroundingTriangle)
+	{
+	}
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+	// Function declarations required by the header
+	void 				THOR_API insertPoint(TriangleList& triangles, AdvancedVertex& vertex, const AdvancedTriangle& boundaryTriangle,
+									const EdgeSet& constrainedEdges);
+
+	void				THOR_API removeUnusedTriangles(TriangleList& triangles, const AdvancedTriangle& boundaryTriangle,
+									const EdgeSet& constrainedEdges, bool limitToPolygon);
+
+	void 				THOR_API createBoundaryPoints(VertexCtr& allVertices, TriangleList& triangles);
+
+	void 				THOR_API setBoundaryPositions(const VertexCtr& allVertices, AdvancedTriangle& boundaryTriangle);
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
@@ -194,7 +292,7 @@ namespace detail
 	};
 
 	// Policy class for small differences in triangulation - here for TriangulatePolygon() with edgesOut parameter
-	template <typename OutputIterator, class VertexType>
+	template <typename OutputIterator, typename UserVertex>
 	struct PolygonOutputTrDetails
 	{
 		PolygonOutputTrDetails(OutputIterator edgesOut)
@@ -209,97 +307,123 @@ namespace detail
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
+	// Returns the position of a user vertex.
+	template <typename V>
+	sf::Vector2f getVertexPosition(const V& vertex)
+	{
+		return TriangulationTraits<V>::getPosition(vertex);
+	}
 
 	// Sort out vertices according to their "importance". Vertices that are part of a constrained edge shall be inserted first.
 	// Adds constrained edges as well.
 	template <typename InputIterator1, typename InputIterator2>
-	void collateVerticesConstrained(TriangleIterator firstTriangle, AdvancedVertexCtr& allVertices, EdgeSet& constrainedEdges,
+	void collateVerticesConstrained(TriangleIterator firstTriangle, VertexCtr& allVertices, EdgeSet& constrainedEdges,
 		InputIterator1 verticesBegin, InputIterator1 verticesEnd, InputIterator2 constrainedEdgesBegin, InputIterator2 constrainedEdgesEnd)
 	{
-		// Sort out "important" vertices
+		typedef typename DereferencedIterator<InputIterator1>::value_type UserVertex;
+		typedef typename std::iterator_traits<InputIterator2>::value_type UserEdge;
+		typedef std::set<UserVertex*> RawVertexPtrSet;
+
+		// Store pointers to important vertices in importantVertices set
 		RawVertexPtrSet importantVertices;
-		for (; constrainedEdgesBegin != constrainedEdgesEnd; ++constrainedEdgesBegin)
+		for (InputIterator2 itr = constrainedEdgesBegin; itr != constrainedEdgesEnd; ++itr)
 		{
-			typedef typename std::iterator_traits<InputIterator2>::value_type UserEdge;
-			const UserEdge& edge = *constrainedEdgesBegin;
+			UserEdge& edge = *itr;
 		
 			importantVertices.insert(&edge[0]);
 			importantVertices.insert(&edge[1]);
-			constrainedEdges.insert(edge);
 		}
 	
-		// Insert important vertices, link to base triangle
-		AURORA_CITR_FOREACH(RawVertexPtrSet, importantVertices, itr)
+		// Insert important advanced vertices, link to base triangle, fill user->advanced map
+		std::map<UserVertex*, AdvancedVertex*> map;
+		AURORA_CITR_FOREACH(typename RawVertexPtrSet, importantVertices, itr)
 		{
-			allVertices.push_back(AdvancedVertex(**itr, firstTriangle));
-			firstTriangle->addVertex(allVertices.back());
+			UserVertex& userVertex = **itr;
+			allVertices.push_back(AdvancedVertex(userVertex, firstTriangle));
+
+			AdvancedVertex& advancedVertex = allVertices.back();
+			firstTriangle->addVertex(advancedVertex);
+			
+			map.insert(std::make_pair(&userVertex, &advancedVertex));
+		}
+
+		// Insert advanced edges, using the user->advanced map
+		for (InputIterator2 itr = constrainedEdgesBegin; itr != constrainedEdgesEnd; ++itr)
+		{
+			UserEdge& userEdge = *itr;
+
+			AdvancedEdge advancedEdge(*map[&userEdge[0]], *map[&userEdge[1]]);
+			constrainedEdges.insert(advancedEdge);
 		}
 
 		// Insert other vertices, link to base triangle
 		for (; verticesBegin != verticesEnd; ++verticesBegin)
 		{
-			const Vertex& vertex = *verticesBegin;
+			UserVertex& userVertex = *verticesBegin;
 	
-			if (importantVertices.find(&vertex) == importantVertices.end())
+			if (importantVertices.find(&userVertex) == importantVertices.end())
 			{
-				allVertices.push_back(detail::AdvancedVertex(vertex, firstTriangle));
+				allVertices.push_back(detail::AdvancedVertex(userVertex, firstTriangle));
 				firstTriangle->addVertex(allVertices.back());
 			}
 		}
 	}
 
-	// Helper function for CollateVerticesPolygon(); constructs an edge and adds it to the container and output iterator.
-	inline void addEdge(EdgeSet& constrainedEdges, const Vertex* previousVertex, const Vertex& currentVertex, const PolygonTrDetails&)
+	// Helper function for collateVerticesPolygon(); constructs an edge and adds it to the container and output iterator.
+	inline void addEdge(EdgeSet& constrainedEdges, AdvancedVertex* previousVertex, AdvancedVertex& currentVertex,
+		PolygonTrDetails)
 	{
 		if (previousVertex != nullptr)
 			constrainedEdges.insert(AdvancedEdge(*previousVertex, currentVertex));
 	}
 
-	// Overload for PolygonTrDetails<OutputIterator> to write in an output iterator
-	template <typename OutputIterator, class VertexType>
-	void addEdge(EdgeSet& constrainedEdges, const Vertex* previousVertex, const Vertex& currentVertex, PolygonOutputTrDetails<OutputIterator, VertexType> details)
+	// Overload for PolygonOutputTrDetails to write in an output iterator
+	template <typename OutputIterator, typename UserVertex>
+	void addEdge(EdgeSet& constrainedEdges, AdvancedVertex* previousVertex, AdvancedVertex& currentVertex, 
+		PolygonOutputTrDetails<OutputIterator, UserVertex> details)
 	{
 		if (previousVertex != nullptr)
 		{	
-			*details.edgesOut++ = Edge<VertexType>(
-				static_cast<const VertexType&>(*previousVertex),
-				static_cast<const VertexType&>(currentVertex));
+			*details.edgesOut++ = Edge<UserVertex>(
+				previousVertex->getUserVertex<UserVertex>(),
+				currentVertex.getUserVertex<UserVertex>());
 		
 			constrainedEdges.insert(AdvancedEdge(*previousVertex, currentVertex));
 		}
 	}
 
-	// CollateVertices Implementation for polygons
+	// collateVertices() - Implementation for polygons
 	template <typename InputIterator, class AdditionalDetails>
-	void CollateVerticesPolygon(TriangleIterator firstTriangle, AdvancedVertexCtr& allVertices, EdgeSet& constrainedEdges,
+	void collateVerticesPolygon(TriangleIterator firstTriangle, VertexCtr& allVertices, EdgeSet& constrainedEdges,
 		InputIterator verticesBegin, InputIterator verticesEnd, const AdditionalDetails& details)
 	{
 		// Empty vertex range: Do nothing
 		if (verticesBegin == verticesEnd)
 			return;
 
-		const Vertex& firstVertex = *verticesBegin;
-		const Vertex* previousVertex = nullptr;
+		AdvancedVertex* previousVertex = nullptr;
 	
 		for (; verticesBegin != verticesEnd; ++verticesBegin)
 		{	
 			// Add the vertex to allVertices, link with firstTriangle
-			AdvancedVertex vertex(*verticesBegin, firstTriangle);
-			allVertices.push_back(vertex);
-			firstTriangle->addVertex(allVertices.back()); 
+			allVertices.push_back(AdvancedVertex(*verticesBegin, firstTriangle));
+			AdvancedVertex& vertex = allVertices.back();
+			firstTriangle->addVertex(vertex); 
 
 			// Add edge of adjacent vertices
-			addEdge(constrainedEdges, previousVertex, vertex.getUserVertex(), details);
-			previousVertex = &vertex.getUserVertex();
+			addEdge(constrainedEdges, previousVertex, vertex, details);
+			previousVertex = &vertex;
 		}
 	
 		// If at least one vertex is contained, insert edge from last to first vertex, so that the boundary is closed.
+		// First vertex is the one directly inserted after the three boundary vertices.
+		AdvancedVertex& firstVertex = allVertices[3];
 		addEdge(constrainedEdges, previousVertex, firstVertex, details);
 	}
 
 	// Indirect overload for ConstrainedTrDetail<InputIterator2>
 	template <typename InputIterator1, typename InputIterator2>
-	void collateVertices(TriangleIterator firstTriangle, AdvancedVertexCtr& allVertices, EdgeSet& constrainedEdges,
+	void collateVertices(TriangleIterator firstTriangle, VertexCtr& allVertices, EdgeSet& constrainedEdges,
 		InputIterator1 verticesBegin, InputIterator1 verticesEnd, const ConstrainedTrDetails<InputIterator2>& details)
 	{
 		collateVerticesConstrained(firstTriangle, allVertices, constrainedEdges, verticesBegin, verticesEnd,
@@ -308,21 +432,21 @@ namespace detail
 
 	// Indirect overload for PolygonTrDetails
 	template <typename InputIterator>
-	void collateVertices(TriangleIterator firstTriangle, AdvancedVertexCtr& allVertices, EdgeSet& constrainedEdges,
+	void collateVertices(TriangleIterator firstTriangle, VertexCtr& allVertices, EdgeSet& constrainedEdges,
 		InputIterator verticesBegin, InputIterator verticesEnd, const PolygonTrDetails& details)
 	{
-		CollateVerticesPolygon(firstTriangle, allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
+		collateVerticesPolygon(firstTriangle, allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
 	}
 
-	// Indirect overload for PolygonTrDetails<OutputIterator>
-	template <typename InputIterator, typename OutputIterator, class VertexType>
-	void collateVertices(TriangleIterator firstTriangle, AdvancedVertexCtr& allVertices, EdgeSet& constrainedEdges,
-		InputIterator verticesBegin, InputIterator verticesEnd, const PolygonOutputTrDetails<OutputIterator, VertexType>& details)
+	// Indirect overload for PolygonOutputTrDetails
+	template <typename InputIterator, typename OutputIterator, typename UserVertex>
+	void collateVertices(TriangleIterator firstTriangle, VertexCtr& allVertices, EdgeSet& constrainedEdges,
+		InputIterator verticesBegin, InputIterator verticesEnd, const PolygonOutputTrDetails<OutputIterator, UserVertex>& details)
 	{
-		CollateVerticesPolygon(firstTriangle, allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
+		collateVerticesPolygon(firstTriangle, allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
 	}
 
-	template <class VertexType, typename InputIterator, typename OutputIterator>
+	template <typename UserVertex, typename InputIterator, typename OutputIterator>
 	OutputIterator transformTriangles(InputIterator begin, InputIterator end, OutputIterator out)
 	{
 		for (; begin != end; ++begin)
@@ -330,10 +454,10 @@ namespace detail
 			const AdvancedTriangle& current = *begin;
 		
 			// Downcast to original vertex type (during the algorithm, we abandoned full type information)
-			*out++ = Triangle<VertexType>(
-				static_cast<const VertexType&>(current[0]),
-				static_cast<const VertexType&>(current[1]),
-				static_cast<const VertexType&>(current[2]));
+			*out++ = Triangle<UserVertex>(
+				current[0].getUserVertex<UserVertex>(),
+				current[1].getUserVertex<UserVertex>(),
+				current[2].getUserVertex<UserVertex>());
 		}
 	
 		return out;
@@ -343,29 +467,29 @@ namespace detail
 	OutputIterator triangulateImpl(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut, const AdditionalDetails& details)
 	{
 		// Create container for all vertices with additional implementation data (allVertices) and for triangles
-		VertexCtr			boundaryVertices;
-		AdvancedVertexCtr	allVertices;
-		TriangleList		triangles;
-		EdgeSet				constrainedEdges;
+		VertexCtr		allVertices;
+		TriangleList	triangles;
+		EdgeSet			constrainedEdges;
 	
 		// Avoid reallocations (and thus iterator and reference invalidations), add first three boundary (dummy, as they're removed afterwards) vertices
-		createBoundaryPoints(allVertices, boundaryVertices, triangles);
+		createBoundaryPoints(allVertices, triangles);
+		AdvancedTriangle boundaryTriangle = triangles.front();
 	
 		// Bring vertices in ideal order for constrained Delaunay triangulation, and add constrained edges
 		collateVertices(triangles.begin(), allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
 
 		// Set the positions of the boundary vertices, according to the spread of the internal vertices
-		setBoundaryPositions(allVertices, boundaryVertices);
+		setBoundaryPositions(allVertices, boundaryTriangle);
 	
 		// Insert each vertex. This invalidates the iterator first (because the old triangle is removed (split)).
-		for (AdvancedVertexCtr::iterator itr = allVertices.begin() + 3, end = allVertices.end(); itr != end; ++itr) 
-			insertPoint(triangles, *itr, boundaryVertices, constrainedEdges);
+		for (VertexCtr::iterator itr = allVertices.begin() + 3, end = allVertices.end(); itr != end; ++itr) 
+			insertPoint(triangles, *itr, boundaryTriangle, constrainedEdges);
 	
 		// Remove triangles that are not contained in the final triangulation
-		removeUnusedTriangles(triangles, boundaryVertices, constrainedEdges, AdditionalDetails::isPolygon);
+		removeUnusedTriangles(triangles, boundaryTriangle, constrainedEdges, AdditionalDetails::isPolygon);
 
 		// Transform from algorithm-specific data structures to user interface
-		typedef typename std::iterator_traits<InputIterator>::value_type UserVertex;
+		typedef typename DereferencedIterator<InputIterator>::value_type UserVertex;
 		return transformTriangles<UserVertex>(triangles.begin(), triangles.end(), trianglesOut);
 	}
 
@@ -378,7 +502,9 @@ template <typename InputIterator, typename OutputIterator>
 OutputIterator triangulate(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut)
 {
 	// Delaunay Triangulation == Constrained Delaunay Triangulation without constraining edges
-	detail::EdgeSet noEdges;
+	typedef typename detail::DereferencedIterator<InputIterator>::value_type UserVertex;
+
+	std::vector<Edge<UserVertex>> noEdges;
 	return triangulateConstrained(verticesBegin, verticesEnd, noEdges.begin(), noEdges.end(), trianglesOut);
 }
 
@@ -401,7 +527,7 @@ template <typename InputIterator, typename OutputIterator1, typename OutputItera
 OutputIterator1 triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator1 trianglesOut, OutputIterator2 edgesOut)
 {
 	return detail::triangulateImpl(verticesBegin, verticesEnd, trianglesOut, 
-		detail::PolygonOutputTrDetails<OutputIterator2, typename std::iterator_traits<InputIterator>::value_type>(edgesOut));
+		detail::PolygonOutputTrDetails<OutputIterator2, typename detail::DereferencedIterator<InputIterator>::value_type>(edgesOut));
 }
 
 } // namespace thor

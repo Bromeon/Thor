@@ -71,14 +71,14 @@ struct ConcaveShape::TriangleGenerator
 	}
 	
 	// Assignment from triangle
-	TriangleGenerator& operator= (const Triangle<Vertex>& triangle)
+	TriangleGenerator& operator= (const Triangle<const sf::Vector2f>& triangle)
 	{
 		aurora::CopiedPtr<sf::ConvexShape> shape(new sf::ConvexShape());
 		shape->setPointCount(3);
 		shape->setFillColor(color);
 		
 		for (unsigned int i = 0; i < 3; ++i)
-			shape->setPoint(i, triangle[i].getPosition());
+			shape->setPoint(i, triangle[i]);
 		
 		triangles.push_back(std::move(shape));
 		return *this;
@@ -129,7 +129,7 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 
 void ConcaveShape::setPointCount(unsigned int count)
 {
-	mPoints.resize(count, Vertex(0.f, 0.f));
+	mPoints.resize(count);
 }
 
 unsigned int ConcaveShape::getPointCount() const
@@ -139,7 +139,7 @@ unsigned int ConcaveShape::getPointCount() const
 
 void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
 {
-	mPoints[index] = Vertex(position);
+	mPoints[index] = position;
 
 	mNeedsTriangleUpdate = true;
 	mNeedsEdgeUpdate = true;
@@ -147,7 +147,7 @@ void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
 
 sf::Vector2f ConcaveShape::getPoint(unsigned int index) const
 {
-	return mPoints[index].getPosition();
+	return mPoints[index];
 }
 
 void ConcaveShape::setFillColor(const sf::Color& fillColor)
@@ -250,19 +250,19 @@ void ConcaveShape::formOutline() const
 	// Create graphic edges	
 	AURORA_CITR_FOREACH(EdgeContainer, mEdges, itr)
 	{
-		const Vertex& first = (*itr)[0];
-		const Vertex& second = (*itr)[1];
+		sf::Vector2f firstPos = (*itr)[0];
+		sf::Vector2f secondPos = (*itr)[1];
 		const float radius = mOutlineThickness / 2.f;
 
 		// Insert circles at the polygon points to round the outline off
 		aurora::CopiedPtr<sf::CircleShape> circle(new sf::CircleShape());
-		circle->setPosition(first.getPosition() - sf::Vector2f(radius, radius));
+		circle->setPosition(firstPos - sf::Vector2f(radius, radius));
 		circle->setRadius(radius);
 		circle->setFillColor(mOutlineColor);
 
 		// Create lines representing the edges
-		sf::ConvexShape line = Shapes::line(second.getPosition() - first.getPosition(), mOutlineColor, mOutlineThickness);
-		line.setPosition(first.getPosition());
+		sf::ConvexShape line = Shapes::line(secondPos - firstPos, mOutlineColor, mOutlineThickness);
+		line.setPosition(firstPos);
 
 		// Add shapes
 		mEdgeShapes.push_back( std::move(circle) );

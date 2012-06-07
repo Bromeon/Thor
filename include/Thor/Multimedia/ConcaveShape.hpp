@@ -124,8 +124,8 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 	private:	 		
 		// Container typedefs
 		typedef std::vector< aurora::CopiedPtr<sf::Shape> >	ShapeContainer;
-		typedef std::vector< Vertex >						PointContainer;
-		typedef std::vector< Edge<Vertex> >					EdgeContainer;
+		typedef std::vector< sf::Vector2f >					PointContainer;
+		typedef std::vector< Edge<const sf::Vector2f> >		EdgeContainer;
 
 		struct TriangleGenerator;
 

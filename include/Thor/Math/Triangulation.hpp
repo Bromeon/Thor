@@ -30,12 +30,14 @@
 #define THOR_TRIANGULATION_HPP
 
 #include <Aurora/Tools/ForEach.hpp>
+#include <Aurora/SmartPtr/CopiedPtr.hpp>
 #include <Thor/Math/TriangulationFigures.hpp>
 
 #include <vector>
 #include <deque>
 #include <list>
 #include <set>
+#include <map>
 #include <iterator>
 
 
@@ -48,58 +50,63 @@ namespace thor
 /// @brief Delaunay Triangulation
 /// @details Triangulates a set of points in a way such that every resulting triangle's circumcircle contains no other than
 ///  the own three points. This condition leads to a "beautiful" result, the triangles appear balanced.
-/// @param verticesBegin, verticesEnd Iterator range to the points being triangulated. The element type shall be thor::Vertex or
-///  a class derived from it, their order doesn't matter.
+/// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
+///  thor::TriangulationTraits<V> is specialized.
 ///  @n Note that the triangulation may meet problems at 4 co-circular points or at 3 or more collinear points.
-/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<T>",
-///  where T is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so they must
+/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
+///  where V is your (maybe const-qualified) vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so they must
 ///  not be destroyed as long as you access the triangles.
 /// @return Output iterator after the last element written.
+/// @details Const-correctness is propagated through the algorithm. That is, if @a InputIterator is a const_iterator, the triangle's template argument shall be const.
 template <typename InputIterator, typename OutputIterator>
-OutputIterator triangulate(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut);
+OutputIterator				triangulate(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut);
 
 /// @brief Constrained Delaunay Triangulation
-/// @details Performes a Delaunay triangulation while taking constraining edges into account. "Constrained" means edges
+/// @details Performs a Delaunay triangulation while taking constraining edges into account. "Constrained" means edges
 ///  which are supposed to be part of the triangulation, locally ignoring the Delaunay condition.
-/// @param verticesBegin, verticesEnd Iterator range to the points being triangulated. The element type shall be thor::Vertex or
-///  a class derived from it, their order doesn't matter.
+/// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
+///  thor::TriangulationTraits<V> is specialized.
 ///  @n Note that the triangulation may meet problems at 4 co-circular points or at 3 or more collinear points.
-/// @param constrainedEdgesBegin,constrainedEdgesEnd Iterator range to the constrained edges. The element type shall be @ref thor::Edge "thor::Edge<T>",
+/// @param constrainedEdgesBegin,constrainedEdgesEnd Iterator range to the constrained edges. The element type shall be @ref thor::Edge "thor::Edge<V>",
 ///  where T specifies your vertex type. The edges must refer to vertices inside the range [verticesBegin, verticesEnd[.
 ///  To get expected results, edges may not intersect (except at the end points; containing the same vertex is allowed).
-/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<T>",
-///  where T is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
+/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
+///  where V is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
 ///  not be destroyed as long as you access the triangles.
 /// @return Output iterator after the last element written.
+/// @details Const-correctness is propagated through the algorithm. That is, if @a InputIterator is a const_iterator, the triangle's template argument shall be const.
 template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
-OutputIterator triangulateConstrained(InputIterator1 verticesBegin, InputIterator1 verticesEnd,
-	InputIterator2 constrainedEdgesBegin, InputIterator2 constrainedEdgesEnd, OutputIterator trianglesOut);
+OutputIterator				triangulateConstrained(InputIterator1 verticesBegin, InputIterator1 verticesEnd,
+								InputIterator2 constrainedEdgesBegin, InputIterator2 constrainedEdgesEnd, OutputIterator trianglesOut);
 
 /// @brief Polygon Delaunay Triangulation
 /// @details Computes a Delaunay triangulation of the inside of a polygon.
-/// @param verticesBegin,verticesEnd Iterator range to the vertices representing the corners of the polygon. The element type shall be thor::Vertex
-///  or a class derived from it. The order of the vertices is important, as the constrained edges are formed between consecutive 
+/// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
+///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive 
 ///  points (and between the last and first point). If the vertices lead to crossing edges, the result is undefined.
-/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<T>",
-///  where T is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
+/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
+///  where V is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
 ///  not be destroyed as long as you access the triangles.
 /// @return Output iterator after the last element written.
+/// @details Const-correctness is propagated through the algorithm. That is, if @a InputIterator is a const_iterator, the triangle's template argument shall be const.
 template <typename InputIterator, typename OutputIterator>
-OutputIterator triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut);
+OutputIterator				triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator trianglesOut);
 
 /// @brief Polygon Delaunay Triangulation
 /// @details Computes a Delaunay triangulation of the inside of a polygon.
-/// @param verticesBegin,verticesEnd Iterator range to the vertices representing the corners of the polygon. The element type shall be
-///  thor::Vertex or a class derived from it. The order of the vertices is important, as the constrained edges are formed between consecutive 
+/// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
+///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive 
 ///  points (and between the last and first point). If the vertices lead to crossing edges, the result is undefined.
-/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<T>",
-///  where T is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
+/// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
+///  where V is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
 ///  not be destroyed as long as you access the triangles.
 /// @param edgesOut Output iterator which can be used to store the outline of the polygon. Beginning at the edge between @a verticesBegin and
 ///  @a verticesBegin+1, every edge is sequentially written to @a edgesOut (the edge between the last and first point included).
 /// @return Output iterator after the last element written.
+/// @details Const-correctness is propagated through the algorithm. That is, if @a InputIterator is a const_iterator, the triangle's and edge's
+///  template arguments shall be const.
 template <typename InputIterator, typename OutputIterator1, typename OutputIterator2>
-OutputIterator1 triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator1 trianglesOut, OutputIterator2 edgesOut);
+OutputIterator1				triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator1 trianglesOut, OutputIterator2 edgesOut);
 
 /// @}
 

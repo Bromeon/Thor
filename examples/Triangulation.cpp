@@ -9,8 +9,8 @@
 
 // Typedefs for simplicity. Instead of thor::Vertex, you may also use a class derived from
 // thor::Vertex to store more information than just the position. Just replace the types.
-typedef std::vector<thor::Vertex>					VertexContainer;
-typedef std::vector<thor::Triangle<thor::Vertex> >	TriangleContainer;
+typedef std::vector<sf::Vector2f>					VertexContainer;
+typedef std::vector<thor::Triangle<sf::Vector2f>>	TriangleContainer;
 
 // Declarations of functions
 VertexContainer::const_iterator findVertex(const VertexContainer& vertices, sf::Vector2f position);
@@ -19,8 +19,12 @@ bool							handleEvents(sf::RenderWindow& window, VertexContainer& vertices, Tri
 
 int main()
 {
+	sf::Vector2f x;
+	thor::TriangulationTraits<sf::Vector2f>::getPosition(x);
+
+
 	// Create render window
-	sf::RenderWindow window(sf::VideoMode(640, 480), "Thor Triangulation");
+	sf::RenderWindow window(sf::VideoMode(640, 480), "Thor Triangulation", sf::Style::Close);
 	window.setFramerateLimit(20);
 
 	// Create containers in which we store the vertices and the computed triangles
@@ -55,7 +59,7 @@ int main()
 			triangle.setOutlineThickness(1.f);
 
 			for (unsigned int i = 0; i < 3; ++i)
-				triangle.setPoint(i, (*itr)[i].getPosition());
+				triangle.setPoint(i, (*itr)[i]);
 			
 			window.draw(triangle);
 		}
@@ -64,7 +68,7 @@ int main()
 		AURORA_CITR_FOREACH(VertexContainer, vertices, itr)
 		{
 			sf::CircleShape circle;
-			circle.setPosition(itr->getPosition() - sf::Vector2f(6.f, 6.f));
+			circle.setPosition(*itr - sf::Vector2f(6.f, 6.f));
 			circle.setRadius(6.f);
 			circle.setFillColor(sf::Color(255, 0, 150));
 
@@ -85,7 +89,7 @@ VertexContainer::iterator findVertex(VertexContainer& vertices, sf::Vector2f pos
 	// Find out which point was clicked on (tolerance radius is 6 pixels, as big as the circle's radius)
 	AURORA_ITR_FOREACH(VertexContainer, vertices, itr)
 	{
-		if (thor::squaredLength(position - itr->getPosition()) <= 36.f)
+		if (thor::squaredLength(position - *itr) <= 36.f)
 			return itr;
 	}
 	
@@ -103,12 +107,12 @@ bool handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& 
 		// Don't insert the same point twice
 		AURORA_CITR_FOREACH(VertexContainer, vertices, itr)
 		{
-			if (itr->getPosition() == clickPos)
+			if (*itr == clickPos)
 				return false;
 		}
 		
 		// If not contained yet, insert point
-		vertices.push_back(thor::Vertex(clickPos));
+		vertices.push_back(clickPos);
 		return true;
 	}
 	

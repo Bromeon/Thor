@@ -28,53 +28,61 @@ namespace thor
 namespace detail
 {
 
-	bool THOR_API isClockwiseOriented(sf::Vector2f v0, sf::Vector2f v1, sf::Vector2f v2);
+	bool THOR_API				isClockwiseOriented(sf::Vector2f v0, sf::Vector2f v1, sf::Vector2f v2);
+
+	template <typename V>
+	sf::Vector2f				getVertexPosition(const V& vertex);
 
 } // namespace detail
 
+// ---------------------------------------------------------------------------------------------------------------------------
 
-inline Vertex::Vertex(sf::Vector2f position)
-: mPosition(position)
+
+template <typename V>
+Edge<V>::Edge(V& corner0, V& corner1)
 {
+	assert(detail::getVertexPosition(corner0) != detail::getVertexPosition(corner1));
+
+	mCorners[0] = &corner0;
+	mCorners[1] = &corner1;
 }
 
-inline Vertex::Vertex(float x, float y)
-: mPosition(x, y)
-{
-}
-
-inline sf::Vector2f Vertex::getPosition() const
-{
-	return mPosition;
-}
-
-template <class VertexType>
-Edge<VertexType>::Edge(const VertexType& startPoint, const VertexType& endPoint)
-{
-	assert(startPoint.getPosition() != endPoint.getPosition());
-
-	mCorners[0] = &startPoint;
-	mCorners[1] = &endPoint;
-}
-
-template <class VertexType>
-const VertexType& Edge<VertexType>::operator[] (unsigned int cornerIndex) const
+template <typename V>
+V& Edge<V>::operator[] (unsigned int cornerIndex)
 {
 	return *mCorners[cornerIndex];
 }
 
-template <class VertexType>
-Triangle<VertexType>::Triangle(const VertexType& v0, const VertexType& v1, const VertexType& v2)
+template <typename V>
+const V& Edge<V>::operator[] (unsigned int cornerIndex) const
 {
-	assert(detail::isClockwiseOriented(v0.getPosition(), v1.getPosition(), v2.getPosition()));
-	
-	mCorners[0] = &v0;
-	mCorners[1] = &v1;
-	mCorners[2] = &v2;
+	return *mCorners[cornerIndex];
 }
 
-template <class VertexType>
-const VertexType& Triangle<VertexType>::operator[] (unsigned int cornerIndex) const
+// ---------------------------------------------------------------------------------------------------------------------------
+
+
+template <typename V>
+Triangle<V>::Triangle(V& corner0, V& corner1, V& corner2)
+{
+	assert(detail::isClockwiseOriented(
+		detail::getVertexPosition(corner0),
+		detail::getVertexPosition(corner1),
+		detail::getVertexPosition(corner2)));
+	
+	mCorners[0] = &corner0;
+	mCorners[1] = &corner1;
+	mCorners[2] = &corner2;
+}
+
+template <typename V>
+V& Triangle<V>::operator[] (unsigned int cornerIndex)
+{
+	return *mCorners[cornerIndex];
+}
+
+template <typename V>
+const V& Triangle<V>::operator[] (unsigned int cornerIndex) const
 {
 	return *mCorners[cornerIndex];
 }
