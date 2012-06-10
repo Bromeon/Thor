@@ -101,8 +101,8 @@ if(SFML_FOUND)
 	include_directories(${SFML_INCLUDE_DIR})
 else()
 	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-	message(FATAL_ERROR "SFML directory not found. Set SFML_ROOT to SFML's top-level path	(containing \"include\" and \"lib\" directories).
-			Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.")
+	message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+	message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
 endif()
 
 
