@@ -114,6 +114,9 @@ namespace detail
 			void*						mUserVertex;
 			sf::Vector2f				mPosition;
 			OptTriangleIterator			mSurroundingTriangle;
+#ifndef NDEBUG
+			const std::type_info*		mUserType;
+#endif
 	};
 
 	// Meta-information edge, for algorithm internals
@@ -164,12 +167,16 @@ namespace detail
 	: mUserVertex(const_cast<typename std::remove_const<V>::type*>(&userVertex))
 	, mPosition(getVertexPosition(userVertex))
 	, mSurroundingTriangle(surroundingTriangle)
+#ifndef NDEBUG
+	, mUserType(&typeid(V))
+#endif
 	{
 	}
 
 	template <typename V>
 	V& AdvancedVertex::getUserVertex() const
 	{
+		assert(typeid(V) == *mUserType);
 		return *static_cast<V*>(mUserVertex);
 	}
 

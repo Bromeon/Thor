@@ -115,6 +115,9 @@ namespace detail
 	: mUserVertex(nullptr)
 	, mPosition(x, y)
 	, mSurroundingTriangle()
+#ifndef NDEBUG
+	, mUserType(&typeid(void))
+#endif
 	{
 		// mSurroundingTriangle is a singular iterator. setSurroundingTriangle() must called before other operations,
 		// especially before assignments and copies of AdvancedVertex objects.

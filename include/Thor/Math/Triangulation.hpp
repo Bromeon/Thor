@@ -39,6 +39,10 @@
 #include <set>
 #include <map>
 #include <iterator>
+#include <type_traits>
+#ifndef NDEBUG
+ #include <typeinfo> // for detail::AdvancedVertex::getUserVertex<V>()
+#endif
 
 
 namespace thor
