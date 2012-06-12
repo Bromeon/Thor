@@ -111,21 +111,9 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
-	CoordVertexHolder::CoordVertexHolder(float x, float y)
-	: mPosition(x, y)
-	{
-	}
-
-	sf::Vector2f CoordVertexHolder::getPosition() const
-	{
-		return mPosition;
-	}
-	
-	// ---------------------------------------------------------------------------------------------------------------------------
-
-
 	AdvancedVertex::AdvancedVertex(float x, float y)
-	: mVertexHolder(new CoordVertexHolder(x, y))
+	: mUserVertex(nullptr)
+	, mPosition(x, y)
 	, mSurroundingTriangle()
 	{
 		// mSurroundingTriangle is a singular iterator. setSurroundingTriangle() must called before other operations,
@@ -135,7 +123,7 @@ namespace detail
 
 	sf::Vector2f AdvancedVertex::getPosition() const
 	{
-		return mVertexHolder->getPosition();
+		return mPosition;
 	}
 	
 	void AdvancedVertex::setSurroundingTriangle(TriangleIterator target)
@@ -157,7 +145,6 @@ namespace detail
 	{
 		orderCorners();
 	}
-
 
 	void AdvancedEdge::orderCorners()
 	{

@@ -94,53 +94,6 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
-	// Type-erased base class to access user vertices
-	class VertexHolder
-	{
-		public:
-			// Virtual destructor
-			virtual						~VertexHolder() {}
-	
-			// Returns the vertex's position.
-			virtual sf::Vector2f		getPosition() const = 0;
-
-			// Returns the derived object.
-			template <typename V>
-			V&							getUserVertex();
-	};
-
-	// Concrete vertex holder to access user vertices
-	template <typename V>
-	class UserVertexHolder : public VertexHolder
-	{
-		public:
-			// Constructs a vertex referencing a user-defined vertex.
-			explicit					UserVertexHolder(V& userVertex);
-	
-			// Returns the vertex's position.
-			virtual sf::Vector2f		getPosition() const;
-
-			// Returns the user-defined vertex
-			V&							getUserVertex();
-
-		private:
-			V*							mUserVertex;
-	};
-
-	// Special vertex holder not referring to user vertices, but boundaries
-	class CoordVertexHolder : public VertexHolder
-	{
-		public:
-			// Constructs a vertex with a given coordinate
-										CoordVertexHolder(float x, float y);
-
-			// Returns the vertex's position.
-			virtual sf::Vector2f		getPosition() const;
-
-		private:
-			sf::Vector2f				mPosition;
-	};
-
 	// Class to represent a vertex for algorithm internals
 	class AdvancedVertex
 	{
@@ -158,7 +111,8 @@ namespace detail
 			V&							getUserVertex() const;
 		
 		private:
-			aurora::CopiedPtr<VertexHolder>	mVertexHolder;
+			void*						mUserVertex;
+			sf::Vector2f				mPosition;
 			OptTriangleIterator			mSurroundingTriangle;
 	};
 
@@ -203,54 +157,21 @@ namespace detail
 
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
-
-
-	template <typename V>
-	V& VertexHolder::getUserVertex()
-	{
-		typedef UserVertexHolder<V> Derived;
-
-		assert(dynamic_cast<Derived*>(this));
-		return static_cast<Derived*>(this)->getUserVertex();
-	}
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-
+	
 
 	template <typename V>
-	UserVertexHolder<V>::UserVertexHolder(V& userVertex)
-		: mUserVertex(&userVertex)
+	AdvancedVertex::AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle)
+	: mUserVertex(const_cast<typename std::remove_const<V>::type*>(&userVertex))
+	, mPosition(getVertexPosition(userVertex))
+	, mSurroundingTriangle(surroundingTriangle)
 	{
-	}
-
-	template <typename V>
-	sf::Vector2f UserVertexHolder<V>::getPosition() const
-	{
-		return getVertexPosition(*mUserVertex);
-	}
-
-	template <typename V>
-	V& UserVertexHolder<V>::getUserVertex()
-	{
-		return *mUserVertex;
 	}
 
 	template <typename V>
 	V& AdvancedVertex::getUserVertex() const
 	{
-		return mVertexHolder->getUserVertex<V>();
+		return *static_cast<V*>(mUserVertex);
 	}
-
-	
-	// ---------------------------------------------------------------------------------------------------------------------------
-	
-	template <typename V>
-	AdvancedVertex::AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle)
-	: mVertexHolder(new UserVertexHolder<V>(userVertex))
-	, mSurroundingTriangle(surroundingTriangle)
-	{
-	}
-
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
