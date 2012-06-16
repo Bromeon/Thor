@@ -175,15 +175,15 @@ namespace detail
 	
 	void AdvancedTriangle::removeVertex(AdvancedVertex& vertexRef)
 	{
-		unsigned int erased = mRemainingVertices.erase(&vertexRef);
+		std::size_t erased = mRemainingVertices.erase(&vertexRef);
 		assert(erased == 1);
 	}
 	
 	void AdvancedTriangle::removeVertex(VertexPtrIterator vertexItr)
 	{
-		unsigned int size = mRemainingVertices.size();
+		std::size_t size = mRemainingVertices.size();
 		mRemainingVertices.erase(vertexItr);
-		assert(size == mRemainingVertices.size()+1);
+		assert(size == mRemainingVertices.size() + 1);
 	}
 	
 	VertexPtrIterator AdvancedTriangle::begin()

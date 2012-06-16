@@ -27,6 +27,12 @@
 
 #include <cassert>
 
+// MSVC: Deactivate warning concerning this in constructor initializer list
+#ifdef _MSC_VER
+	#pragma warning(push)
+	#pragma warning(disable: 4355)
+#endif // _MSC_VER
+
 
 namespace thor
 {
@@ -69,3 +75,7 @@ namespace detail
 
 } // namespace detail
 } // namespace thor
+
+#ifdef _MSC_VER
+	#pragma warning(pop)
+#endif // _MSC_VER

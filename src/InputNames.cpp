@@ -57,7 +57,7 @@ namespace
 
 			const std::string& at(T t) const
 			{
-				if (static_cast<unsigned int>(t) >= stringVector.size())
+				if (static_cast<std::size_t>(t) >= stringVector.size())
 					throw StringConversionException("thor::ToKeyboardKey() / thor::ToMouseButton() - No match for string found");
 				else
 					return stringVector[t];

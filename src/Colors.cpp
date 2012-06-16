@@ -84,7 +84,7 @@ sf::Color ColorGradient::getColor(float interpolation) const
 		return mColors[0];
 
 	// Find out to which transition the parameter belongs
-	unsigned int index = 0;
+	std::size_t index = 0;
 	float sum = 0.f;
 	AURORA_CITR_FOREACH(std::vector<float>, mTransitionTimes, itr)
 	{

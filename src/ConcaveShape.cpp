@@ -134,7 +134,7 @@ void ConcaveShape::setPointCount(unsigned int count)
 
 unsigned int ConcaveShape::getPointCount() const
 {
-	return mPoints.size();
+	return static_cast<unsigned int>(mPoints.size());
 }
 
 void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
