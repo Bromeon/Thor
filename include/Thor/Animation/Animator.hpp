@@ -82,6 +82,11 @@ class Animator
 		///  animation is shown.
 		void						stopAnimation();
 
+		/// @brief Checks whether an animation is currently playing.
+		/// @details Returns true after an animation has been started with playAnimation(), as long as it has not ended. 
+		///  If none or the default animation is playing, false is returned.
+		bool						isPlayingAnimation() const;
+
 		/// @brief Updates the animator's progress. You should call this method each frame.
 		/// @param dt Frame time.
 		void						update(sf::Time dt);

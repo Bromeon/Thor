@@ -66,6 +66,12 @@ void Animator<Animated, Id>::stopAnimation()
 }
 
 template <class Animated, typename Id>
+bool Animator<Animated, Id>::isPlayingAnimation() const
+{
+	return mPlayingAnimation != nullptr;
+}
+
+template <class Animated, typename Id>
 void Animator<Animated, Id>::update(sf::Time dt)
 {
 	// No animation playing (no default animation available): Do nothing
