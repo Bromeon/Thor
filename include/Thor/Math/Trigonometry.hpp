@@ -43,7 +43,8 @@ namespace thor
 /// @struct thor::TrigonometricTraits
 /// @brief Trigonometric traits template
 /// @details This template can be specialized in order to implement trigonometric constants and functions
-///  for arbitrary types. Some of the definitions are required by the vector algebra functions. @n@n
+///  for arbitrary types. Some of the definitions are required by the vector algebra functions. Thor supplies
+///  predefined specializations for float, double and long double.@n@n
 /// To define your own traits, specialize the template inside namespace @a thor. The full specialization
 ///  shall contain the following public static methods. You don't have to define all of them, depending on
 ///  the functionality you need. For example, computing the vector length requires sqrt(), while the polar
@@ -61,10 +62,11 @@ namespace thor
 ///
 /// @attention All trigonometric functions take and return degrees, @b NOT radians.
 template <typename T>
-struct TrigonometricTraits;
+struct TrigonometricTraits
+{
+};
 
-/// @brief Trigonometric traits: Specialization for float
-///
+// Trigonometric traits: Specialization for float
 template <>
 struct TrigonometricTraits<float>
 {
@@ -83,8 +85,7 @@ struct TrigonometricTraits<float>
 	static Type degToRad(Type deg)				{ return pi() / 180 * deg;					}
 };
 
-/// @brief Trigonometric traits: Specialization for double
-///
+// Trigonometric traits: Specialization for double
 template <>
 struct TrigonometricTraits<double>
 {
@@ -103,8 +104,7 @@ struct TrigonometricTraits<double>
 	static Type degToRad(Type deg)				{ return pi() / 180 * deg;					}
 };
 
-/// @brief Trigonometric traits: Specialization for long double
-///
+// Trigonometric traits: Specialization for long double
 template <>
 struct TrigonometricTraits<long double>
 {
@@ -122,6 +122,9 @@ struct TrigonometricTraits<long double>
 	static Type radToDeg(Type rad)				{ return 180 / pi() * rad;					}
 	static Type degToRad(Type deg)				{ return pi() / 180 * deg;					}
 };
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 
 /// @brief Converts radians to degrees.
 ///

@@ -29,9 +29,10 @@
 #ifndef THOR_TRIANGULATION_HPP
 #define THOR_TRIANGULATION_HPP
 
+#include <Thor/Math/TriangulationFigures.hpp>
+
 #include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
-#include <Thor/Math/TriangulationFigures.hpp>
 
 #include <vector>
 #include <deque>

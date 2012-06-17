@@ -108,31 +108,27 @@ class Triangle
 };
 
 
-/// @brief Class to implement the Vertex concept
+/// @brief Traits template to implement the Vertex concept
 /// @details Specializations of this class template shall contain a method with a signature compatible to the following one.
 ///  The returned value represents the position of the user-defined vertex.
 /// @code
 ///  static sf::Vector2f getPosition(const V& vertex);
 /// @endcode
 /// By default, a member function <i>V::getPosition()</i> is invoked.
+/// @n The traits template is already specialized for sf::Vector2f.
 template <typename V>
 struct TriangulationTraits
 {
-	/// @brief Returns @a vertex.getPosition().
-	///
 	static sf::Vector2f getPosition(const V& vertex)
 	{
 		return vertex.getPosition();
 	}
 };
 
-/// @brief Triangulation traits specialization for sf::Vector2f
-///
+// Triangulation traits: Specialization for sf::Vector2f
 template <>
 struct TriangulationTraits<sf::Vector2f>
 {
-	/// @brief Returns the vector itself.
-	/// 
 	static sf::Vector2f getPosition(sf::Vector2f vertex)
 	{
 		return vertex;
