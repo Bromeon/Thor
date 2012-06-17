@@ -84,7 +84,7 @@ class THOR_API Timer
 		
 		/// @brief Resets the timer's countdown to the given time limit.
 		/// @param timeLimit The new time limit (must be greater than zero).
-		/// @param restart True when the timer continues to run, false if it waits for the next Start() call.
+		/// @param restart True when the timer continues to run, false if it waits for the next start() call.
 		virtual void				reset(sf::Time timeLimit, bool restart = false);
 		
 

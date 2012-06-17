@@ -45,17 +45,17 @@ namespace thor
 /// @details This template can be specialized in order to implement trigonometric constants and functions
 ///  for arbitrary types. Some of the definitions are required by the vector algebra functions. @n@n
 /// To define your own traits, specialize the template inside namespace @a thor. The full specialization
-/// shall contain the following public static methods. You don't have to define all of them, depending on
-/// the functionality you need. For example, computing the vector length requires Sqrt(), and for
-/// angle-related functionality, you need ArcTan2(). @n
-/// @arg T Sin(T deg)
-///	@arg T Cos(T deg)
-///	@arg T Tan(T deg)
-///	@arg T ArcSin(T value)
-///	@arg T ArcCos(T value)
-///	@arg T ArcTan2(T valY, T valX)
-///	@arg T Sqrt(T value)
-///	@arg T %Pi()
+///  shall contain the following public static methods. You don't have to define all of them, depending on
+///  the functionality you need. For example, computing the vector length requires sqrt(), while the polar
+///  angle requires arcTan2(). @n
+/// @arg T sin(T deg)
+///	@arg T cos(T deg)
+///	@arg T tan(T deg)
+///	@arg T arcSin(T value)
+///	@arg T arcCos(T value)
+///	@arg T arcTan2(T valY, T valX)
+///	@arg T sqrt(T value)
+///	@arg T %pi()
 ///	@arg T radToDeg(T rad)
 ///	@arg T degToRad(T deg)
 ///

@@ -141,7 +141,7 @@ class ActionMap : private aurora::NonCopyable
 		///
 		/// // Create EventSystem object, connect "run" action to callback
 		/// thor::ActionMap<std::string>::CallbackSystem system;
-		/// system.connect("run", &Callback);
+		/// system.connect("run", &callback);
 		///
 		/// // In the main loop: Forward actions to the callback system
 		/// map.invokeCallbacks(system);

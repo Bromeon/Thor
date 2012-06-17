@@ -80,7 +80,7 @@ template <typename T>
 std::string					toString(const sf::Vector3<T>& vector);
 
 /// @brief Returns a std::string representation of sf::Rect<T>.
-/// @details Format: (Left,Top;Width,Height)
+/// @details Format: (left,top;width,height)
 template <typename T>
 std::string					toString(const sf::Rect<T>& rect);
 

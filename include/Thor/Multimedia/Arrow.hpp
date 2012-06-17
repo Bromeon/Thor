@@ -122,7 +122,6 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		mutable sf::ConvexShape		mTriangle;
 		
 		static float				zeroVectorTolerance;
-		
 };
 
 /// @}

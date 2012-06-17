@@ -59,7 +59,7 @@ int main()
 		if (map.isActive(Quit))
 			return 0;
 
-		// Forward actions to callbacks: Invokes OnResize() in case of sf::Event::Resized events
+		// Forward actions to callbacks: Invokes onResize() in case of sf::Event::Resized events
 		map.invokeCallbacks(system);
 
 		// Update window
@@ -69,9 +69,9 @@ int main()
 
 void onResize(thor::ActionContext<MyAction> context)
 {
-	// The sf::Event member variable called Type has always the value sf::Event::Resized, as specified in the thor::Action
-	// constructor. Since the Resize action has been triggered by an sf::Event (in contrast to sf::Input), we can also be
-	// sure that context.Event is no null pointer.
+	// The sf::Event member variable called type has always the value sf::Event::Resized, as specified in the thor::Action
+	// constructor. Since the Resize action has been triggered by an sf::Event (and not by a sf::Keyboard, sf::Mouse or
+	// sf::Joystick), we can also be sure that context.event is no null pointer.
 	sf::Event event = *context.event;
 	std::cout << "Resized!   New size = (" << event.size.width << ", " << event.size.height << ")" << std::endl;
 }
