@@ -68,7 +68,8 @@ void Animator<Animated, Id>::stopAnimation()
 template <class Animated, typename Id>
 bool Animator<Animated, Id>::isPlayingAnimation() const
 {
-	return mPlayingAnimation != nullptr;
+	return mPlayingAnimation != nullptr
+		&& mPlayingAnimation != &mDefaultAnimation;
 }
 
 template <class Animated, typename Id>
