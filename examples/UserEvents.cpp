@@ -27,8 +27,8 @@ struct UnitEvent
 	Command::Type order;
 };
 
-// Function that returns the corresponding EventIdentifier to an Event
-Command::Type extractEventIdentifier(const UnitEvent& event)
+// Function that returns the corresponding EventId to an Event
+Command::Type getEventId(const UnitEvent& event)
 {
 	return event.order;
 }
@@ -53,7 +53,7 @@ void onHoldPosition(const UnitEvent& event)
 
 int main()
 {
-	// Create event system with template parameters for Event and EventIdentifier
+	// Create event system with template parameters for Event and EventId
 	thor::EventSystem<UnitEvent, Command::Type> system;
 
 	// Connect event identifiers to the listeners

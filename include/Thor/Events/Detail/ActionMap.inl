@@ -26,52 +26,52 @@
 namespace thor
 {
 
-template <typename ActionIdentifier>
-ActionMap<ActionIdentifier>::ActionMap(sf::Window& window)
+template <typename ActionId>
+ActionMap<ActionId>::ActionMap(sf::Window& window)
 : mActionMap()
 , mEventBuffer(window)
 {
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::update()
+template <typename ActionId>
+void ActionMap<ActionId>::update()
 {
 	mEventBuffer.clearEvents();
 	mEventBuffer.pollEvents();
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::pushEvent(const sf::Event& event)
+template <typename ActionId>
+void ActionMap<ActionId>::pushEvent(const sf::Event& event)
 {
 	mEventBuffer.pushEvent(event);
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::clearEvents()
+template <typename ActionId>
+void ActionMap<ActionId>::clearEvents()
 {
 	mEventBuffer.clearEvents();
 }
 
-template <typename ActionIdentifier>
-Action& ActionMap<ActionIdentifier>::operator[] (const ActionIdentifier& id)
+template <typename ActionId>
+Action& ActionMap<ActionId>::operator[] (const ActionId& id)
 {
 	return mActionMap[id];
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::removeAction(const ActionIdentifier& id)
+template <typename ActionId>
+void ActionMap<ActionId>::removeAction(const ActionId& id)
 {
 	mActionMap.erase(id);
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::clearActions()
+template <typename ActionId>
+void ActionMap<ActionId>::clearActions()
 {
 	mActionMap.clear();
 }
 
-template <typename ActionIdentifier>
-bool ActionMap<ActionIdentifier>::isActive(const ActionIdentifier& id) const
+template <typename ActionId>
+bool ActionMap<ActionId>::isActive(const ActionId& id) const
 {
 	typename Map::const_iterator action = mActionMap.find(id);
 	if (action == mActionMap.end())
@@ -80,8 +80,8 @@ bool ActionMap<ActionIdentifier>::isActive(const ActionIdentifier& id) const
 	return action->second.isActive(mEventBuffer);
 }
 
-template <typename ActionIdentifier>
-void ActionMap<ActionIdentifier>::invokeCallbacks(CallbackSystem& system) const
+template <typename ActionId>
+void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system) const
 {
 	sf::Window& window = mEventBuffer.getWindow();
 
@@ -94,11 +94,11 @@ void ActionMap<ActionIdentifier>::invokeCallbacks(CallbackSystem& system) const
 
 		// If at least one realtime constellation triggers this action, invoke callback for it
 		if (result.nbRealtimeTriggers > 0)
-			system.triggerEvent( ActionContext<ActionIdentifier>(window, nullptr, actionItr->first) );
+			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionItr->first) );
 
 		// Additionally, invoke callback once for every sf::Event
 		AURORA_CITR_FOREACH(std::vector<sf::Event>, result.eventContainer, eventItr)
-			system.triggerEvent( ActionContext<ActionIdentifier>(window, &*eventItr, actionItr->first) );
+			system.triggerEvent( ActionContext<ActionId>(window, &*eventItr, actionItr->first) );
 	}
 }
 

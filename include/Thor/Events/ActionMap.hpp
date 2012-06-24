@@ -42,7 +42,7 @@
 namespace thor
 {
 
-template <typename Event, typename EventIdentifier>
+template <typename Event, typename EventId>
 class EventSystem;
 
 
@@ -54,9 +54,9 @@ class EventSystem;
 ///  (sf::Event) and real time input states (sf::Mouse, sf::Keyboard, sf::Joystick). After the initialization, isActive() provides
 ///  an easy way to check whether a specified identifier is associated with an active action. Furthermore, it is possible to map
 ///  the actions to callbacks, which can be achieved with InvokeCallbacks().
-/// @tparam ActionIdentifier The type of ID you want to map to actions. This can be a string, an enum, or anything with a < operator
+/// @tparam ActionId The type of ID you want to map to actions. This can be a string, an enum, or anything with a < operator
 ///  and value semantics.
-template <typename ActionIdentifier>
+template <typename ActionId>
 class ActionMap : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ class ActionMap : private aurora::NonCopyable
 	public:
 		/// @brief EventSystem to connect ActionMap with event listeners.
 		/// 
-		typedef EventSystem< ActionContext<ActionIdentifier>, ActionIdentifier > CallbackSystem;
+		typedef EventSystem< ActionContext<ActionId>, ActionId > CallbackSystem;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class ActionMap : private aurora::NonCopyable
 		explicit					ActionMap(sf::Window& window);
 
 		/// @brief Clears old events and polls the window for new ones.
-		/// @details When you invoke this method, you should not call sf::Window::PollEvent() in the same frame, since update()
+		/// @details When you invoke this method, you should not call sf::Window::pollEvent() in the same frame, since update()
 		///  already does that. The following code
 		/// @code
 		/// map.update();
@@ -91,12 +91,12 @@ class ActionMap : private aurora::NonCopyable
 		void						update();
 
 		/// @brief Feeds the action map with a SFML event, that can be used during the current frame.
-		/// @details When you use the update() method, you needn't invoke PushEvent(). This method exists for more flexibility:
-		///  You can push user-defined events, and you can do something else with the polled events before calling PushEvent().
+		/// @details When you use the update() method, you needn't invoke pushEvent(). This method exists for more flexibility:
+		///  You can push user-defined events, and you can do something else with the polled events before calling pushEvent().
 		void						pushEvent(const sf::Event& event);
 
 		/// @brief Removes the events that have been temporarily stored.
-		/// @details You only need this function in combination with PushEvent(), if you want to feed the action map manually with events.
+		/// @details You only need this function in combination with pushEvent(), if you want to feed the action map manually with events.
 		///  Otherwise, you can just call update().
 		void						clearEvents();
 
@@ -107,11 +107,11 @@ class ActionMap : private aurora::NonCopyable
 		/// thor::ActionMap<std::string> map(...);
 		/// map["run"] = thor::Action(sf::Keyboard::R);
 		/// @endcode
-		Action&						operator[] (const ActionIdentifier& id);
+		Action&						operator[] (const ActionId& id);
 
 		/// @brief Remove the action associated with the specified @a id.
 		///
-		void						removeAction(const ActionIdentifier& id);
+		void						removeAction(const ActionId& id);
 
 		/// @brief Removes all actions associated with this map.
 		///
@@ -125,10 +125,10 @@ class ActionMap : private aurora::NonCopyable
 		/// // If LCtrl+A or B is pressed, the action is active.
 		/// thor::Action(sf::Keyboard::A) && thor::Action(sf::Keyboard::LCtrl) || thor::Action(sf::Keyboard::B);
 		/// @endcode
-		bool						isActive(const ActionIdentifier& id) const;
+		bool						isActive(const ActionId& id) const;
 
 		/// @brief Forwards active actions to a callback system.
-		/// @param system Callback system of type EventSystem< ActionContext<ActionIdentifier>, ActionIdentifier >
+		/// @param system Callback system of type EventSystem< ActionContext<ActionId>, ActionId >
 		/// @details For every action that is currently active, the action ID is passed to @a system, where all listener
 		///  functions associated with the ID are invoked.
 		/// @code
@@ -152,7 +152,7 @@ class ActionMap : private aurora::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef std::map<ActionIdentifier, Action> Map;
+		typedef std::map<ActionId, Action> Map;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

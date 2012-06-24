@@ -26,35 +26,35 @@
 namespace thor
 {
 
-template <typename Event, typename EventIdentifier>
-EventSystem<Event, EventIdentifier>::EventSystem()
+template <typename Event, typename EventId>
+EventSystem<Event, EventId>::EventSystem()
 : mListeners()
 {
 }
 
-template <typename Event, typename EventIdentifier>
-void EventSystem<Event, EventIdentifier>::triggerEvent(const Event& event)
+template <typename Event, typename EventId>
+void EventSystem<Event, EventId>::triggerEvent(const Event& event)
 {
-	// Import symbol extractEventIdentifier to qualify for ADL.
+	// Import symbol getEventId to qualify for ADL.
 	using namespace detail;
 
-	mListeners.call(extractEventIdentifier(event), event);
+	mListeners.call(getEventId(event), event);
 }
 
-template <typename Event, typename EventIdentifier>
-Connection EventSystem<Event, EventIdentifier>::connect(const EventIdentifier& trigger, const Listener& listener)
+template <typename Event, typename EventId>
+Connection EventSystem<Event, EventId>::connect(const EventId& trigger, const Listener& listener)
 {
 	return mListeners.add(trigger, listener);
 }
 
-template <typename Event, typename EventIdentifier>
-void EventSystem<Event, EventIdentifier>::clearConnections(EventIdentifier identifier)
+template <typename Event, typename EventId>
+void EventSystem<Event, EventId>::clearConnections(EventId identifier)
 {
 	mListeners.clear(identifier);
 }
 
-template <typename Event, typename EventIdentifier>
-void EventSystem<Event, EventIdentifier>::clearAllConnections()
+template <typename Event, typename EventId>
+void EventSystem<Event, EventId>::clearAllConnections()
 {
 	mListeners.clearAll();
 }
@@ -65,11 +65,11 @@ void EventSystem<Event, EventIdentifier>::clearAllConnections()
 namespace detail
 {
 
-	// Default implementation for events where the Event type is the same as the EventIdentifier type.
+	// Default implementation for events where the Event type is the same as the EventId type.
 	// This declaration must appear after the invocation in call(), since g++ otherwise prefers
 	// this function for overload resolution (while the overload for sf::Event isn't considered).
 	template <typename Event>
-	const Event& extractEventIdentifier(const Event& event)
+	const Event& getEventId(const Event& event)
 	{
 		return event;
 	}
