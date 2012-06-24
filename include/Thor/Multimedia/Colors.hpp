@@ -48,10 +48,6 @@ namespace detail
 /// @addtogroup Multimedia
 /// @{
 
-/// @brief Transparent color == sf::Color(0,0,0,0).
-/// @details Can be used as color for invisible objects.
-extern const sf::Color THOR_API		Transparency;
-
 /// @brief Blends the colors @a firstColor and @a secondColor, according to the given interpolation.
 /// @param firstColor The first color to blend.
 /// @param secondColor The second color to blend.

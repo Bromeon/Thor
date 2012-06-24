@@ -36,8 +36,6 @@
 namespace thor
 {
 
-extern const sf::Color Transparency = sf::Color(0, 0, 0, 0);
-
 sf::Color blendColors(const sf::Color& firstColor, const sf::Color& secondColor, float interpolation)
 {
 	assert(interpolation >= 0.f && interpolation <= 1.f);
