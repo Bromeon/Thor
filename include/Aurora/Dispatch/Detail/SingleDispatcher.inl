@@ -79,7 +79,7 @@ R SingleDispatcher<B, R>::call(B arg) const
 		detail::getRttiBaseClasses(key, bases);
 
 		// Iterate through all direct and indirect base classes
-		AURORA_CITR_FOREACH(std::vector<std::type_index>, bases, baseItr)
+		AURORA_CITR_FOREACH(baseItr, bases)
 		{
 			typename FnMap::const_iterator dispatchItr = findFunction(*baseItr);
 
