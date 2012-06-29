@@ -124,7 +124,7 @@ inline void MultiResourceCache::setLoadingFailureStrategy(Resources::LoadingFail
 	mLoadingFailureStrategy = strategy;
 
 	// Adapt already existing caches
-	AURORA_ITR_FOREACH(ResourceCacheMap, mSpecificCaches, itr)
+	AURORA_ITR_FOREACH(itr, mSpecificCaches)
 		itr->second->setLoadingFailureStrategy(strategy);
 }
 
@@ -133,7 +133,7 @@ inline void MultiResourceCache::setReleaseStrategy(Resources::ReleaseStrategy st
 	mReleaseStrategy = strategy;
 
 	// Adapt already existing caches
-	AURORA_ITR_FOREACH(ResourceCacheMap, mSpecificCaches, itr)
+	AURORA_ITR_FOREACH(itr, mSpecificCaches)
 		itr->second->setReleaseStrategy(strategy);
 }
 

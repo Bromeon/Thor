@@ -225,11 +225,11 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	states.transform *= getTransform();
 	
 	// Draw all points
-	AURORA_CITR_FOREACH(ShapeContainer, mTriangleShapes, itr)
+	AURORA_CITR_FOREACH(itr, mTriangleShapes)
 		target.draw(**itr, states);
 	
 	// Draw all edges at the boundary
-	AURORA_CITR_FOREACH(ShapeContainer, mEdgeShapes, itr)
+	AURORA_CITR_FOREACH(itr, mEdgeShapes)
 		target.draw(**itr, states);
 }
 
@@ -248,7 +248,7 @@ void ConcaveShape::formOutline() const
 		return;
 
 	// Create graphic edges	
-	AURORA_CITR_FOREACH(EdgeContainer, mEdges, itr)
+	AURORA_CITR_FOREACH(itr, mEdges)
 	{
 		sf::Vector2f firstPos = (*itr)[0];
 		sf::Vector2f secondPos = (*itr)[1];

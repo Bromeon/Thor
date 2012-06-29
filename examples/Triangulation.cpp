@@ -19,10 +19,6 @@ bool							handleEvents(sf::RenderWindow& window, VertexContainer& vertices, Tri
 
 int main()
 {
-	sf::Vector2f x;
-	thor::TriangulationTraits<sf::Vector2f>::getPosition(x);
-
-
 	// Create render window
 	sf::RenderWindow window(sf::VideoMode(640, 480), "Thor Triangulation", sf::Style::Close);
 	window.setFramerateLimit(20);
@@ -50,7 +46,7 @@ int main()
 		window.clear();
 		
 		// Draw all triangles
-		AURORA_CITR_FOREACH(TriangleContainer, triangles, itr)
+		AURORA_CITR_FOREACH(itr, triangles)
 		{
 			sf::ConvexShape triangle;
 			triangle.setPointCount(3);
@@ -65,7 +61,7 @@ int main()
 		}
 		
 		// Draw all points
-		AURORA_CITR_FOREACH(VertexContainer, vertices, itr)
+		AURORA_CITR_FOREACH(itr, vertices)
 		{
 			sf::CircleShape circle;
 			circle.setPosition(*itr - sf::Vector2f(6.f, 6.f));
@@ -87,7 +83,7 @@ int main()
 VertexContainer::iterator findVertex(VertexContainer& vertices, sf::Vector2f position)
 {
 	// Find out which point was clicked on (tolerance radius is 6 pixels, as big as the circle's radius)
-	AURORA_ITR_FOREACH(VertexContainer, vertices, itr)
+	AURORA_ITR_FOREACH(itr, vertices)
 	{
 		if (thor::squaredLength(position - *itr) <= 36.f)
 			return itr;
@@ -105,7 +101,7 @@ bool handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& 
 	if (mouseEvent.button == sf::Mouse::Left)
 	{
 		// Don't insert the same point twice
-		AURORA_CITR_FOREACH(VertexContainer, vertices, itr)
+		AURORA_CITR_FOREACH(itr, vertices)
 		{
 			if (*itr == clickPos)
 				return false;

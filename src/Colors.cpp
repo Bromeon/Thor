@@ -84,7 +84,7 @@ sf::Color ColorGradient::getColor(float interpolation) const
 	// Find out to which transition the parameter belongs
 	std::size_t index = 0;
 	float sum = 0.f;
-	AURORA_CITR_FOREACH(std::vector<float>, mTransitionTimes, itr)
+	AURORA_CITR_FOREACH(itr, mTransitionTimes)
 	{
 		sum += *itr;
 		if (sum >= interpolation)
@@ -104,7 +104,7 @@ void ColorGradient::normalize()
 {
 	float sum = std::accumulate(mTransitionTimes.begin(), mTransitionTimes.end(), 0.f);
 
-	AURORA_ITR_FOREACH(std::vector<float>, mTransitionTimes, itr)
+	AURORA_ITR_FOREACH(itr, mTransitionTimes)
 		*itr /= sum;
 }
 

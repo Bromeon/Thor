@@ -85,7 +85,7 @@ void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system) const
 {
 	sf::Window& window = mEventBuffer.getWindow();
 
-	AURORA_CITR_FOREACH(typename Map, mActionMap, actionItr)
+	AURORA_CITR_FOREACH(actionItr, mActionMap)
 	{
 		// Check if current action is active, collect additional information in result
 		detail::ActionResult result = {};
@@ -97,7 +97,7 @@ void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system) const
 			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionItr->first) );
 
 		// Additionally, invoke callback once for every sf::Event
-		AURORA_CITR_FOREACH(std::vector<sf::Event>, result.eventContainer, eventItr)
+		AURORA_CITR_FOREACH(eventItr, result.eventContainer)
 			system.triggerEvent( ActionContext<ActionId>(window, &*eventItr, actionItr->first) );
 	}
 }

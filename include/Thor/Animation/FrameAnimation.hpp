@@ -115,7 +115,7 @@ void FrameAnimation::operator() (Animated& target, float progress) const
 	assert(progress >= 0.f && progress <= 1.f);
 
 	ensureNormalized();
-	AURORA_CITR_FOREACH(std::vector<detail::Frame>, mFrames, itr)
+	AURORA_CITR_FOREACH(itr, mFrames)
 	{
 		progress -= itr->duration;
 		

@@ -64,14 +64,14 @@ void BigSprite::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
 
-	AURORA_CITR_FOREACH(std::vector<sf::Sprite>, mSplitSprites, itr)
+	AURORA_CITR_FOREACH(itr, mSplitSprites)
 		target.draw(*itr, states);
 }
 
 void BigSprite::setColor(const sf::Color& color)
 {
 	mColor = color;
-	AURORA_ITR_FOREACH(std::vector<sf::Sprite>, mSplitSprites, itr)
+	AURORA_ITR_FOREACH(itr, mSplitSprites)
 		itr->setColor(color);
 }
 

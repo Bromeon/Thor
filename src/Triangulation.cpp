@@ -274,7 +274,7 @@ namespace detail
 	// Checks if edge intersects any constrained edge in constrainedEdges.
 	bool intersectsEdge(const AdvancedEdge& edge, const EdgeSet& constrainedEdges)
 	{
-		AURORA_CITR_FOREACH(EdgeSet, constrainedEdges, itr)
+		AURORA_CITR_FOREACH(itr, constrainedEdges)
 		{
 			if (intersection(edge, *itr))
 				return true;
@@ -744,7 +744,7 @@ namespace detail
 	{
 		// Find maximal coordinate in any direction
 		float maxCoord = 0.f;
-		AURORA_CITR_FOREACH(VertexCtr, allVertices, itr)
+		AURORA_CITR_FOREACH(itr, allVertices)
 		{
 			sf::Vector2f position = itr->getPosition();
 

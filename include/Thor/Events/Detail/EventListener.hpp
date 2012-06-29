@@ -144,7 +144,7 @@ namespace detail
 			// Invokes all stored functions with arg as argument.
 			void call(Parameter arg) const
 			{
-				AURORA_CITR_FOREACH(typename Container, mListeners, itr)
+				AURORA_CITR_FOREACH(itr, mListeners)
 					itr->call(arg);
 			}
 	
