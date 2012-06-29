@@ -91,7 +91,7 @@ R DoubleDispatcher<B, R>::call(B arg1, B arg2) const
 
 			// Iterate through all possible matches of the current indirection level (for success, there must be exactly 1 match)
 			typename FnMap::const_iterator dispatchItr = mMap.end();
-			AURORA_CITR_FOREACH(std::vector<detail::IndirectionPair>, indirections, itr)
+			AURORA_CITR_FOREACH(itr, indirections)
 			{
 				// Check if types corresponding to current indirection are registered
 				typename FnMap::const_iterator currentItr = findFunction(bases1[itr->first], bases2[itr->second]);
