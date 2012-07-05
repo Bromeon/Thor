@@ -141,3 +141,7 @@ install(FILES license.txt
 
 install(DIRECTORY extlibs/aurora/include
 		DESTINATION .)
+
+# Install CMake module
+install(FILES cmake/Modules/FindThor.cmake
+		DESTINATION cmake/Modules)
