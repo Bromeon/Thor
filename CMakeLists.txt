@@ -132,12 +132,17 @@ if(THOR_BUILD_EXAMPLES)
 endif()
 
 
-# Install include directory and license file
+# Install include directory and license files
 install(DIRECTORY include
 		DESTINATION .)
 
 install(FILES license.txt
+		RENAME license-thor.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
 
+install(FILES extlibs/aurora/license.txt
+		RENAME license-aurora.txt
+		DESTINATION ${THOR_DOC_INSTALL_DIR})
+		
 install(DIRECTORY extlibs/aurora/include
 		DESTINATION .)
