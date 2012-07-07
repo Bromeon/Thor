@@ -88,7 +88,7 @@ endif()
 
 
 # Add directory containing FindSFML.cmake to module path
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/;${CMAKE_MODULE_PATH}")
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
 
 
 # Find SFML
