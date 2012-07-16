@@ -83,6 +83,7 @@ namespace
 
 		#define THOR_INSERT_MAPPING(identifier) bimap.insert(sf::Keyboard::identifier, #identifier)
 
+		THOR_INSERT_MAPPING(Unknown);
 		THOR_INSERT_MAPPING(A);
 		THOR_INSERT_MAPPING(B);
 		THOR_INSERT_MAPPING(C);
