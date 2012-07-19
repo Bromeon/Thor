@@ -78,13 +78,13 @@ class Animator
 		void						playAnimation(const Id& id, bool loop = false);
 
 		/// @brief Interrupts the animation that is currently active.
-		/// @details If a default animation has been specified, it is shown. Otherwise, the last visible frame of the stopped
-		///  animation is shown.
+		/// @details The animated object remains in the state of the stopped animation. After this call, isPlayingAnimation()
+		///  returns false.
 		void						stopAnimation();
 
 		/// @brief Checks whether an animation is currently playing.
-		/// @details Returns true after an animation has been started with playAnimation(), as long as it has not ended. 
-		///  If none or the default animation is playing, false is returned.
+		/// @return true after an animation has been started with playAnimation(), as long as it has not ended. 
+		///  If no animation is playing, false is returned.
 		bool						isPlayingAnimation() const;
 
 		/// @brief Updates the animator's progress. You should call this method each frame.
@@ -92,16 +92,9 @@ class Animator
 		void						update(sf::Time dt);
 
 		/// @brief Applies the stored animations to an object.
-		/// @param animated Object which is animated by the current animation. If no animation is active, the default animation
-		///  is applied (if specified), otherwise the object is left unchanged.
+		/// @param animated Object which is animated by the current animation. If no animation is active, the object is left
+		///  unchanged.
 		void						animate(Animated& animated) const;
-
-		/// @brief Sets an animation that is active when all others are stopped.
-		/// @param animation Default animation to set. Will be played in a loop if no other animation is currently active.
-		///  @a animation can be empty to reset the default animation. In this case, the object is not affected when
-		///  no animation is playing.
-		/// @param duration Duration of the animation.
-		void						setDefaultAnimation(const AnimationFunction& animation, sf::Time duration);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -122,7 +115,6 @@ class Animator
 	private:
 		AnimationMap				mAnimationMap;
 		const ScaledAnimation*		mPlayingAnimation;
-		ScaledAnimation				mDefaultAnimation;
 		float						mProgress;
 		bool						mLoop;
 };

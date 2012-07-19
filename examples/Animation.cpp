@@ -33,9 +33,9 @@ int main()
 	sprite.setPosition(100.f, 100.f);
 	thor::Animator<sf::Sprite, std::string> animator;
 
-	// Specify static subrect which is shown unless an other animation is active
-	thor::FrameAnimation defaultAnim;
-	defaultAnim.addFrame(1.f, sf::IntRect(0, 21, 44, 21));
+	// Specify single subrect which is shown unless an other animation is active
+	thor::FrameAnimation stand;
+	stand.addFrame(1.f, sf::IntRect(0, 21, 44, 21));
 
 	// Create first animation: Drive
 	thor::FrameAnimation drive;
@@ -48,7 +48,7 @@ int main()
 		fire.addFrame(1.f, sf::IntRect(44, 21*i, 49, 21));
 
 	// Register animations with their corresponding durations
-	animator.setDefaultAnimation(defaultAnim, sf::seconds(1.f));
+	animator.addAnimation("stand", stand, sf::seconds(1.f));
 	animator.addAnimation("drive", drive, sf::seconds(0.4f));
 	animator.addAnimation("fire", fire, sf::seconds(0.3f));
 
@@ -77,6 +77,10 @@ int main()
 				return 0;
 			}
 		}
+
+		// If no other animation is playing, play stand animation
+		if (!animator.isPlayingAnimation())
+			animator.playAnimation("stand");
 
 		// Update animator and apply current animation state to the sprite
 		animator.update(frameClock.restart());

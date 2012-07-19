@@ -33,8 +33,7 @@ template <class Animated, typename Id>
 Animator<Animated, Id>::Animator()
 : mAnimationMap()
 , mPlayingAnimation(nullptr)
-, mDefaultAnimation()
-, mProgress(0.f)
+
 , mLoop(false)
 {
 }
@@ -58,24 +57,19 @@ void Animator<Animated, Id>::playAnimation(const Id& id, bool loop)
 template <class Animated, typename Id>
 void Animator<Animated, Id>::stopAnimation()
 {
-	// Animations stopped: Play default animation if available
-	if (mDefaultAnimation.first)
-		playAnimation(mDefaultAnimation, true);
-	else
-		mPlayingAnimation = nullptr;
+	mPlayingAnimation = nullptr;
 }
 
 template <class Animated, typename Id>
 bool Animator<Animated, Id>::isPlayingAnimation() const
 {
-	return mPlayingAnimation != nullptr
-		&& mPlayingAnimation != &mDefaultAnimation;
+	return mPlayingAnimation != nullptr;
 }
 
 template <class Animated, typename Id>
 void Animator<Animated, Id>::update(sf::Time dt)
 {
-	// No animation playing (no default animation available): Do nothing
+	// No animation playing: Do nothing
 	if (!mPlayingAnimation)
 		return;
 
@@ -95,7 +89,7 @@ void Animator<Animated, Id>::update(sf::Time dt)
 template <class Animated, typename Id>
 void Animator<Animated, Id>::animate(Animated& animated) const
 {
-	// If animation is playing, apply it (includes default animation, if others are stopped)
+	// If animation is playing, apply it
 	if (mPlayingAnimation)
 		mPlayingAnimation->first(animated, mProgress);
 }
@@ -106,22 +100,6 @@ void Animator<Animated, Id>::playAnimation(ScaledAnimation& animation, bool loop
 	mPlayingAnimation = &animation;
 	mProgress = 0.f;
 	mLoop = loop;
-}
-
-template <class Animated, typename Id>
-void Animator<Animated, Id>::setDefaultAnimation(const AnimationFunction& animation, sf::Time duration)
-{
-	// Invalidate old playing animation, if it refers to default animation (which might be destroyed)
-	if (mPlayingAnimation == &mDefaultAnimation)
-		mPlayingAnimation = nullptr;
-
-	// Assign animation and duration
-	mDefaultAnimation.first = animation;
-	mDefaultAnimation.second = duration;
-
-	// If no other animation is active, play default animation
-	if (!mPlayingAnimation)
-		stopAnimation();
 }
 
 } // namespace thor
