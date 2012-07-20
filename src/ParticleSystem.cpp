@@ -42,21 +42,21 @@ namespace thor
 namespace
 {
 
-	// Functor as argument for std::find_if()
+	// Functor as argument for std::find_if() - compares only pair.first
 	template <typename First>
 	struct FirstFinder
 	{
-		explicit FirstFinder(const First& ptr)
-		: ptr(ptr)
+		explicit FirstFinder(const First& first)
+		: first(&first)
 		{
 		}
 
 		bool operator() (const std::pair<First, sf::Time>& element)
 		{
-			return element.first == ptr;
+			return element.first == *first;
 		}
 
-		const First& ptr;
+		const First* first;
 	};
 
 	// Erases emitter/affector at itr from c, if its time has expired. itr will point to the next element.

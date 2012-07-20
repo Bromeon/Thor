@@ -46,7 +46,7 @@ namespace thor
 struct ConcaveShape::TriangleGenerator
 {
 	TriangleGenerator(ShapeContainer& triangles, const sf::Color& color)
-	: triangles(triangles)
+	: triangles(&triangles)
 	, color(color)
 	{
 		triangles.clear();
@@ -80,11 +80,11 @@ struct ConcaveShape::TriangleGenerator
 		for (unsigned int i = 0; i < 3; ++i)
 			shape->setPoint(i, triangle[i]);
 		
-		triangles.push_back(std::move(shape));
+		triangles->push_back(std::move(shape));
 		return *this;
 	}
 
-	ShapeContainer&	triangles;
+	ShapeContainer*	triangles;
 	sf::Color		color;
 };
 

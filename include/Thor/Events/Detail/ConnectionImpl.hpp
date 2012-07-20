@@ -56,18 +56,18 @@ namespace detail
 		public:
 			// Constructor
 			ConnectionImpl(ListenerContainer& container, ListenerIterator iterator)
-			: mContainer(container)
+			: mContainer(&container)
 			, mIterator(iterator)
 			{
 			}
 		
 			virtual void disconnect()
 			{
-				mContainer.remove(mIterator);
+				mContainer->remove(mIterator);
 			}
 	
 		private:	
-			ListenerContainer&	mContainer;
+			ListenerContainer*	mContainer;
 			ListenerIterator	mIterator;
 	};
 
