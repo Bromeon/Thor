@@ -23,8 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Multimedia/BigSprite.hpp>
-#include <Thor/Multimedia/BigTexture.hpp>
+#include <Thor/Graphics/BigSprite.hpp>
+#include <Thor/Graphics/BigTexture.hpp>
 #include <Aurora/Tools/ForEach.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>

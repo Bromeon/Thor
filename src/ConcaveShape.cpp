@@ -23,8 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Multimedia/ConcaveShape.hpp>
-#include <Thor/Multimedia/Shapes.hpp>
+#include <Thor/Shapes/ConcaveShape.hpp>
+#include <Thor/Shapes/Shapes.hpp>
 #include <Thor/Math/Triangulation.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 

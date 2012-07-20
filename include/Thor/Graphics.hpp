@@ -24,17 +24,14 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete header for the Multimedia module
+/// @brief Complete header for the Graphics module
 
-#ifndef THOR_MODULE_MULTIMEDIA_HPP
-#define THOR_MODULE_MULTIMEDIA_HPP
+#ifndef THOR_MODULE_GRAPHICS_HPP
+#define THOR_MODULE_GRAPHICS_HPP
 
-#include <Thor/Multimedia/Arrow.hpp>
-#include <Thor/Multimedia/BigTexture.hpp>
-#include <Thor/Multimedia/BigSprite.hpp>
-#include <Thor/Multimedia/Colors.hpp>
-#include <Thor/Multimedia/ConcaveShape.hpp>
-#include <Thor/Multimedia/Shapes.hpp>
-#include <Thor/Multimedia/ToString.hpp>
+#include <Thor/Graphics/BigTexture.hpp>
+#include <Thor/Graphics/BigSprite.hpp>
+#include <Thor/Graphics/Colors.hpp>
+#include <Thor/Graphics/ToString.hpp>
 
-#endif // THOR_MODULE_MULTIMEDIA_HPP
+#endif // THOR_MODULE_GRAPHICS_HPP

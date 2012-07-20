@@ -48,7 +48,7 @@ namespace thor
 
 class ConcaveShape;
 
-/// @addtogroup Multimedia
+/// @addtogroup Shapes
 /// @{
 
 /// @brief Namespace for predefined shapes

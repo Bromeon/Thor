@@ -30,7 +30,7 @@
 #define THOR_AFFECTOR_HPP
 
 #include <Thor/Particles/ParticleInterfaces.hpp>
-#include <Thor/Multimedia/Colors.hpp>
+#include <Thor/Graphics/Colors.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/System/Time.hpp>

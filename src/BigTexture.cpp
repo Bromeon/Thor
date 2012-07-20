@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Multimedia/BigTexture.hpp>
+#include <Thor/Graphics/BigTexture.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Image.hpp>

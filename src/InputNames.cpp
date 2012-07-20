@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Events/InputNames.hpp>
-#include <Thor/Multimedia/ToString.hpp> // thor::StringConversionException
+#include <Thor/Graphics/ToString.hpp> // thor::StringConversionException
 
 #include <Aurora/Tools/Metaprogramming.hpp>
 

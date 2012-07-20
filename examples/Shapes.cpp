@@ -1,11 +1,11 @@
 
-#include <Thor/Multimedia.hpp>
+#include <Thor/Shapes.hpp>
 #include <SFML/Graphics.hpp>
 
 int main()
 {
 	// Create render window
-	sf::RenderWindow window(sf::VideoMode(600, 500), "Thor Multimedia", sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(600, 500), "Thor Shapes", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 	
 	// Create a concave shape by directly inserting the polygon points

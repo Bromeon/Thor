@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Multimedia/Colors.hpp>
+#include <Thor/Graphics/Colors.hpp>
 #include <Aurora/Tools/ForEach.hpp>
 
 #include <SFML/Graphics/Color.hpp>

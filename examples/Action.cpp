@@ -1,6 +1,6 @@
 
 #include <Thor/Events.hpp>
-#include <Thor/Multimedia/ToString.hpp>
+#include <Thor/Graphics/ToString.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
 

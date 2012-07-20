@@ -53,7 +53,7 @@ namespace thor
 class BigTexture;
 
 
-/// @addtogroup Multimedia
+/// @addtogroup Graphics
 /// @{
 
 /// @brief Sprite using big textures.

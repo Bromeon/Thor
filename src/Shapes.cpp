@@ -23,9 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-
-#include <Thor/Multimedia/Shapes.hpp>
-#include <Thor/Multimedia/ConcaveShape.hpp>
+#include <Thor/Shapes/Shapes.hpp>
+#include <Thor/Shapes/ConcaveShape.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 
 #include <SFML/Graphics/ConvexShape.hpp>

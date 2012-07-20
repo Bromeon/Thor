@@ -39,7 +39,7 @@
 namespace thor
 {
 
-/// @addtogroup Multimedia
+/// @addtogroup Shapes
 /// @{
 
 /// @brief Drawable arrow class

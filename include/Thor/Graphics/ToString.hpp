@@ -62,7 +62,7 @@ namespace thor
 template <typename T>
 struct PolarVector2;
 
-/// @addtogroup Multimedia
+/// @addtogroup Graphics
 /// @{
 
 /// @brief Returns a std::string representation of sf::Color.
@@ -109,5 +109,5 @@ class StringConversionException : public aurora::Exception
 
 } // namespace thor
 
-#include <Thor/Multimedia/Detail/ToString.inl>
+#include <Thor/Graphics/Detail/ToString.inl>
 #endif // THOR_TOSTRING_HPP

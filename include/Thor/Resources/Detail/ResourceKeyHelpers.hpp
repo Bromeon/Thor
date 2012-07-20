@@ -27,7 +27,7 @@
 #define THOR_RESOURCEKEYHELPERS_HPP
 
 #include <Thor/Resources/ResourceKey.hpp>
-#include <Thor/Multimedia/ToString.hpp>
+#include <Thor/Graphics/ToString.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/Graphics/Color.hpp>

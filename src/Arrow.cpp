@@ -23,8 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Multimedia/Arrow.hpp>
-#include <Thor/Multimedia/Shapes.hpp>
+#include <Thor/Shapes/Arrow.hpp>
+#include <Thor/Shapes/Shapes.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>

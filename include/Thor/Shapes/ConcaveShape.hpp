@@ -53,7 +53,7 @@ namespace sf
 namespace thor
 {
 
-/// @addtogroup Multimedia
+/// @addtogroup Shapes
 /// @{
 
 /// @brief Concave shape class

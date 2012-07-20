@@ -23,23 +23,14 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Graphics/ToString.hpp>
+/// @file
+/// @brief Complete header for the Shapes module
 
-#include <SFML/Graphics/Color.hpp>
+#ifndef THOR_MODULE_SHAPES_HPP
+#define THOR_MODULE_SHAPES_HPP
 
+#include <Thor/Shapes/Arrow.hpp>
+#include <Thor/Shapes/ConcaveShape.hpp>
+#include <Thor/Shapes/Shapes.hpp>
 
-namespace thor
-{
-
-std::string toString(const sf::Color& color)
-{
-	std::ostringstream stream;
-	stream							 << '(' 
-		<< static_cast<int>(color.r) << ','
-		<< static_cast<int>(color.g) << ','
-		<< static_cast<int>(color.b) << ','
-		<< static_cast<int>(color.a) << ')';
-	return stream.str();
-}
-
-} // namespace thor
+#endif // THOR_MODULE_SHAPES_HPP

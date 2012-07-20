@@ -29,7 +29,7 @@
 #ifndef THOR_COLORS_HPP
 #define THOR_COLORS_HPP
 
-#include <Thor/Multimedia/Detail/ColorImpl.hpp>
+#include <Thor/Graphics/Detail/ColorImpl.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/Graphics/Color.hpp>
@@ -45,7 +45,7 @@ namespace detail
 } // namespace detail
 
 
-/// @addtogroup Multimedia
+/// @addtogroup Graphics
 /// @{
 
 /// @brief Blends the colors @a firstColor and @a secondColor, according to the given interpolation.

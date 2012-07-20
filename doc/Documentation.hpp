@@ -50,17 +50,20 @@
 /// @defgroup Events Events
 /// @brief Facilities for object-oriented event handling using callbacks.
 
+/// @defgroup Graphics Graphics
+/// @brief Miscellaneous graphics-related functionality, such as specialized sprites or color helpers.
+
 /// @defgroup Math Math
 /// @brief Mathematical functionality, such as random number generator or trigonometric wrappers.
-
-/// @defgroup Multimedia Multimedia
-/// @brief Miscellaneous SFML related functionality, such as shapes and colors.
 
 /// @defgroup Particles Particles
 /// @brief Contains a particle system based on sf::Texture. The module also provides several affector and emitter classes.
 
 /// @defgroup Resources Resources
 /// @brief Provides a resource manager for various resource types as well as the possibility to access them safely.
+
+/// @defgroup Shapes Shapes
+/// @brief Extensions for sf::Shape like concave shapes or predefined figures.
 
 /// @defgroup Time Time
 /// @brief Supplies classes to measure time. These are convenient wrappers around sf::Clock.

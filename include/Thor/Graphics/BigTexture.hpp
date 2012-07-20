@@ -50,7 +50,7 @@ namespace sf
 namespace thor
 {
 
-/// @addtogroup Multimedia
+/// @addtogroup Graphics
 /// @{
 	
 /// @brief Class for textures which are too big for sf::Texture.
