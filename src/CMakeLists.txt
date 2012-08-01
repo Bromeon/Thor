@@ -34,6 +34,7 @@ set(THOR_SRC
 	Arrow.cpp
 	BigSprite.cpp
 	BigTexture.cpp
+	CallbackTimer.cpp
 	ColorImpl.cpp
 	Colors.cpp
 	ConcaveShape.cpp
@@ -51,7 +52,6 @@ set(THOR_SRC
 	Timer.cpp
 	ToString.cpp
 	Triangulation.cpp
-	TriggeringTimer.cpp
 	Trigonometry.cpp
 )
 

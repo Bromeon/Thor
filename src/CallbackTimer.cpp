@@ -23,34 +23,34 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Time/TriggeringTimer.hpp>
+#include <Thor/Time/CallbackTimer.hpp>
 
 
 namespace thor
 {
 
-TriggeringTimer::TriggeringTimer()
+CallbackTimer::CallbackTimer()
 : Timer()
 , mListeners()
 , mJustExpired(true) // Don't call listeners at beginning when default-constructed
 {
 }
 
-TriggeringTimer::TriggeringTimer(sf::Time timeLimit, bool initiallyRunning)
+CallbackTimer::CallbackTimer(sf::Time timeLimit, bool initiallyRunning)
 : Timer(timeLimit, initiallyRunning)
 , mListeners()
 , mJustExpired(false) // When constructed with initial time limit, call listeners at expiration time
 {
 }
 
-void TriggeringTimer::reset(sf::Time timeLimit, bool restart)
+void CallbackTimer::reset(sf::Time timeLimit, bool restart)
 {
 	Timer::reset(timeLimit, restart);
 
 	mJustExpired = false;
 }
 
-void TriggeringTimer::update()
+void CallbackTimer::update()
 {
 	// When not flagged as "just expired" yet, do it now, and call listeners
 	if (isExpired() && !mJustExpired)
@@ -60,12 +60,12 @@ void TriggeringTimer::update()
 	}
 }
 
-Connection TriggeringTimer::connect(const Listener& listener)
+Connection CallbackTimer::connect(const Listener& listener)
 {
 	return mListeners.add(listener);
 }
 
-void TriggeringTimer::clearConnections()
+void CallbackTimer::clearConnections()
 {
 	mListeners.clear();
 }

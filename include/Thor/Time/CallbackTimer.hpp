@@ -24,10 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::TriggeringTimer
+/// @brief Class thor::CallbackTimer
 
-#ifndef THOR_TRIGGERINGTIMER_HPP
-#define THOR_TRIGGERINGTIMER_HPP
+#ifndef THOR_CALLBACKTIMER_HPP
+#define THOR_CALLBACKTIMER_HPP
 
 #include <Thor/Time/Timer.hpp>
 #include <Thor/Events/Detail/EventListener.hpp>
@@ -45,27 +45,27 @@ namespace thor
 /// @brief Advanced timer with the ability to trigger function calls.
 /// @details Clock class that counts time down. As an extension of Timer, this class is able
 ///  to register functions that are called at expiration time.
-class THOR_API TriggeringTimer : public Timer
+class THOR_API CallbackTimer : public Timer
 {	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public types
 	public:
-		/// @brief Callback type for events being processed by TriggeringTimer.
+		/// @brief Callback type for events being processed by CallbackTimer.
 		///
-		typedef std::function< void(TriggeringTimer&) >		Listener;
+		typedef std::function< void(CallbackTimer&) >		Listener;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Default constructor: Creates an TriggeringTimer that is initially expired.
+		/// @brief Default constructor: Creates a callback timer that is initially expired.
 		/// @details You have to call reset() before you can use the countdown functionality.
-									TriggeringTimer();
+									CallbackTimer();
 	
 		/// @brief Constructor: Sets up a new Timer with the given time limit.
 		/// @param timeLimit The initial time (must be greater than zero).
 		/// @param initiallyRunning Indicates whether the timer is immediately being started.
-		explicit					TriggeringTimer(sf::Time timeLimit, bool initiallyRunning = false);
+		explicit					CallbackTimer(sf::Time timeLimit, bool initiallyRunning = false);
 		
 		virtual void				reset(sf::Time timeLimit, bool restart = false);
 
@@ -89,7 +89,7 @@ class THOR_API TriggeringTimer : public Timer
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef detail::ListenerSequence< TriggeringTimer& >		ListenerCtr;
+		typedef detail::ListenerSequence< CallbackTimer& >		ListenerCtr;
 		
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -103,4 +103,4 @@ class THOR_API TriggeringTimer : public Timer
 
 } // namespace thor
 
-#endif // THOR_TRIGGERINGTIMER_HPP
+#endif // THOR_CALLBACKTIMER_HPP

@@ -29,8 +29,8 @@
 #ifndef THOR_MODULE_TIME_HPP
 #define THOR_MODULE_TIME_HPP
 
+#include <Thor/Time/CallbackTimer.hpp>
 #include <Thor/Time/StopWatch.hpp>
 #include <Thor/Time/Timer.hpp>
-#include <Thor/Time/TriggeringTimer.hpp>
 
 #endif // THOR_MODULE_TIME_HPP

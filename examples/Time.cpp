@@ -23,7 +23,7 @@ int main()
 	// Create stopwatch and timer
 	const sf::Time initialTime = sf::seconds(4.f);
 	thor::StopWatch stopWatch;
-	thor::TriggeringTimer timer(initialTime);
+	thor::CallbackTimer timer(initialTime);
 
 	// Create texts that display instructions and current time
 	sf::Text instructions(
