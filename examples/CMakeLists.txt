@@ -50,6 +50,7 @@ endmacro()
 
 thor_example(Action)
 thor_example(Animation)
+thor_example(Fireworks)
 thor_example(Particles)
 thor_example(Resources)
 thor_example(Shapes)
