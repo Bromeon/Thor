@@ -64,7 +64,7 @@ void UniversalEmitter::emit(Adder& system, sf::Time dt)
 		particle.rotation = mParticleRotation();
 		particle.rotationSpeed = mParticleRotationSpeed();
 		particle.scale = mParticleScale();
-		mParticleColor = mParticleColor();
+		particle.color = mParticleColor();
 
 		system.addParticle(particle);
 	}
