@@ -33,7 +33,7 @@ template <class Animated, typename Id>
 Animator<Animated, Id>::Animator()
 : mAnimationMap()
 , mPlayingAnimation(nullptr)
-
+, mProgress(0.f)
 , mLoop(false)
 {
 }

@@ -111,7 +111,7 @@ int main()
 
 	// Allocate texture in std::shared_ptr
 	auto texture = std::make_shared<sf::Texture>();
-	if (!texture->loadFromFile("media/particle.png"))
+	if (!texture->loadFromFile("Media/particle.png"))
 		return EXIT_FAILURE;
 
 	// Instantiate particle system and add custom affector
