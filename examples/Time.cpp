@@ -25,21 +25,26 @@ int main()
 	thor::StopWatch stopWatch;
 	thor::CallbackTimer timer(initialTime);
 
+	sf::Font font;
+	if (!font.loadFromFile("Media/sansation.ttf"))
+		return 1;
+
 	// Create texts that display instructions and current time
 	sf::Text instructions(
 		"S      Start/pause stopwatch\n"
 		"T      Start/pause timer\n"
 		"R      Reset stopwatch and timer\n"
-		"Esc  Quit");
-	instructions.setCharacterSize(12);
-	instructions.setColor(sf::Color::White);
+		"Esc  Quit",
+		font, 12);
 
 	sf::Text stopWatchMeasurement;
 	stopWatchMeasurement.setCharacterSize(20);
+	stopWatchMeasurement.setFont(font);
 	stopWatchMeasurement.setPosition(70.f, 120.f);
 	stopWatchMeasurement.setColor(sf::Color(0, 190, 140));
 	
 	sf::Text timerMeasurement;
+	timerMeasurement.setFont(font);
 	timerMeasurement.setCharacterSize(20);
 	timerMeasurement.setPosition(70.f, 150.f);
 	timerMeasurement.setColor(sf::Color(0, 140, 190));

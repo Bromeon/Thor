@@ -22,14 +22,17 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
 
+	sf::Font font;
+	if (!font.loadFromFile("Media/sansation.ttf"))
+		return 1;
+
 	// Instruction text
 	sf::Text instructions(
 		"W:     Play walk animation (loop)\n"
 		"A:      Play attack animation\n"
 		"S:      Stop current animation\n"
-		"Esc:  Quit");
-	instructions.setCharacterSize(12);
-	instructions.setColor(sf::Color::White);
+		"Esc:  Quit",
+		font, 12);
 
 	// Load image that contains animation steps
 	sf::Image image;

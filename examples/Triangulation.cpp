@@ -26,14 +26,17 @@ int main()
 	// Create containers in which we store the vertices and the computed triangles
 	VertexContainer		vertices;
 	TriangleContainer	triangles;
+	
+	sf::Font font;
+	if (!font.loadFromFile("Media/sansation.ttf"))
+		return 1;
 
 	// Description with instructions
 	sf::Text instructions(
 		"Left click to add point\n"
 		"Right click to remove point\n"
-		"C key to clear everything");
-	instructions.setCharacterSize(12);
-	instructions.setColor(sf::Color::White);
+		"C key to clear everything",
+		font, 12);
 		
 	// Main loop
 	for (;;)

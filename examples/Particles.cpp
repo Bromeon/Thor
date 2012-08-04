@@ -60,12 +60,15 @@ int main()
 	thor::PolarVector2f velocity(200.f, -90.f);
 	bool				paused = false;
 
+	sf::Font font;
+	if (!font.loadFromFile("Media/sansation.ttf"))
+		return 1;
+
 	// Instruction text
 	sf::Text instructions(
 		"Left click: Pause\n"
-		"Mouse wheel: Change direction\n");
-	instructions.setCharacterSize(12);
-	instructions.setColor(sf::Color::White);
+		"Mouse wheel: Change direction\n",
+		font, 12);
 
 	// Create clock to measure frame time
 	sf::Clock frameClock;
