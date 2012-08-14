@@ -24,6 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <cmath>
 
 
 namespace thor
@@ -80,7 +81,7 @@ void Animator<Animated, Id>::update(sf::Time dt)
 	if (mProgress > 1.f)
 	{
 		if (mLoop)
-			mProgress -= 1.f;
+			mProgress -= std::floor(mProgress); // Store only fractional part
 		else
 			stopAnimation();
 	}
