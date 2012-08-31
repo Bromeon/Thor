@@ -117,4 +117,10 @@ Action operator&& (const Action& lhs, const Action& rhs)
 	return Action(result);
 }
 
+Action operator! (const Action& action)
+{
+	detail::ActionNode::CopiedPtr result( new detail::NotNode(action.mOperation) );
+	return Action(result);
+}
+
 } // namespace thor

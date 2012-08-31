@@ -230,6 +230,18 @@ namespace detail
 			ActionNode::CopiedPtr		mRhs;
 	};
 
+	// Logical NOT operator
+	class NotNode : public ActionNode
+	{
+		public:
+			explicit					NotNode(ActionNode::CopiedPtr action);
+			virtual	bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
+
+		private:
+			ActionNode::CopiedPtr		mAction;
+	};
+
 } // namespace detail
 } // namespace thor
 

@@ -354,5 +354,36 @@ namespace detail
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
+	
+	NotNode::NotNode(ActionNode::CopiedPtr action)
+		: ActionNode()
+		, mAction(std::move(action))
+	{
+	}
+
+	bool NotNode::isActionActive(const EventBuffer& buffer) const
+	{
+		return !mAction->isActionActive(buffer);
+	}
+
+	bool NotNode::isActionActive(const EventBuffer& buffer, ActionResult& out) const
+	{
+		// Don't modify if action is active -> use temporary result state
+		ActionResult tmpResult;
+
+		if (!mAction->isActionActive(buffer, tmpResult))
+		{
+			out.eventContainer.insert(out.eventContainer.end(), tmpResult.eventContainer.begin(), tmpResult.eventContainer.end());
+			out.nbRealtimeTriggers += tmpResult.nbRealtimeTriggers;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 } // namespace detail
 } // namespace thor

@@ -122,6 +122,7 @@ class THOR_API Action
 	/// @cond FriendsAreAnImplementationDetail
 	friend Action THOR_API operator|| (const Action& lhs, const Action& rhs);
 	friend Action THOR_API operator&& (const Action& lhs, const Action& rhs);
+	friend Action THOR_API operator! (const Action& action);
 	/// @endcond
 };
 
@@ -133,6 +134,10 @@ Action THOR_API				operator|| (const Action& lhs, const Action& rhs);
 /// @relates Action
 /// @brief AND operator of two actions: The resulting action is in effect if both @a lhs and @a rhs are active.
 Action THOR_API				operator&& (const Action& lhs, const Action& rhs);
+
+/// @relates Action
+/// @brief NOT operator of an action: The resulting action is in effect if @a action is not active.
+Action THOR_API				operator! (const Action& action);
 
 /// @}
 
