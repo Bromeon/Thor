@@ -33,6 +33,9 @@ namespace detail
 	class AdvancedVertex;
 	class AdvancedEdge;
 
+	struct OptTriangleIterator;
+	struct OptTriangleItrArray;
+
 	// Functor to sort advanced vertices by their positions, needed to store them inside std::set.
 	struct THOR_API CompareVertexPtrs
 	{
@@ -45,51 +48,9 @@ namespace detail
 		bool operator() (const AdvancedEdge& lhs, const AdvancedEdge& rhs) const;
 	};
 
-	// ---------------------------------------------------------------------------------------------------------------------------
-
-
-	// Type definitions of containers
-	typedef std::deque<AdvancedVertex>						VertexCtr;
+	// Containers and iterators which don't depend on type directly
 	typedef std::set<AdvancedVertex*, CompareVertexPtrs>	VertexPtrSet;
-	typedef std::set<AdvancedEdge, CompareEdges>			EdgeSet;
-	typedef std::list<AdvancedTriangle>						TriangleList;
-
-	// Type definitions of often used iterators
 	typedef VertexPtrSet::iterator							VertexPtrIterator;
-	typedef TriangleList::iterator							TriangleIterator;
-	
-	// ---------------------------------------------------------------------------------------------------------------------------
-
-
-	// Iterator to a triangle which can be explicitly invalid ("opt" stands for "optional").
-	struct THOR_API OptTriangleIterator
-	{
-									OptTriangleIterator();
-									OptTriangleIterator(TriangleIterator target);
-									OptTriangleIterator(const OptTriangleIterator& origin);
-		OptTriangleIterator&		operator= (const OptTriangleIterator& origin);
-
-		bool						valid;
-		TriangleIterator			target;
-	};
-	
-	// Circle class, needed for circumcircle
-	struct Circle
-	{
-									Circle(sf::Vector2f midPoint, float squaredRadius);
-
-		sf::Vector2f				midPoint;
-		float						squaredRadius;
-	};
-
-	// Metafunction to get a CV-qualified iterator value type (std::iterator_traits<T>::value_type is not const)
-	template <typename T>
-	struct DereferencedIterator
-	{
-		typedef typename std::remove_pointer<
-			typename std::iterator_traits<T>::pointer
-			>::type value_type;
-	};
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
@@ -97,25 +58,26 @@ namespace detail
 	// Class to represent a vertex for algorithm internals
 	class AdvancedVertex
 	{
+		// Note: Public interface contains OptTriangleIterator instead of TriangleIterator, although iterators are always valid.
+		// The reason is to avoid dependency on the STL container (TriangleIterator requires full typedef)
 		public:
 			template <typename V>
-										AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle);
-
+										AdvancedVertex(V& userVertex, OptTriangleIterator surroundingTriangle);
 										AdvancedVertex(float x, float y);
 
 			sf::Vector2f				getPosition() const;
-			void						setSurroundingTriangle(TriangleIterator target);
-			TriangleIterator			getSurroundingTriangle() const;
+			void						setSurroundingTriangle(OptTriangleIterator target);
+			OptTriangleIterator			getSurroundingTriangle() const;
 
 			template <typename V>
 			V&							getUserVertex() const;
-		
+
 		private:
-			void*						mUserVertex;
-			sf::Vector2f				mPosition;
-			OptTriangleIterator			mSurroundingTriangle;
+			void*									mUserVertex;
+			sf::Vector2f							mPosition;
+			aurora::CopiedPtr<OptTriangleIterator>	mSurroundingTriangle;
 #ifndef NDEBUG
-			const std::type_info*		mUserType;
+			const std::type_info*					mUserType;
 #endif
 	};
 
@@ -154,19 +116,62 @@ namespace detail
 
 		private:		
 			VertexPtrSet							mRemainingVertices;
-			std::array<OptTriangleIterator, 3>		mAdjacentTriangles;
+			aurora::CopiedPtr<OptTriangleItrArray>	mAdjacentTriangles;
 			bool									mFlagged;
 	};
 
-	
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+
+	// Type definitions of containers
+	typedef std::deque<AdvancedVertex>						VertexCtr;
+	typedef std::set<AdvancedEdge, CompareEdges>			EdgeSet;
+	typedef std::list<AdvancedTriangle>						TriangleList;
+
+	// Type definitions of often used iterators
+	typedef TriangleList::iterator							TriangleIterator;
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+
+	// Iterator to a triangle which can be explicitly invalid ("opt" stands for "optional").
+	struct THOR_API OptTriangleIterator
+	{
+									OptTriangleIterator();
+									OptTriangleIterator(TriangleIterator target);
+									OptTriangleIterator(const OptTriangleIterator& origin);
+		OptTriangleIterator&		operator= (const OptTriangleIterator& origin);
+
+		bool						valid;
+		TriangleIterator			target;
+	};
+
+	// Circle class, needed for circumcircle
+	struct Circle
+	{
+									Circle(sf::Vector2f midPoint, float squaredRadius);
+
+		sf::Vector2f				midPoint;
+		float						squaredRadius;
+	};
+
+	// Metafunction to get a CV-qualified iterator value type (std::iterator_traits<T>::value_type is not const)
+	template <typename T>
+	struct DereferencedIterator
+	{
+		typedef typename std::remove_pointer<
+			typename std::iterator_traits<T>::pointer
+		>::type value_type;
+	};
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 
 	template <typename V>
-	AdvancedVertex::AdvancedVertex(V& userVertex, TriangleIterator surroundingTriangle)
+	AdvancedVertex::AdvancedVertex(V& userVertex, OptTriangleIterator surroundingTriangle)
 	: mUserVertex(const_cast<typename std::remove_const<V>::type*>(&userVertex))
 	, mPosition(getVertexPosition(userVertex))
-	, mSurroundingTriangle(surroundingTriangle)
+	, mSurroundingTriangle(new OptTriangleIterator(surroundingTriangle))
 #ifndef NDEBUG
 	, mUserType(&typeid(V))
 #endif
@@ -182,6 +187,7 @@ namespace detail
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
+
 	// Function declarations required by the header
 	void 				THOR_API insertPoint(TriangleList& triangles, AdvancedVertex& vertex, const AdvancedTriangle& boundaryTriangle,
 									const EdgeSet& constrainedEdges);
@@ -193,11 +199,10 @@ namespace detail
 
 	void 				THOR_API setBoundaryPositions(const VertexCtr& allVertices, AdvancedTriangle& boundaryTriangle);
 
-
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 
-	// Policy class for small differences in triangulation - here for TriangulateConstrained()
+	// Policy class for small differences in triangulation - here for triangulateConstrained()
 	template <typename InputIterator>
 	struct ConstrainedTrDetails
 	{
@@ -213,13 +218,13 @@ namespace detail
 		static const bool isPolygon = false;
 	};
 
-	// Policy class for small differences in triangulation - here for TriangulatePolygon() without edgesOut parameter
+	// Policy class for small differences in triangulation - here for triangulatePolygon() without edgesOut parameter
 	struct PolygonTrDetails
 	{
 		static const bool isPolygon = true;
 	};
 
-	// Policy class for small differences in triangulation - here for TriangulatePolygon() with edgesOut parameter
+	// Policy class for small differences in triangulation - here for triangulatePolygon() with edgesOut parameter
 	template <typename OutputIterator, typename UserVertex>
 	struct PolygonOutputTrDetails
 	{
@@ -234,6 +239,7 @@ namespace detail
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------------
+
 
 	// Returns the position of a user vertex.
 	template <typename V>

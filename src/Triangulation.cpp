@@ -37,6 +37,12 @@ namespace thor
 namespace detail
 {
 
+	// Struct instead of typedef, since the latter cannot be forward-declared
+	struct OptTriangleItrArray 
+	{
+		std::array<OptTriangleIterator, 3>	iterators;
+	};
+
 	// Type definitions
 	typedef std::array<TriangleIterator, 3>					TriangleItrArray;
 	typedef std::pair<TriangleIterator, TriangleIterator>	TriangleItrPair;
@@ -114,7 +120,7 @@ namespace detail
 	AdvancedVertex::AdvancedVertex(float x, float y)
 	: mUserVertex(nullptr)
 	, mPosition(x, y)
-	, mSurroundingTriangle()
+	, mSurroundingTriangle(new OptTriangleIterator())
 #ifndef NDEBUG
 	, mUserType(&typeid(void))
 #endif
@@ -129,15 +135,16 @@ namespace detail
 		return mPosition;
 	}
 	
-	void AdvancedVertex::setSurroundingTriangle(TriangleIterator target)
+	void AdvancedVertex::setSurroundingTriangle(OptTriangleIterator target)
 	{
-		mSurroundingTriangle = target;
+		assert(target.valid);
+		*mSurroundingTriangle = target;
 	}
 	
-	TriangleIterator AdvancedVertex::getSurroundingTriangle() const
+	OptTriangleIterator AdvancedVertex::getSurroundingTriangle() const
 	{
-		assert(mSurroundingTriangle.valid);
-		return mSurroundingTriangle.target;
+		assert(mSurroundingTriangle->valid);
+		return *mSurroundingTriangle;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -163,7 +170,7 @@ namespace detail
 	AdvancedTriangle::AdvancedTriangle(AdvancedVertex& corner0, AdvancedVertex& corner1, AdvancedVertex& corner2)
 	: Triangle<AdvancedVertex>(corner0, corner1, corner2)
 	, mRemainingVertices()
-	, mAdjacentTriangles()
+	, mAdjacentTriangles(new OptTriangleItrArray())
 	, mFlagged(false)
 	{
 	}
@@ -198,12 +205,12 @@ namespace detail
 	
 	void AdvancedTriangle::setAdjacentTriangle(unsigned int index, const OptTriangleIterator& adjacentTriangle)
 	{
-		mAdjacentTriangles[index] = adjacentTriangle;
+		mAdjacentTriangles->iterators[index] = adjacentTriangle;
 	}
 	
 	OptTriangleIterator AdvancedTriangle::getAdjacentTriangle(unsigned int index) const
 	{
-		return mAdjacentTriangles[index];
+		return mAdjacentTriangles->iterators[index];
 	}
 	
 	void AdvancedTriangle::setFlagged(bool flagged)
@@ -679,7 +686,7 @@ namespace detail
 	// Inserts the specified vertex into the list of triangles.
 	void insertPoint(TriangleList& triangles, AdvancedVertex& vertex, const AdvancedTriangle& boundaryTriangle, const EdgeSet& constrainedEdges)
 	{
-		TriangleIterator oldTriangleItr = vertex.getSurroundingTriangle();
+		TriangleIterator oldTriangleItr = vertex.getSurroundingTriangle().target;
 		AdvancedTriangle& oldTriangle = *oldTriangleItr;
 	
 		assert(isClockwiseOriented(at(oldTriangle, 0), at(oldTriangle, 1), at(oldTriangle,2)));

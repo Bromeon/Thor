@@ -29,6 +29,8 @@
 #ifndef THOR_TRIANGULATION_HPP
 #define THOR_TRIANGULATION_HPP
 
+#include <SFML/System/Vector2.hpp>
+
 #include <Thor/Math/TriangulationFigures.hpp>
 
 #include <Aurora/Tools/ForEach.hpp>
