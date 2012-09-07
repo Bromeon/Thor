@@ -43,43 +43,46 @@ namespace
 		static_assert(!std::is_same<T, std::string>::value, "Type different from std::string expected");
 
 		public:
-			explicit StringBimap(unsigned int size)
-			: stringVector(size)
-			, tMap()
+			explicit StringBimap(unsigned int valueCount, unsigned int specialValueCount = 0)
+			: mStringVector(valueCount + specialValueCount)
+			, mTMap()
+			, mSpecialValueCount(specialValueCount)
 			{
 			}
 
 			void insert(T t, const std::string& string)
 			{
-				stringVector[t] = string;
-				tMap[string] = t;
+				mStringVector[t + mSpecialValueCount] = string;
+				mTMap[string] = t;
 			}
 
 			const std::string& at(T t) const
 			{
-				if (static_cast<std::size_t>(t) >= stringVector.size())
-					throw StringConversionException("thor::ToKeyboardKey() / thor::ToMouseButton() - No match for string found");
+				std::size_t index = static_cast<std::size_t>(t + mSpecialValueCount);
+				if (index >= mStringVector.size() + mSpecialValueCount)
+					throw StringConversionException("thor::toString() - No match for key / mouse button found");
 				else
-					return stringVector[t];
+					return mStringVector[index];
 			}
 
 			T at(const std::string& string) const
 			{
-				typename std::map<std::string, T>::const_iterator itr = tMap.find(string);
-				if (itr == tMap.end())
-					throw StringConversionException("thor::ToKeyboardKey() / thor::ToMouseButton() - No match for string found");
+				auto itr = mTMap.find(string);
+				if (itr == mTMap.end())
+					throw StringConversionException("thor::toKeyboardKey() / thor::toMouseButton() - No match for string found");
 				else
 					return itr->second;
 			}
 
 		private:
-			std::vector<std::string> stringVector;
-			std::map<std::string, T> tMap;
+			std::vector<std::string>	mStringVector;
+			std::map<std::string, T>	mTMap;
+			unsigned int				mSpecialValueCount;
 	};
 
 	StringBimap<sf::Keyboard::Key> InitMap(aurora::Type<sf::Keyboard::Key>)
 	{
-		StringBimap<sf::Keyboard::Key> bimap(sf::Keyboard::KeyCount);
+		StringBimap<sf::Keyboard::Key> bimap(sf::Keyboard::KeyCount, 1);
 
 		#define THOR_INSERT_MAPPING(identifier) bimap.insert(sf::Keyboard::identifier, #identifier)
 
