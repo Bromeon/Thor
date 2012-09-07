@@ -36,7 +36,31 @@
 
 namespace thor
 {
+namespace detail
+{
 
+	// Functor that returns always the same value (don't use lambda expression because of Clang compiler bug)
+	template <typename T>
+	struct Constant
+	{
+		explicit Constant(T value)
+		: value(value)
+		{
+		}
+
+		T operator() () const
+		{
+			return value;
+		}
+
+		T value;
+	};
+
+} // namespace detail
+	
+// ---------------------------------------------------------------------------------------------------------------------------
+	
+	
 /// @addtogroup Math
 /// @{
 
@@ -61,11 +85,8 @@ class Distribution
 		template <typename U>
 									Distribution(U constant
 										AURORA_ENABLE_IF(std::is_convertible<U, T>::value))
-		: mFactory()
+		: mFactory(detail::Constant<T>(constant))
 		{
-			// Convert to T first to avoid conversion happening at every function call.
-			T copy = constant;
-			mFactory = [copy] () { return copy; };
 		}
 
 		/// @brief Construct from distribution function
