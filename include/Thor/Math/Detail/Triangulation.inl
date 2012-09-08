@@ -56,7 +56,7 @@ namespace detail
 
 
 	// Class to represent a vertex for algorithm internals
-	class AdvancedVertex
+	class THOR_API AdvancedVertex
 	{
 		// Note: Public interface contains OptTriangleIterator instead of TriangleIterator, although iterators are always valid.
 		// The reason is to avoid dependency on the STL container (TriangleIterator requires full typedef)
