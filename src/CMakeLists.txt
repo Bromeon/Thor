@@ -42,6 +42,7 @@ set(THOR_SRC
 	Connection.cpp
 	Distributions.cpp
 	Emitter.cpp
+	FadeAnimation.cpp
 	FrameAnimation.cpp
 	InputNames.cpp
 	Particle.cpp

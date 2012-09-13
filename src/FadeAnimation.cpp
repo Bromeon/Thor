@@ -23,15 +23,21 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-/// @file
-/// @brief Complete header for the Animation module
-
-#ifndef THOR_MODULE_ANIMATION_HPP
-#define THOR_MODULE_ANIMATION_HPP
-
-#include <Thor/Animation/Animator.hpp>
-#include <Thor/Animation/ColorAnimation.hpp>
 #include <Thor/Animation/FadeAnimation.hpp>
-#include <Thor/Animation/FrameAnimation.hpp>
 
-#endif // THOR_MODULE_ANIMATION_HPP
+#include <cassert>
+
+
+namespace thor
+{
+
+FadeAnimation::FadeAnimation(float inRatio, float outRatio)
+: mInRatio(inRatio)
+, mOutRatio(outRatio)
+{
+	assert(inRatio >= 0.f && inRatio <= 1.f);
+	assert(outRatio >= 0.f && outRatio <= 1.f);
+	assert(inRatio + outRatio <= 1.f);
+}
+
+} // namespace thor
