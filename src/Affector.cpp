@@ -209,4 +209,22 @@ const ColorGradient& ColorAffector::getGradient() const
 	return mGradient;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------
+
+
+AnimationAffector::Ptr AnimationAffector::create(std::function<void(Particle&, float)> particleAnimation)
+{
+	return std::make_shared<AnimationAffector>(std::move(particleAnimation));
+}
+
+AnimationAffector::AnimationAffector(std::function<void(Particle&, float)> particleAnimation)
+: mAnimation(std::move(particleAnimation))
+{
+}
+
+void AnimationAffector::affect(Particle& particle, sf::Time)
+{
+	mAnimation(particle, getPassedRatio(particle));
+}
+
 } // namespace thor

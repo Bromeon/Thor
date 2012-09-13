@@ -36,6 +36,8 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#include <functional>
+
 
 namespace thor
 {
@@ -314,6 +316,46 @@ class THOR_API ColorAffector : public Affector
 	// Private variables
 	private:
 		ColorGradient				mGradient;
+};
+
+
+/// @brief Affector that animates particles using a function.
+/// @details This affector can be used to apply animations of Thor's Animation module to particles. Such animations are described
+///  by a function with signature <b>void(Particle& animated, float progress)</b>.
+class THOR_API AnimationAffector : public Affector
+{
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public types
+	public:
+		/// @brief Shared pointer type referring to AnimationAffector objects
+		///
+		typedef std::shared_ptr<AnimationAffector> Ptr;
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public static member functions
+	public:
+		/// @brief Creates an affector that colorizes particles according to a given particleAnimation.
+		/// @copydetails AnimationAffector::AnimationAffector(std::function<void(Particle&, float)>)
+		static Ptr 					create(std::function<void(Particle&, float)> particleAnimation);
+
+		virtual void				affect(Particle& particle, sf::Time dt);
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public member functions
+	public:
+		/// @brief Constructor
+		/// @details Applies an animation during the whole lifetime of the particles.
+		/// @param particleAnimation An animation function that is applied to the particle. Its second parameter @a progress
+		///  corresponds to getPassedRatio(particle), the delta time of affect() is ignored.
+		explicit					AnimationAffector(std::function<void(Particle&, float)> particleAnimation);
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Private variables
+	private:
+		std::function<void(Particle&, float)>	mAnimation;
 };
 
 /// @}
