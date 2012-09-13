@@ -1,5 +1,6 @@
 
 #include <Thor/Particles.hpp>
+#include <Thor/Animation.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 #include <Thor/Math/Distributions.hpp>
 #include <SFML/Graphics.hpp>
@@ -43,15 +44,18 @@ int main()
 	system.addEmitter(emitter);
 
 	// Build color gradient (green -> teal -> blue)
-	const thor::ColorGradient gradient = thor::createGradient
+	thor::ColorGradient gradient = thor::createGradient
 		(sf::Color(0, 150, 0))		(1)
 		(sf::Color(0, 150, 100))	(1)
 		(sf::Color(0, 0, 150));
 
+	// Create color and fade in/out animations
+	thor::ColorAnimation colorizer(gradient);
+	thor::FadeAnimation fader(0.1f, 0.1f);
+
 	// Add particle affectors
-	system.addAffector( thor::ColorAffector::create(gradient) );
-	system.addAffector( thor::FadeInAffector::create(0.1f) );
-	system.addAffector( thor::FadeOutAffector::create(0.1f) );
+	system.addAffector( thor::AnimationAffector::create(colorizer) );
+	system.addAffector( thor::AnimationAffector::create(fader) );
 	system.addAffector( thor::TorqueAffector::create(100.f) );
 	system.addAffector( thor::ForceAffector::create(sf::Vector2f(0.f, 100.f))  );
 
