@@ -53,6 +53,7 @@ set(THOR_SRC
 	ToString.cpp
 	Triangulation.cpp
 	Trigonometry.cpp
+	UniformAccess.cpp
 )
 
 

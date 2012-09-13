@@ -33,5 +33,6 @@
 #include <Thor/Graphics/BigSprite.hpp>
 #include <Thor/Graphics/Colors.hpp>
 #include <Thor/Graphics/ToString.hpp>
+#include <Thor/Graphics/UniformAccess.hpp>
 
 #endif // THOR_MODULE_GRAPHICS_HPP
