@@ -35,6 +35,7 @@ set(THOR_SRC
 	BigSprite.cpp
 	BigTexture.cpp
 	CallbackTimer.cpp
+	ColorAnimation.cpp
 	ColorImpl.cpp
 	Colors.cpp
 	ConcaveShape.cpp

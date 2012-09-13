@@ -23,14 +23,15 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-/// @file
-/// @brief Complete header for the Animation module
-
-#ifndef THOR_MODULE_ANIMATION_HPP
-#define THOR_MODULE_ANIMATION_HPP
-
-#include <Thor/Animation/Animator.hpp>
 #include <Thor/Animation/ColorAnimation.hpp>
-#include <Thor/Animation/FrameAnimation.hpp>
 
-#endif // THOR_MODULE_ANIMATION_HPP
+
+namespace thor
+{
+
+ColorAnimation::ColorAnimation(const ColorGradient& gradient)
+: mGradient(gradient)
+{
+}
+
+} // namespace thor
