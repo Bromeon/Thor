@@ -36,7 +36,7 @@
 /// Other functions:
 /// <table>
 ///	 <tr><td>dotProduct(v,w)</td>				<td>unitVector(v)</td>					<td>squaredLength(v)</td>		</tr>
-///	 <tr><td>crossProduct(v,w)</td>				<td>perpendicularVector(v)</td>			<td>angle(v,w)</td>				</tr>
+///	 <tr><td>crossProduct(v,w)</td>				<td>perpendicularVector(v)</td>			<td>signedAngle(v,w)</td>		</tr>
 ///	 <tr><td>componentwiseProduct(v,w)</td>		<td>componentwiseQuotient(v,w)</td>										</tr>
 /// </table>
 
@@ -114,7 +114,7 @@ sf::Vector2<T>				perpendicularVector(const sf::Vector2<T>& vector);
 ///  until it points to the same direction as @a rhs.
 /// @pre Neither @a lhs nor @a rhs is a zero vector.
 template <typename T>
-T							angle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+T							signedAngle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
 /// @brief Computes the dot product of two 2D vectors.
 ///

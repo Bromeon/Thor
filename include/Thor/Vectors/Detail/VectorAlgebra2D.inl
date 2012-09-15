@@ -104,7 +104,7 @@ sf::Vector2<T> perpendicularVector(const sf::Vector2<T>& vector)
 
 
 template <typename T>
-T angle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
+T signedAngle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
 {
 	assert(lhs != sf::Vector2<T>() && rhs != sf::Vector2<T>());
 	return TrigonometricTraits<T>::arcTan2(crossProduct(lhs, rhs).z, dotProduct(lhs, rhs));
