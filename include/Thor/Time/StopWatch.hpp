@@ -48,9 +48,9 @@ class THOR_API StopWatch
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Constructor: Sets up a new StopWatch with time zero.
-		/// @param initiallyRunning Specifies whether the stopwatch immediately starts.
-		explicit					StopWatch(bool initiallyRunning = false);
+		/// @brief Constructor: Sets up a paused stopwatch with time zero.
+		/// @details The stopwatch is initially not running. Call start() to run it.
+									StopWatch();
 							
 		/// @brief Returns the totally elapsed time.
 		///
@@ -68,10 +68,14 @@ class THOR_API StopWatch
 		/// @details If it is already paused, nothing happens.
 		void						stop();
 				
-		/// @brief Resets the stopwatch's time to zero. 
-		/// @param restart True if the stopwatch continues to run, false if it waits for the next Start() call.
-		void						reset(bool restart = false);
-		
+		/// @brief Resets the stopwatch's elapsed time to zero and stops it. 
+		/// @details In contrast to restart(), the stopwatch is not running after the call.
+		void						reset();
+
+		/// @brief Resets the stopwatch's elapsed time to zero and starts it again.
+		/// @details The behavior is equivalent to reset() followed by start().
+		void						restart();
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables

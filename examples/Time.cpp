@@ -7,7 +7,7 @@
 // Converts a float to a string with two decimal places
 std::string ToString(sf::Time value)
 {
-	std::stringstream stream;
+	std::ostringstream stream;
 	stream.setf(std::ios_base::fixed);
 	stream.precision(2);
 	stream << value.asSeconds();
@@ -23,7 +23,8 @@ int main()
 	// Create stopwatch and timer
 	const sf::Time initialTime = sf::seconds(4.f);
 	thor::StopWatch stopWatch;
-	thor::CallbackTimer timer(initialTime);
+	thor::CallbackTimer timer;
+	timer.reset(initialTime);
 
 	sf::Font font;
 	if (!font.loadFromFile("Media/sansation.ttf"))

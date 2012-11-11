@@ -119,12 +119,13 @@ int main()
 	system.addAffector(std::make_shared<FireworkAffector>());
 
 	// Create timer that can be connected to callbacks. Initial time limit is 1 second, timer immediately starts
-	thor::CallbackTimer explosionTimer(sf::seconds(1.f), true);
+	thor::CallbackTimer explosionTimer;
+	explosionTimer.restart(sf::seconds(1.f));
 
 	// Connect timer to a lambda expression which restarts the timer every time it expires
 	explosionTimer.connect( [] (thor::CallbackTimer& trigger)
 	{
-		trigger.reset(explosionInterval, true);
+		trigger.restart(explosionInterval);
 	});
 
 	// Connect timer to a lambda expression that creates an explosion at expiration

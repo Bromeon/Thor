@@ -29,10 +29,10 @@
 namespace thor
 {
 
-StopWatch::StopWatch(bool initiallyRunning)
+StopWatch::StopWatch()
 : mClock()
 , mTimeBuffer(sf::Time::Zero)
-, mRunning(initiallyRunning)
+, mRunning(false)
 {
 }
 
@@ -67,11 +67,17 @@ void StopWatch::stop()
 	}
 }
 
-void StopWatch::reset(bool restart)
+void StopWatch::reset()
 {
 	mTimeBuffer = sf::Time::Zero;
-	mRunning = restart;
+	mRunning = false;
 	mClock.restart();
+}
+
+void StopWatch::restart()
+{
+	reset();
+	start();
 }
 
 } // namespace thor

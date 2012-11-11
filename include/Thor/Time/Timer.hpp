@@ -41,33 +41,27 @@ namespace thor
 /// @addtogroup Time
 /// @{
 
-/// @brief Clock class that has the semantics of a timer.
-/// @details You can initialize an instance with a time limit and it will automatically count
-///  down, until the time reaches zero.
+/// @brief Clock class that has the semantics of a countdown timer.
+/// @details After starting the timer, it will automatically count down, until the remaining time reaches zero.
 class THOR_API Timer
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Default constructor: Creates a timer that is initially expired.
-		/// @details You have to call reset() before you can use the countdown functionality.
+		/// @details You have to call reset() or restart() before you can use the countdown functionality.
 									Timer();
 
 		/// @brief Virtual destructor
-		///
+		/// 
 		virtual						~Timer();
-	
-		/// @brief Constructor: Sets up a new timer with the given time limit.
-		/// @param timeLimit The initial time limit (must be greater than zero).
-		/// @param initiallyRunning Indicates whether the timer is immediately being started.
-		explicit					Timer(sf::Time timeLimit, bool initiallyRunning = false);
-		
+			
 		/// @brief Returns the remaining time.
 		/// @details If the timer has expired, sf::Time::Zero is returned.
 		sf::Time					getRemainingTime() const;
 		
 		/// @brief Checks if the timer is currently running.
-		/// @details As soon as the timer expires, it stops running until reset() is called.
+		/// @details As soon as the timer expires, it stops running.
 		bool						isRunning() const;
 		
 		/// @brief Checks if the timer has expired yet.
@@ -82,10 +76,15 @@ class THOR_API Timer
 		/// @details If it is already paused, nothing happens.
 		void						stop();
 		
-		/// @brief Resets the timer's countdown to the given time limit.
+		/// @brief Resets the timer's remaining time to the given limit and stops it. 
 		/// @param timeLimit The new time limit (must be greater than zero).
-		/// @param restart True when the timer continues to run, false if it waits for the next start() call.
-		virtual void				reset(sf::Time timeLimit, bool restart = false);
+		/// @details In contrast to restart(), the timer is not running after the call.
+		virtual void				reset(sf::Time timeLimit);
+
+		/// @brief Resets the timer's remaining time to the given limit and starts it again. 
+		/// @param timeLimit The new time limit (must be greater than zero).
+		/// @details The behavior is equivalent to @ref reset() "reset(timeLimit)" followed by start().
+		virtual void				restart(sf::Time timeLimit);
 		
 
 	// ---------------------------------------------------------------------------------------------------------------------------

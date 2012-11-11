@@ -38,13 +38,6 @@ Timer::Timer()
 {
 }
 
-Timer::Timer(sf::Time timeLimit, bool initiallyRunning)
-: mStopWatch(initiallyRunning)
-, mLimit(timeLimit)
-{
-	assert(timeLimit > sf::Time::Zero);
-}
-
 Timer::~Timer()
 {
 }
@@ -74,12 +67,18 @@ void Timer::stop()
 	mStopWatch.stop();
 }
 
-void Timer::reset(sf::Time timeLimit, bool restart)
+void Timer::reset(sf::Time timeLimit)
 {
 	assert(timeLimit > sf::Time::Zero);
 
 	mLimit = timeLimit;
-	mStopWatch.reset(restart);
+	mStopWatch.reset();
+}
+
+void Timer::restart(sf::Time timeLimit)
+{
+	reset(timeLimit);
+	start();
 }
 
 } // namespace thor

@@ -59,15 +59,12 @@ class THOR_API CallbackTimer : public Timer
 	// Public member functions
 	public:
 		/// @brief Default constructor: Creates a callback timer that is initially expired.
-		/// @details You have to call reset() before you can use the countdown functionality.
+		/// @details You have to call reset() or restart() before you can use the countdown functionality.
 									CallbackTimer();
-	
-		/// @brief Constructor: Sets up a new Timer with the given time limit.
-		/// @param timeLimit The initial time (must be greater than zero).
-		/// @param initiallyRunning Indicates whether the timer is immediately being started.
-		explicit					CallbackTimer(sf::Time timeLimit, bool initiallyRunning = false);
 		
-		virtual void				reset(sf::Time timeLimit, bool restart = false);
+		virtual void				reset(sf::Time timeLimit);
+
+		virtual void				restart(sf::Time timeLimit);
 
 		/// @brief Trigger listeners, if expired
 		/// @details This is the most important function of this class. You should call update() 

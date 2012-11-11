@@ -36,16 +36,16 @@ CallbackTimer::CallbackTimer()
 {
 }
 
-CallbackTimer::CallbackTimer(sf::Time timeLimit, bool initiallyRunning)
-: Timer(timeLimit, initiallyRunning)
-, mListeners()
-, mJustExpired(false) // When constructed with initial time limit, call listeners at expiration time
+void CallbackTimer::reset(sf::Time timeLimit)
 {
+	Timer::reset(timeLimit);
+
+	mJustExpired = false;
 }
 
-void CallbackTimer::reset(sf::Time timeLimit, bool restart)
+void CallbackTimer::restart(sf::Time timeLimit)
 {
-	Timer::reset(timeLimit, restart);
+	Timer::restart(timeLimit);
 
 	mJustExpired = false;
 }
