@@ -5,7 +5,7 @@
 #include <sstream>
 
 // Converts a float to a string with two decimal places
-std::string ToString(sf::Time value)
+std::string toString(sf::Time value)
 {
 	std::ostringstream stream;
 	stream.setf(std::ios_base::fixed);
@@ -102,8 +102,8 @@ int main()
 		}
 
 		// Adapt texts for stopwatch and timer according to elapsed/remaining time
-		stopWatchMeasurement.setString("Stopwatch:  " + ToString(stopWatch.getElapsedTime()));
-		timerMeasurement.setString("Timer:  " + ToString(timer.getRemainingTime()));
+		stopWatchMeasurement.setString("Stopwatch:  " + toString(stopWatch.getElapsedTime()));
+		timerMeasurement.setString("Timer:  " + toString(timer.getRemainingTime()));
 
 		// Update TriggeringTimer that allows the callback to be invoked
 		timer.update();
