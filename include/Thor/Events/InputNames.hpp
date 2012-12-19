@@ -33,6 +33,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/Window/Joystick.hpp>
 
 #include <string>
 
@@ -59,6 +60,14 @@ std::string THOR_API		toString(sf::Keyboard::Key key);
 /// @throw StringConversionException in case of invalid mouse button.
 std::string THOR_API		toString(sf::Mouse::Button button);
 
+/// @brief Returns a string representation of @a axis.
+/// @details The returned string is identical to the enum identifier. For example:
+/// @code
+/// thor::toString(sf::Joystick::U) == "U"
+/// @endcode
+/// @throw StringConversionException in case of invalid joystick axis.
+std::string THOR_API		toString(sf::Joystick::Axis axis);
+
 /// @brief Returns the key interpretation of @a string.
 /// @details The passed string shall be identical to the enum identifier. For example:
 /// @code
@@ -74,6 +83,14 @@ sf::Keyboard::Key THOR_API	toKeyboardKey(const std::string& string);
 /// @endcode
 /// @throw StringConversionException if the string doesn't match a mouse button.
 sf::Mouse::Button THOR_API	toMouseButton(const std::string& string);
+
+/// @brief Returns the joystick axis interpretation of @a string.
+/// @details The passed string shall be identical to the enum identifier. For example:
+/// @code
+/// thor::toJoystickAxis("U") == sf::Joystick::U
+/// @endcode
+/// @throw StringConversionException if the string doesn't match a joystick axis.
+sf::Joystick::Axis THOR_API	toJoystickAxis(const std::string& string);
 
 /// @}
 

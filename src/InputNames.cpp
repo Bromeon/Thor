@@ -69,7 +69,8 @@ namespace
 			{
 				auto itr = mTMap.find(string);
 				if (itr == mTMap.end())
-					throw StringConversionException("thor::toKeyboardKey() / thor::toMouseButton() - No match for string found");
+					throw StringConversionException(
+						"thor::toKeyboardKey() / thor::toMouseButton() / thor::toJoystickAxis() - No match for string found");
 				else
 					return itr->second;
 			}
@@ -80,7 +81,7 @@ namespace
 			unsigned int				mSpecialValueCount;
 	};
 
-	StringBimap<sf::Keyboard::Key> InitMap(aurora::Type<sf::Keyboard::Key>)
+	StringBimap<sf::Keyboard::Key> initMap(aurora::Type<sf::Keyboard::Key>)
 	{
 		StringBimap<sf::Keyboard::Key> bimap(sf::Keyboard::KeyCount, 1);
 
@@ -195,7 +196,7 @@ namespace
 		return bimap;
 	}
 
-	StringBimap<sf::Mouse::Button> InitMap(aurora::Type<sf::Mouse::Button>)
+	StringBimap<sf::Mouse::Button> initMap(aurora::Type<sf::Mouse::Button>)
 	{
 		StringBimap<sf::Mouse::Button> bimap(sf::Mouse::ButtonCount);
 
@@ -213,10 +214,31 @@ namespace
 		return bimap;
 	}
 
-	template <typename T>
-	StringBimap<T>& MapInstance()
+	StringBimap<sf::Joystick::Axis> initMap(aurora::Type<sf::Joystick::Axis>)
 	{
-		static StringBimap<T> instance = InitMap(aurora::Type<T>());
+		StringBimap<sf::Joystick::Axis> bimap(sf::Joystick::AxisCount);
+
+		#define THOR_INSERT_MAPPING(identifier) bimap.insert(sf::Joystick::identifier, #identifier)
+
+		THOR_INSERT_MAPPING(X);
+		THOR_INSERT_MAPPING(Y);
+		THOR_INSERT_MAPPING(Z);
+		THOR_INSERT_MAPPING(R);
+		THOR_INSERT_MAPPING(U);
+		THOR_INSERT_MAPPING(V);
+		THOR_INSERT_MAPPING(PovX);
+		THOR_INSERT_MAPPING(PovY);
+
+		static_assert(sf::Joystick::AxisCount == 8, "Number of SFML joystick axes has changed");
+		#undef THOR_INSERT_MAPPING
+
+		return bimap;
+	}
+
+	template <typename T>
+	StringBimap<T>& mapInstance()
+	{
+		static StringBimap<T> instance = initMap(aurora::Type<T>());
 		return instance;
 	}
 
@@ -227,22 +249,32 @@ namespace
 
 std::string toString(sf::Keyboard::Key key)
 {
-	return MapInstance<sf::Keyboard::Key>().at(key);
+	return mapInstance<sf::Keyboard::Key>().at(key);
 }
 
 std::string toString(sf::Mouse::Button button)
 {
-	return MapInstance<sf::Mouse::Button>().at(button);
+	return mapInstance<sf::Mouse::Button>().at(button);
+}
+
+std::string toString(sf::Joystick::Axis axis)
+{
+	return mapInstance<sf::Joystick::Axis>().at(axis);
 }
 
 sf::Keyboard::Key toKeyboardKey(const std::string& string)
 {
-	return MapInstance<sf::Keyboard::Key>().at(string);
+	return mapInstance<sf::Keyboard::Key>().at(string);
 }
 
 sf::Mouse::Button toMouseButton(const std::string& string)
 {
-	return MapInstance<sf::Mouse::Button>().at(string);
+	return mapInstance<sf::Mouse::Button>().at(string);
+}
+
+sf::Joystick::Axis toJoystickAxis(const std::string& string)
+{
+	return mapInstance<sf::Joystick::Axis>().at(string);
 }
 
 } // namespace thor
