@@ -57,3 +57,6 @@ thor_example(Shapes)
 thor_example(Time)
 thor_example(Triangulation)
 thor_example(UserEvents)
+
+#Copy over Media folder to build directory (images, fonts, and such)
+file(COPY Media DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
