@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Thor C++ Library
-// Copyright (c) 2011-2012 Jan Haller
+// Copyright (c) 2011-2013 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -83,7 +83,7 @@ class THOR_API BigTexture
 		/// @param stream Reference to sf::InputStream which loads the data.
 		bool						loadFromStream(sf::InputStream& stream);
 
-		/// @brief Returns the texture width in pixels.
+		/// @brief Returns the texture width and height in pixels.
 		/// 
 		sf::Vector2u				getSize() const;
 
