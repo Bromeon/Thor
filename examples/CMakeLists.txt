@@ -43,7 +43,6 @@ macro(thor_example THOR_EXAMPLE_NAME)
 
 	install (DIRECTORY .
 			 DESTINATION ${THOR_EXAMPLE_INSTALL_DIR}/examples
-			 REGEX "\\.svn|_svn" EXCLUDE
 			 PATTERN "CMakeLists.txt" EXCLUDE)
 endmacro()
 
