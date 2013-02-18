@@ -129,7 +129,7 @@ AnimationAffector::AnimationAffector(std::function<void(Particle&, float)> parti
 
 void AnimationAffector::affect(Particle& particle, sf::Time)
 {
-	mAnimation(particle, getPassedRatio(particle));
+	mAnimation(particle, getElapsedRatio(particle));
 }
 
 } // namespace thor

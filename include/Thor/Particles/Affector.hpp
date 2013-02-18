@@ -209,7 +209,7 @@ class THOR_API AnimationAffector : public Affector
 		/// @brief Constructor
 		/// @details Applies an animation during the whole lifetime of the particles.
 		/// @param particleAnimation An animation function that is applied to the particle. Its second parameter @a progress
-		///  corresponds to getPassedRatio(particle), the delta time of affect() is ignored.
+		///  corresponds to getElapsedRatio(particle), the delta time of affect() is ignored.
 		explicit					AnimationAffector(std::function<void(Particle&, float)> particleAnimation);
 
 

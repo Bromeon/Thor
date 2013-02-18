@@ -41,7 +41,7 @@ Particle::Particle(sf::Time totalLifetime)
 {
 }
 
-sf::Time getPassedLifetime(const Particle& particle)
+sf::Time getElapsedLifetime(const Particle& particle)
 {
 	return particle.passedLifetime;
 }
@@ -53,12 +53,12 @@ sf::Time getTotalLifetime(const Particle& particle)
 
 sf::Time getRemainingLifetime(const Particle& particle)
 {
-	return getTotalLifetime(particle) - getPassedLifetime(particle);
+	return getTotalLifetime(particle) - getElapsedLifetime(particle);
 }
 
-float getPassedRatio(const Particle& particle)
+float getElapsedRatio(const Particle& particle)
 {
-	return getPassedLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
+	return getElapsedLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
 }
 
 float getRemainingRatio(const Particle& particle)

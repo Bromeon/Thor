@@ -78,14 +78,14 @@ class THOR_API Particle
 	// Friends
 	/// @cond FriendsAreAnImplementationDetail
 	friend class ParticleSystem;
-	friend sf::Time THOR_API getPassedLifetime(const Particle& particle);
+	friend sf::Time THOR_API getElapsedLifetime(const Particle& particle);
 	friend sf::Time THOR_API getTotalLifetime(const Particle& particle);
 	/// @endcond
 };
 
 /// @relates Particle
 /// @brief Returns the time passed since the particle has been emitted.
-sf::Time THOR_API			getPassedLifetime(const Particle& particle);
+sf::Time THOR_API			getElapsedLifetime(const Particle& particle);
 
 /// @relates Particle
 /// @brief Returns the total time the particle is alive.
@@ -97,7 +97,7 @@ sf::Time THOR_API			getRemainingLifetime(const Particle& particle);
 
 /// @relates Particle
 /// @brief Returns <b> passed lifetime / total lifetime</b>.
-float THOR_API				getPassedRatio(const Particle& particle);
+float THOR_API				getElapsedRatio(const Particle& particle);
 
 /// @relates Particle
 /// @brief Returns <b>remaining lifetime / total lifetime</b>.
