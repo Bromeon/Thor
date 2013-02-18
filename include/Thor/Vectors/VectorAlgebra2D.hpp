@@ -37,7 +37,7 @@
 /// <table>
 ///	 <tr><td>dotProduct(v,w)</td>				<td>unitVector(v)</td>					<td>squaredLength(v)</td>		</tr>
 ///	 <tr><td>crossProduct(v,w)</td>				<td>perpendicularVector(v)</td>			<td>signedAngle(v,w)</td>		</tr>
-///	 <tr><td>componentwiseProduct(v,w)</td>		<td>componentwiseQuotient(v,w)</td>										</tr>
+///	 <tr><td>cwiseProduct(v,w)</td>		<td>cwiseQuotient(v,w)</td>										</tr>
 /// </table>
 
 #ifndef THOR_VECTORALGEBRA2D_HPP
@@ -130,13 +130,13 @@ sf::Vector3<T>				crossProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& 
 /// @brief Returns the component-wise product of @a lhs and @a rhs.
 /// @details Computes <i>(lhs.x*rhs.x, lhs.y*rhs.y)</i>. Component-wise multiplications are mainly used for scales.
 template <typename T>
-sf::Vector2<T>				componentwiseProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+sf::Vector2<T>				cwiseProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
 /// @brief Returns the component-wise quotient of @a lhs and @a rhs.
 /// @details Computes <i>(lhs.x/rhs.x, lhs.y/rhs.y)</i>. Component-wise divisions are mainly used for scales.
 /// @pre Neither component of @a rhs is zero.
 template <typename T>
-sf::Vector2<T>				componentwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+sf::Vector2<T>				cwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
 /// @}
 

@@ -29,8 +29,8 @@
 /// <table>
 ///	 <tr><td>dotProduct(v,w)</td>				<td>length(v)</td>				<td>unitVector(v)</td>				</tr>
 ///	 <tr><td>crossProduct(v,w)</td>				<td>squaredLength(v)</td>		<td>toVector3(v)</td>				</tr>
-///	 <tr><td>componentwiseProduct(v,w)</td>		<td>polarAngle(v)</td>												</tr>
-///	 <tr><td>componentwiseQuotient(v,w)</td>	<td>elevationAngle(v)</td>											</tr>
+///	 <tr><td>cwiseProduct(v,w)</td>		<td>polarAngle(v)</td>												</tr>
+///	 <tr><td>cwiseQuotient(v,w)</td>	<td>elevationAngle(v)</td>											</tr>
 /// </table>
 
 #ifndef THOR_VECTORALGEBRA3D_HPP
@@ -96,14 +96,14 @@ sf::Vector3<T>				crossProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& 
 /// @details Computes <i>(lhs.x*rhs.x, lhs.y*rhs.y, lhs.z*rhs.z)</i>.
 ///  Component-wise multiplications are mainly used for scales.
 template <typename T>
-sf::Vector3<T>				componentwiseProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
+sf::Vector3<T>				cwiseProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
 
 /// @brief Returns the component-wise quotient of @a lhs and @a rhs.
 /// @details Computes <i>(lhs.x/rhs.x, lhs.y/rhs.y, lhs.z/rhs.z)</i>.
 ///  Component-wise divisions are mainly used for scales.
 /// @pre Neither component of @a rhs is zero.
 template <typename T>
-sf::Vector3<T>				componentwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
+sf::Vector3<T>				cwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 

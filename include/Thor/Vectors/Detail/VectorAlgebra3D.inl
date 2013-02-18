@@ -80,13 +80,13 @@ sf::Vector3<T> crossProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs
 }
 
 template <typename T>
-sf::Vector3<T> componentwiseProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs)
+sf::Vector3<T> cwiseProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs)
 {
 	return sf::Vector3<T>(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z);
 }
 
 template <typename T>
-sf::Vector3<T> componentwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs)
+sf::Vector3<T> cwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs)
 {
 	assert(rhs.x != 0 && rhs.y != 0 && rhs.z != 0);
 	return sf::Vector3<T>(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z);
