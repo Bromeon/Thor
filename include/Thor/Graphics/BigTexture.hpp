@@ -87,6 +87,13 @@ class THOR_API BigTexture
 		/// 
 		sf::Vector2u				getSize() const;
 
+		/// @brief Enable or disable SFML's smooth filter
+		/// @param smooth True to enable smoothing, false to disable it
+		void setSmooth(bool smooth = true);
+
+		/// @brief Tell whether SFML's smooth filter is enabled or not
+		bool isSmooth() const;
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
@@ -102,6 +109,7 @@ class THOR_API BigTexture
 		std::vector<sf::Texture>	mTextures;
 		sf::Vector2u				mTableSize;
 		sf::Vector2u				mPixelSize;
+		bool						mIsSmooth;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
