@@ -60,20 +60,23 @@ void BigTexture::swap(BigTexture& other)
 	std::swap(mTextures,  other.mTextures);
 	std::swap(mTableSize, other.mTableSize);
 	std::swap(mPixelSize, other.mPixelSize);
+	std::swap(mIsSmooth,  other.mIsSmooth);
 }
 
 bool BigTexture::loadFromImage(const sf::Image& source)
 {
 	// Rollback semantics: In case of failure, *this remains unchanged 
 	BigTexture tmp;
-
+	
+	tmp.mIsSmooth = false;
+	
 	const unsigned int maxSize = sf::Texture::getMaximumSize();
 	tmp.mPixelSize = source.getSize();
 
 	// Number of textures needed, in X and Y direction
 	tmp.mTableSize.x = (tmp.mPixelSize.x - 1u) / maxSize + 1u;
 	tmp.mTableSize.y = (tmp.mPixelSize.y - 1u) / maxSize + 1u;
-
+	
 	tmp.mTextures.clear();
 	tmp.mTextures.reserve(tmp.mTableSize.x * tmp.mTableSize.y);
     
@@ -115,6 +118,20 @@ bool BigTexture::loadFromStream(sf::InputStream& stream)
 sf::Vector2u BigTexture::getSize() const
 {
 	return mPixelSize;
+}
+
+void BigTexture::setSmooth(bool smooth)
+{
+	for(std::vector<sf::Texture>::iterator it = mTextures.begin(); it != mTextures.end(); it++)
+	{
+		it->setSmooth(smooth);
+	}
+	mIsSmooth = smooth;
+}
+
+bool BigTexture::isSmooth() const
+{
+	return mIsSmooth;
 }
 
 sf::Vector2f BigTexture::fillSprites(const sf::Color& color, std::vector<sf::Sprite>& out) const
