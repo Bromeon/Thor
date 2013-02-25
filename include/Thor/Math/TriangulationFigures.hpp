@@ -78,7 +78,7 @@ class Edge
 /// @brief %Triangle class consisting of 3 vertices (its corners).
 /// @details The invariant of this class is that the corners 0, 1, 2 are aligned in clockwise order.
 /// @tparam V The type of the vertices, for which the template thor::TriangulationTraits shall be specialized.
-///  If @a V is const-qualified, the corners cannot be changed through this edge.
+///  If @a V is const-qualified, the corners cannot be changed through this triangle.
 template <typename V>
 class Triangle
 {
