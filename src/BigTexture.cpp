@@ -25,6 +25,8 @@
 
 #include <Thor/Graphics/BigTexture.hpp>
 
+#include <Aurora/Tools/ForEach.hpp>
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Image.hpp>
 
@@ -55,11 +57,20 @@ namespace
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
+BigTexture::BigTexture()
+: mTextures()
+, mTableSize(0u, 0u)
+, mPixelSize(0u, 0u)
+, mSmooth(false)
+{
+}
+
 void BigTexture::swap(BigTexture& other)
 {
 	std::swap(mTextures,  other.mTextures);
 	std::swap(mTableSize, other.mTableSize);
 	std::swap(mPixelSize, other.mPixelSize);
+	std::swap(mSmooth,    other.mSmooth);
 }
 
 bool BigTexture::loadFromImage(const sf::Image& source)
@@ -89,6 +100,9 @@ bool BigTexture::loadFromImage(const sf::Image& source)
         }
 	}
 
+	// Apply smooth filter
+	tmp.setSmooth(isSmooth());
+
 	// Success: Commit modifications
 	swap(tmp);
 	return true;
@@ -115,6 +129,22 @@ bool BigTexture::loadFromStream(sf::InputStream& stream)
 sf::Vector2u BigTexture::getSize() const
 {
 	return mPixelSize;
+}
+
+void BigTexture::setSmooth(bool smooth)
+{
+	if (mSmooth != smooth)
+	{
+		mSmooth = smooth;
+
+		AURORA_FOREACH(sf::Texture& texture, mTextures)
+			texture.setSmooth(smooth);
+	}
+}
+
+bool BigTexture::isSmooth() const
+{
+	return mSmooth;
 }
 
 sf::Vector2f BigTexture::fillSprites(const sf::Color& color, std::vector<sf::Sprite>& out) const
