@@ -99,13 +99,13 @@ namespace
 #endif // THOR_USE_STD_RANDOMENGINE
 
 	// Function initializing the engine and its seed at startup time
-	Engine CreateInitialEngine()
+	Engine createInitialEngine()
 	{
 		return Engine( static_cast<unsigned long>(std::time(nullptr)) );
 	}
 
 	// Pseudo random number generator engine
-	Engine globalEngine = CreateInitialEngine();
+	Engine globalEngine = createInitialEngine();
 
 } // namespace
 
