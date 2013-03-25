@@ -29,7 +29,7 @@
 #ifndef THOR_EVENTSYSTEM_HPP
 #define THOR_EVENTSYSTEM_HPP
 
-#include <Thor/Events/Detail/EventListener.hpp>
+#include <Thor/Input/Detail/EventListener.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
 
@@ -37,7 +37,7 @@
 namespace thor
 {
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Class for object-oriented handling of user-defined events.
@@ -103,5 +103,5 @@ class EventSystem : private aurora::NonCopyable
 
 } // namespace thor
 
-#include <Thor/Events/Detail/EventSystem.inl>
+#include <Thor/Input/Detail/EventSystem.inl>
 #endif // THOR_EVENTSYSTEM_HPP

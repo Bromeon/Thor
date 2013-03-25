@@ -41,7 +41,7 @@
 namespace thor
 {
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Returns a string representation of @a key.

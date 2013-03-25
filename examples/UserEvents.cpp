@@ -1,5 +1,5 @@
 
-#include <Thor/Events/EventSystem.hpp>
+#include <Thor/Input/EventSystem.hpp>
 #include <iostream>
 #include <string>
 

@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Events/Action.hpp>
+#include <Thor/Input/Action.hpp>
 
 #include <algorithm>
 #include <cassert>

@@ -28,8 +28,8 @@
 
 #include <Thor/Config.hpp>
 #include <Aurora/Tools/ForEach.hpp>
-#include <Thor/Events/Connection.hpp>
-#include <Thor/Events/Detail/ConnectionImpl.hpp>
+#include <Thor/Input/Connection.hpp>
+#include <Thor/Input/Detail/ConnectionImpl.hpp>
 
 #include <functional>
 #include <vector>

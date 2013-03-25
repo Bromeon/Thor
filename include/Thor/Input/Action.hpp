@@ -29,7 +29,7 @@
 #ifndef THOR_ACTION_HPP
 #define THOR_ACTION_HPP
 
-#include <Thor/Events/Detail/ActionOperations.hpp>
+#include <Thor/Input/Detail/ActionOperations.hpp>
 #include <Thor/Config.hpp>
 
 
@@ -45,7 +45,7 @@ namespace detail
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Class for dynamic actions that are connected with SFML events

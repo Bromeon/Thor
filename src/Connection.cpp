@@ -23,8 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Events/Connection.hpp>
-#include <Thor/Events/Detail/ConnectionImpl.hpp>
+#include <Thor/Input/Connection.hpp>
+#include <Thor/Input/Detail/ConnectionImpl.hpp>
 
 
 namespace thor

@@ -42,7 +42,7 @@ namespace sf
 namespace thor
 {
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Structure containing information about the context in which an action has occurred

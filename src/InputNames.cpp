@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Events/InputNames.hpp>
+#include <Thor/Input/InputNames.hpp>
 #include <Thor/Graphics/ToString.hpp> // thor::StringConversionException
 
 #include <Aurora/Tools/Metaprogramming.hpp>

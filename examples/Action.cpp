@@ -1,5 +1,5 @@
 
-#include <Thor/Events.hpp>
+#include <Thor/Input.hpp>
 #include <Thor/Graphics/ToString.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>

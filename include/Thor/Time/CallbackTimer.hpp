@@ -30,7 +30,7 @@
 #define THOR_CALLBACKTIMER_HPP
 
 #include <Thor/Time/Timer.hpp>
-#include <Thor/Events/Detail/EventListener.hpp>
+#include <Thor/Input/Detail/EventListener.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/System/Time.hpp>

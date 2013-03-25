@@ -49,7 +49,7 @@ namespace detail
 } // namespace detail
 
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Class that manages the connection between an event and a listener.

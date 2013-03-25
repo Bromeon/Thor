@@ -24,17 +24,57 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete header for the Events module
+/// @brief Class thor::Joystick
 
-#ifndef THOR_MODULE_EVENTS_HPP
-#define THOR_MODULE_EVENTS_HPP
+#ifndef THOR_JOYSTICK_HPP
+#define THOR_JOYSTICK_HPP
 
-#include <Thor/Events/Action.hpp>
-#include <Thor/Events/ActionContext.hpp>
-#include <Thor/Events/ActionMap.hpp>
-#include <Thor/Events/EventSystem.hpp>
-#include <Thor/Events/Connection.hpp>
-#include <Thor/Events/InputNames.hpp>
-#include <Thor/Events/Joystick.hpp>
 
-#endif // THOR_MODULE_EVENTS_HPP
+namespace thor
+{
+
+/// @addtogroup Input
+/// @{
+
+/// @brief Small wrapper class for joystick number and button number
+///
+struct Joystick
+{
+	/// @brief Constructor
+	/// @details Note that you can also construct a joystick id and button property
+	///  with the following more expressive syntax:
+	/// @code
+	/// thor::Joystick j = thor::Joy(id).Button(button);
+	/// @endcode
+	Joystick(unsigned int id, unsigned int button)
+	: id(id)
+	, button(button)
+	{
+	}
+
+	unsigned int id;		///< The joystick number
+	unsigned int button;	///< The joystick button number
+};
+
+/// @}
+
+// Proxy class that allows the Joy(id).Button(button) syntax
+struct Joy
+{
+	explicit Joy(unsigned int id)
+	: id(id)
+	{
+	}
+
+	Joystick button(unsigned int button)
+	{
+		return Joystick(id, button);
+	}
+
+	unsigned int id;
+};
+
+
+} // namespace thor
+
+#endif // THOR_JOYSTICK_HPP

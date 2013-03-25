@@ -29,9 +29,9 @@
 #ifndef THOR_ACTIONMAP_HPP
 #define THOR_ACTIONMAP_HPP
 
-#include <Thor/Events/Action.hpp>
-#include <Thor/Events/ActionContext.hpp>
-#include <Thor/Events/Detail/ActionOperations.hpp>
+#include <Thor/Input/Action.hpp>
+#include <Thor/Input/ActionContext.hpp>
+#include <Thor/Input/Detail/ActionOperations.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/ForEach.hpp>
@@ -46,7 +46,7 @@ template <typename Event, typename EventId>
 class EventSystem;
 
 
-/// @addtogroup Events
+/// @addtogroup Input
 /// @{
 
 /// @brief Class template that associates identifiers with dynamic actions
@@ -164,5 +164,5 @@ class ActionMap : private aurora::NonCopyable
 
 } // namespace thor
 
-#include <Thor/Events/Detail/ActionMap.inl>
+#include <Thor/Input/Detail/ActionMap.inl>
 #endif // THOR_ACTIONMAP_HPP

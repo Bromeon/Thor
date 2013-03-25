@@ -47,8 +47,8 @@
 /// @defgroup Animation Animation
 /// @brief Classes able to animate sf::Sprite objects in different ways.
 
-/// @defgroup Events Events
-/// @brief Facilities for object-oriented event handling using callbacks.
+/// @defgroup Input Input
+/// @brief Facilities for user input, such as object-oriented event callbacks.
 
 /// @defgroup Graphics Graphics
 /// @brief Miscellaneous graphics-related functionality, such as specialized sprites or color helpers.

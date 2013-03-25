@@ -26,7 +26,7 @@
 #ifndef THOR_EVENTOPERATIONS_HPP
 #define THOR_EVENTOPERATIONS_HPP
 
-#include <Thor/Events/Joystick.hpp>
+#include <Thor/Input/Joystick.hpp>
 #include <Thor/Config.hpp>
 
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
