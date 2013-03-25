@@ -70,15 +70,12 @@ class ActionMap : private aurora::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Constructor
-		/// @param window The SFML window used for event generation and referenced in ActionContext objects. 
-		explicit					ActionMap(sf::Window& window);
-
 		/// @brief Clears old events and polls the window for new ones.
+		/// @param window The SFML window from which events are polled.
 		/// @details When you invoke this method, you should not call sf::Window::pollEvent() in the same frame, since update()
 		///  already does that. The following code
 		/// @code
-		/// map.update();
+		/// map.update(window);
 		/// @endcode
 		/// is equivalent to
 		/// @code
@@ -88,7 +85,7 @@ class ActionMap : private aurora::NonCopyable
 		/// while (window.pollEvent(event))
 		///     map.pushEvent(event);
 		/// @endcode
-		void						update();
+		void						update(sf::Window& window);
 
 		/// @brief Feeds the action map with a SFML event, that can be used during the current frame.
 		/// @details When you use the update() method, you needn't invoke pushEvent(). This method exists for more flexibility:
@@ -129,14 +126,15 @@ class ActionMap : private aurora::NonCopyable
 
 		/// @brief Forwards active actions to a callback system.
 		/// @param system Callback system of type EventSystem< ActionContext<ActionId>, ActionId >
+		/// @param window Window pointer which is stored in the ActionContext passed to the callbacks. Can be nullptr.
 		/// @details For every action that is currently active, the action ID is passed to @a system, where all listener
 		///  functions associated with the ID are invoked.
 		/// @code
 		/// // Listener function for "run" actions
-		/// void callback(const thor::ActionContext<std::string>& context);
+		/// void callback(thor::ActionContext<std::string> context);
 		///
 		/// // Map to register "run" action
-		/// thor::ActionMap<std::string> map(...);
+		/// thor::ActionMap<std::string> map;
 		/// map["run"] = thor::Action(sf::Keyboard::R);
 		///
 		/// // Create EventSystem object, connect "run" action to callback
@@ -144,9 +142,9 @@ class ActionMap : private aurora::NonCopyable
 		/// system.connect("run", &callback);
 		///
 		/// // In the main loop: Forward actions to the callback system
-		/// map.invokeCallbacks(system);
+		/// map.invokeCallbacks(system, &window);
 		/// @endcode
-		void						invokeCallbacks(CallbackSystem& system) const;
+		void						invokeCallbacks(CallbackSystem& system, sf::Window* window) const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

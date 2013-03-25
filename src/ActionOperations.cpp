@@ -49,9 +49,8 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
-	EventBuffer::EventBuffer(sf::Window& window)
+	EventBuffer::EventBuffer()
 	: mEventSet()
-	, mWindow(window)
 	, mRealtimeEnabled(true)
 	{
 	}
@@ -115,21 +114,16 @@ namespace detail
 		return oldSize != out.size();
 	}
 
-	sf::Window& EventBuffer::getWindow() const
-	{
-		return mWindow;
-	}
-
 	bool EventBuffer::isRealtimeInputEnabled() const
 	{
 		return mRealtimeEnabled;
 	}
 
-	void EventBuffer::pollEvents()
+	void EventBuffer::pollEvents(sf::Window& window)
 	{
 		sf::Event event;
 
-		while (mWindow.pollEvent(event))
+		while (window.pollEvent(event))
 			pushEvent(event);
 	}
 

@@ -54,15 +54,16 @@ template <typename ActionId>
 struct ActionContext
 {
 	// Constructor
-	ActionContext(sf::Window& window, const sf::Event* event, const ActionId& actionId)
-	: window(&window)
+	ActionContext(sf::Window* window, const sf::Event* event, const ActionId& actionId)
+	: window(window)
 	, event(event)
 	, actionId(actionId)
 	{
 	}
 
-	/// @brief Pointer to sf::Window passed to the action map.
-	/// @details Use this variable to access the window inside a callback function. This pointer is never @a nullptr.
+	/// @brief Pointer to sf::Window passed to the ActionMap::invokeCallbacks().
+	/// @details Use this variable to access the window inside a callback function. This pointer can be @a nullptr if you
+	///  didn't specify a window when calling ActionMap::invokeCallbacks().
 	sf::Window*					window;
 
 	/// @brief Pointer to a sf::Event that contributed to this action's activation.

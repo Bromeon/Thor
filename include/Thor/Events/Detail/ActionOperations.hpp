@@ -68,24 +68,22 @@ namespace detail
 			typedef std::multiset<sf::Event, CompareEvents> EventSet;
 
 		public:
-			explicit					EventBuffer(sf::Window& window);
+										EventBuffer();
 
 			// Modifiers
 			void						pushEvent(const sf::Event& event);
 			void						clearEvents();
-			void						pollEvents();
+			void						pollEvents(sf::Window& window);
 
 			// Accessors
 			bool						containsEvent(const sf::Event& event) const;
 			bool						containsEvent(const sf::Event& event, const ActionNode& filterNode) const;
 			bool						getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out) const;
 			bool						getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const;
-			sf::Window&					getWindow() const;
 			bool						isRealtimeInputEnabled() const;
 
 		private:
 			EventSet					mEventSet;
-			sf::Window&					mWindow;
 			bool						mRealtimeEnabled;
 	};
 	

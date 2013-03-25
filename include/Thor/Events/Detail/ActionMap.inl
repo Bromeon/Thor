@@ -27,17 +27,10 @@ namespace thor
 {
 
 template <typename ActionId>
-ActionMap<ActionId>::ActionMap(sf::Window& window)
-: mActionMap()
-, mEventBuffer(window)
-{
-}
-
-template <typename ActionId>
-void ActionMap<ActionId>::update()
+void ActionMap<ActionId>::update(sf::Window& window)
 {
 	mEventBuffer.clearEvents();
-	mEventBuffer.pollEvents();
+	mEventBuffer.pollEvents(window);
 }
 
 template <typename ActionId>
@@ -81,10 +74,8 @@ bool ActionMap<ActionId>::isActive(const ActionId& id) const
 }
 
 template <typename ActionId>
-void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system) const
+void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system, sf::Window* window) const
 {
-	sf::Window& window = mEventBuffer.getWindow();
-
 	AURORA_CITR_FOREACH(actionItr, mActionMap)
 	{
 		// Check if current action is active, collect additional information in result
