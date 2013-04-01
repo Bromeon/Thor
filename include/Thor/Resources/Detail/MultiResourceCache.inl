@@ -124,8 +124,8 @@ inline void MultiResourceCache::setLoadingFailureStrategy(Resources::LoadingFail
 	mLoadingFailureStrategy = strategy;
 
 	// Adapt already existing caches
-	AURORA_ITR_FOREACH(itr, mSpecificCaches)
-		itr->second->setLoadingFailureStrategy(strategy);
+	AURORA_FOREACH(auto& pair, mSpecificCaches)
+		pair.second->setLoadingFailureStrategy(strategy);
 }
 
 inline void MultiResourceCache::setReleaseStrategy(Resources::ReleaseStrategy strategy)
@@ -133,8 +133,8 @@ inline void MultiResourceCache::setReleaseStrategy(Resources::ReleaseStrategy st
 	mReleaseStrategy = strategy;
 
 	// Adapt already existing caches
-	AURORA_ITR_FOREACH(itr, mSpecificCaches)
-		itr->second->setReleaseStrategy(strategy);
+	AURORA_FOREACH(auto& pair, mSpecificCaches)
+		pair.second->setReleaseStrategy(strategy);
 }
 
 } // namespace thor

@@ -199,8 +199,8 @@ void ParticleSystem::update(sf::Time dt)
 		if (reader->passedLifetime < reader->totalLifetime)
 		{
 			// Only apply affectors to living particles
-			AURORA_ITR_FOREACH(itr2, mAffectors)
-				itr2->first->affect(*reader, dt);
+			AURORA_FOREACH(auto& affectorPair, mAffectors)
+				affectorPair.first->affect(*reader, dt);
 
 			// Go ahead
 			*writer++ = *reader;
@@ -277,16 +277,16 @@ void ParticleSystem::computeVertices() const
 	};
 
 	// Fill vertex array
-	AURORA_CITR_FOREACH(itr, mParticles)
+	AURORA_FOREACH(const Particle& p, mParticles)
 	{
 		for (unsigned int i = 0; i < 4; ++i)
 		{
 			sf::Transform transform;
-			transform.translate(itr->position);
-			transform.rotate(itr->rotation);
-			transform.scale(itr->scale);
+			transform.translate(p.position);
+			transform.rotate(p.rotation);
+			transform.scale(p.scale);
 
-			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), itr->color, texCoords[i]) );
+			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), p.color, texCoords[i]) );
 		}
 	}
 }

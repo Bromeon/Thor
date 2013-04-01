@@ -47,11 +47,11 @@ void FrameAnimation::ensureNormalized() const
 		return;
 
 	float sum = 0.f;
-	AURORA_CITR_FOREACH(itr, mFrames)
-		sum += itr->duration;
+	AURORA_FOREACH(const detail::Frame& frame, mFrames)
+		sum += frame.duration;
 
-	AURORA_CITR_FOREACH(itr, mFrames)
-		itr->duration /= sum;
+	AURORA_FOREACH(const detail::Frame& frame, mFrames)
+		frame.duration /= sum;
 
 	mNormalized = true;
 }

@@ -225,12 +225,12 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	states.transform *= getTransform();
 	
 	// Draw all points
-	AURORA_CITR_FOREACH(itr, mTriangleShapes)
-		target.draw(**itr, states);
+	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& shape, mTriangleShapes)
+		target.draw(*shape, states);
 	
 	// Draw all edges at the boundary
-	AURORA_CITR_FOREACH(itr, mEdgeShapes)
-		target.draw(**itr, states);
+	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& edge, mEdgeShapes)
+		target.draw(*edge, states);
 }
 
 void ConcaveShape::decompose() const
@@ -248,10 +248,10 @@ void ConcaveShape::formOutline() const
 		return;
 
 	// Create graphic edges	
-	AURORA_CITR_FOREACH(itr, mEdges)
+	AURORA_FOREACH(const Edge<const sf::Vector2f>& edge, mEdges)
 	{
-		sf::Vector2f firstPos = (*itr)[0];
-		sf::Vector2f secondPos = (*itr)[1];
+		sf::Vector2f firstPos = edge[0];
+		sf::Vector2f secondPos = edge[1];
 		const float radius = mOutlineThickness / 2.f;
 
 		// Insert circles at the polygon points to round the outline off
