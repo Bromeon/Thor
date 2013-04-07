@@ -28,9 +28,9 @@ int main()
 	// Create window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Thor Particles");
 	
-	// Load image and initialize sprite
-	std::shared_ptr<sf::Texture> texture(new sf::Texture());
-	if (!texture->loadFromFile("Media/particle.png"))
+	// Load texture
+	sf::Texture texture;
+	if (!texture.loadFromFile("Media/particle.png"))
 		return EXIT_FAILURE;
 	
 	// Create emitter

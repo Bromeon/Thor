@@ -109,9 +109,9 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Thor Fireworks", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 
-	// Allocate texture in std::shared_ptr
-	auto texture = std::make_shared<sf::Texture>();
-	if (!texture->loadFromFile("Media/particle.png"))
+	// Load texture
+	sf::Texture texture;
+	if (!texture.loadFromFile("Media/particle.png"))
 		return EXIT_FAILURE;
 
 	// Instantiate particle system and add custom affector

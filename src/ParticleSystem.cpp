@@ -76,28 +76,26 @@ namespace
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture)
+ParticleSystem::ParticleSystem(const sf::Texture& texture)
 : mParticles()
 , mAffectors()
 , mEmitters()
-, mTexture()
-, mTextureRect(0, 0, texture->getSize().x, texture->getSize().y)
+, mTexture(&texture)
+, mTextureRect(0, 0, texture.getSize().x, texture.getSize().y)
 , mVertices(sf::Quads)
 , mNeedsVertexUpdate(true)
 {
-	mTexture.swap(texture);
 }
 
-ParticleSystem::ParticleSystem(std::shared_ptr<const sf::Texture> texture, const sf::IntRect& textureRect)
+ParticleSystem::ParticleSystem(const sf::Texture& texture, const sf::IntRect& textureRect)
 : mParticles()
 , mAffectors()
 , mEmitters()
-, mTexture()
+, mTexture(&texture)
 , mTextureRect(textureRect)
 , mVertices(sf::Quads)
 , mNeedsVertexUpdate(true)
 {
-	mTexture.swap(texture);
 }
 
 void ParticleSystem::swap(ParticleSystem& other)
@@ -231,7 +229,7 @@ void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	}
 
 	// Draw the vertex array with our texture
-	states.texture = mTexture.get();
+	states.texture = mTexture;
 	target.draw(mVertices, states);
 }
 
