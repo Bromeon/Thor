@@ -33,7 +33,7 @@ namespace thor
 template <class Animated, typename Id>
 Animator<Animated, Id>::Animator()
 : mAnimationMap()
-, mPlayingAnimation(nullptr)
+, mPlayingAnimation(mAnimationMap.end())
 , mProgress(0.f)
 , mLoop(false)
 {
@@ -49,33 +49,33 @@ void Animator<Animated, Id>::addAnimation(const Id& id, const AnimationFunction&
 template <class Animated, typename Id>
 void Animator<Animated, Id>::playAnimation(const Id& id, bool loop)
 {
-	typename AnimationMap::iterator itr = mAnimationMap.find(id);
+	AnimationMapIterator itr = mAnimationMap.find(id);
 	assert(itr != mAnimationMap.end());
 
-	playAnimation(itr->second, loop);
+	playAnimation(itr, loop);
 }
 
 template <class Animated, typename Id>
 void Animator<Animated, Id>::stopAnimation()
 {
-	mPlayingAnimation = nullptr;
+	mPlayingAnimation = mAnimationMap.end();
 }
 
 template <class Animated, typename Id>
 bool Animator<Animated, Id>::isPlayingAnimation() const
 {
-	return mPlayingAnimation != nullptr;
+	return mPlayingAnimation != mAnimationMap.end();
 }
 
 template <class Animated, typename Id>
 void Animator<Animated, Id>::update(sf::Time dt)
 {
 	// No animation playing: Do nothing
-	if (!mPlayingAnimation)
+	if (!isPlayingAnimation())
 		return;
 
 	// Update progress, scale dt with 1 / current animation duration
-	mProgress += dt.asSeconds() / mPlayingAnimation->second.asSeconds();
+	mProgress += dt.asSeconds() / mPlayingAnimation->second.second.asSeconds();
 
 	// If animation is expired, stop or restart animation at loops
 	if (mProgress > 1.f)
@@ -91,14 +91,14 @@ template <class Animated, typename Id>
 void Animator<Animated, Id>::animate(Animated& animated) const
 {
 	// If animation is playing, apply it
-	if (mPlayingAnimation)
-		mPlayingAnimation->first(animated, mProgress);
+	if (isPlayingAnimation())
+		mPlayingAnimation->second.first(animated, mProgress);
 }
 
 template <class Animated, typename Id>
-void Animator<Animated, Id>::playAnimation(ScaledAnimation& animation, bool loop)
+void Animator<Animated, Id>::playAnimation(AnimationMapIterator animation, bool loop)
 {
-	mPlayingAnimation = &animation;
+	mPlayingAnimation = animation;
 	mProgress = 0.f;
 	mLoop = loop;
 }

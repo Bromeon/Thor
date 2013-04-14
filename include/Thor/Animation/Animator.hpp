@@ -102,19 +102,20 @@ class Animator
 	private:
 		typedef std::pair<AnimationFunction, sf::Time>		ScaledAnimation;
 		typedef std::map<Id, ScaledAnimation>				AnimationMap;
+		typedef typename AnimationMap::iterator				AnimationMapIterator;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
 	private:
-		void						playAnimation(ScaledAnimation& animation, bool loop);
+		void						playAnimation(AnimationMapIterator animation, bool loop);
 
 			
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
 		AnimationMap				mAnimationMap;
-		const ScaledAnimation*		mPlayingAnimation;
+		AnimationMapIterator		mPlayingAnimation;
 		float						mProgress;
 		bool						mLoop;
 };
