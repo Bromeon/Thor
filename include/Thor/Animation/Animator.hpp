@@ -87,6 +87,11 @@ class Animator
 		///  If no animation is playing, false is returned.
 		bool						isPlayingAnimation() const;
 
+		/// @brief Returns the ID of the currently playing animation.
+		/// @warning The behavior is undefined if no animation is playing. Therefore, you have to make sure by a preceding call
+		///  to isPlayingAnimation() whether it is safe to call getPlayingAnimation().
+		Id							getPlayingAnimation() const;
+
 		/// @brief Updates the animator's progress. You should call this method each frame.
 		/// @param dt Frame time.
 		void						update(sf::Time dt);

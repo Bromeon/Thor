@@ -68,6 +68,14 @@ bool Animator<Animated, Id>::isPlayingAnimation() const
 }
 
 template <class Animated, typename Id>
+Id Animator<Animated, Id>::getPlayingAnimation() const
+{
+	assert(isPlayingAnimation());
+
+	return mPlayingAnimation->first;
+}
+
+template <class Animated, typename Id>
 void Animator<Animated, Id>::update(sf::Time dt)
 {
 	// No animation playing: Do nothing
