@@ -34,6 +34,9 @@ int main()
 		"Esc:  Quit",
 		font, 12);
 
+	sf::Text animationText("", font, 12);
+	animationText.setPosition(100.f, 150.f);
+
 	// Load image that contains animation steps
 	sf::Image image;
 	if (!image.loadFromFile("Media/animation.png"))
@@ -103,6 +106,12 @@ int main()
 		if (!animator.isPlayingAnimation())
 			animator.playAnimation("stand");
 
+		// Output playing animation (general case; at the moment an animation is always playing)
+		if (animator.isPlayingAnimation())
+			animationText.setString("Animation: " + animator.getPlayingAnimation());
+		else
+			animationText.setString("");
+
 		// Update animator and apply current animation state to the sprite
 		animator.update(frameClock.restart());
 		animator.animate(sprite);
@@ -110,6 +119,7 @@ int main()
 		// Draw everything
 		window.clear(sf::Color(50, 50, 50));
 		window.draw(instructions);
+		window.draw(animationText);
 		window.draw(sprite);
 		window.display();
 	}	
