@@ -277,15 +277,13 @@ void ParticleSystem::computeVertices() const
 	// Fill vertex array
 	AURORA_FOREACH(const Particle& p, mParticles)
 	{
-		for (unsigned int i = 0; i < 4; ++i)
-		{
-			sf::Transform transform;
-			transform.translate(p.position);
-			transform.rotate(p.rotation);
-			transform.scale(p.scale);
+		sf::Transform transform;
+		transform.translate(p.position);
+		transform.rotate(p.rotation);
+		transform.scale(p.scale);
 
+		for (unsigned int i = 0; i < 4; ++i)
 			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), p.color, texCoords[i]) );
-		}
 	}
 }
 
