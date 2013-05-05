@@ -44,10 +44,10 @@ int main()
 	system.addEmitter(emitter);
 
 	// Build color gradient (green -> teal -> blue)
-	thor::ColorGradient gradient = thor::createGradient
-		(sf::Color(0, 150, 0))		(1)
-		(sf::Color(0, 150, 100))	(1)
-		(sf::Color(0, 0, 150));
+	thor::ColorGradient gradient;
+	gradient[0.f] = sf::Color(0, 150, 0);
+	gradient[0.5f] = sf::Color(0, 150, 100);
+	gradient[1.f] = sf::Color(0, 0, 150);
 
 	// Create color and fade in/out animations
 	thor::ColorAnimation colorizer(gradient);

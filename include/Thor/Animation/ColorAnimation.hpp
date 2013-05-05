@@ -30,7 +30,7 @@
 #define THOR_COLORANIMATION_HPP
 
 #include <Thor/Config.hpp>
-#include <Thor/Graphics/Colors.hpp>
+#include <Thor/Graphics/ColorGradient.hpp>
 #include <Thor/Graphics/UniformAccess.hpp>
 
 
