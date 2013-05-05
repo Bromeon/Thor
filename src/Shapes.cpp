@@ -54,7 +54,7 @@ namespace
 namespace Shapes
 {
 
-	sf::ConvexShape THOR_API toConvexShape(const sf::Shape& shape)
+	sf::ConvexShape toConvexShape(const sf::Shape& shape)
 	{
 		const unsigned int size = shape.getPointCount();
 
