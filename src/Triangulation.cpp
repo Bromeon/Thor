@@ -399,13 +399,13 @@ namespace detail
 	void arrangeCorners(const AdvancedTriangle& first, const AdvancedTriangle& second, 
 		UintPair& sharedCornerIndices1, UintPair& sharedCornerIndices2, UintPair& disjointCornerIndices)
 	{
-		std::array<bool, 3> match;
-	
 		// The triangle's corners are numbered in clockwise order. For example, to compare ABC and BAD,          A
 		// we need to reverse BAD to DAB. Here, the AB subsequences are equal in ABC and DAB.                 C  |  D
 		// The variable j determines by how many elements the first sequence is rotated.                         B
 		for (unsigned int j = 0; j < 3; ++j)
 		{
+			std::array<bool, 3> match;
+
 			// Rotate vertex sequence in first until two of them are equal to second
 			for (unsigned int i = 0; i < 3; ++i)
 			{
