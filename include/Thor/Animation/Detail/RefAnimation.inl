@@ -23,16 +23,26 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-/// @file
-/// @brief Complete header for the Animation module
+namespace thor
+{
 
-#ifndef THOR_MODULE_ANIMATION_HPP
-#define THOR_MODULE_ANIMATION_HPP
+template <typename Animation>
+RefAnimation<Animation>::RefAnimation(Animation& referenced)
+: mReferenced(&referenced)
+{
+}
 
-#include <Thor/Animation/Animator.hpp>
-#include <Thor/Animation/ColorAnimation.hpp>
-#include <Thor/Animation/FadeAnimation.hpp>
-#include <Thor/Animation/FrameAnimation.hpp>
-#include <Thor/Animation/RefAnimation.hpp>
+template <typename Animation>
+template <typename Animated>
+void thor::RefAnimation<Animation>::operator() (Animated& animated, float progress)
+{
+	(*mReferenced)(animated, progress);
+}
 
-#endif // THOR_MODULE_ANIMATION_HPP
+template <typename Animation>
+RefAnimation<Animation> refAnimation(Animation& referenced)
+{
+	return RefAnimation<Animation>(referenced);
+}
+
+} // namespace thor

@@ -70,7 +70,8 @@ class Animator
 
 		/// @brief Registers an animation with a given name.
 		/// @param id Value that identifies the animation (must not be registered yet).
-		/// @param animation Animation to add to the animator.
+		/// @param animation Animation to add to the animator. The animation is copied; if you want to insert a reference
+		///  instead, use the function refAnimation().
 		/// @param duration Duration of the animation.
 		void						addAnimation(const Id& id, const AnimationFunction& animation, sf::Time duration);
 
