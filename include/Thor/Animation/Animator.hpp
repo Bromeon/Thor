@@ -35,6 +35,8 @@
 
 #include <map>
 #include <functional>
+#include <cassert>
+#include <cmath>
 
 
 namespace thor
