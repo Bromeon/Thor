@@ -6,23 +6,6 @@
 #include <SFML/Graphics.hpp>
 
 
-// Functor that returns the mouse position in float coordinates
-struct MousePosition
-{
-	MousePosition(sf::Window& window)
-	: window(window)
-	{
-	}
-
-	sf::Vector2f operator() ()
-	{
-		return sf::Vector2f(sf::Mouse::getPosition(window));
-	}
-
-	sf::Window& window;
-};
-
-
 int main()
 {
 	// Create window
@@ -37,7 +20,6 @@ int main()
 	thor::UniversalEmitter::Ptr emitter = thor::UniversalEmitter::create();
 	emitter->setEmissionRate(30.f);
 	emitter->setParticleLifetime(sf::seconds(5.f));
-	emitter->setParticlePosition(MousePosition(window));
 
 	// Create particle system
 	thor::ParticleSystem system(texture);
@@ -60,9 +42,8 @@ int main()
 	system.addAffector( thor::ForceAffector::create(sf::Vector2f(0.f, 100.f))  );
 
 	// Attributes that influence emitter
-	sf::Vector2f		position;
 	thor::PolarVector2f velocity(200.f, -90.f);
-	bool				paused = false;
+	bool paused = false;
 
 	sf::Font font;
 	if (!font.loadFromFile("Media/sansation.ttf"))
@@ -113,7 +94,8 @@ int main()
 		if (!paused)
 			system.update(frameTime);
 
-		// Set initial particle velocity, rotate vector randomly by maximal 10 degrees
+		// Set initial particle position and velocity, rotate vector randomly by maximal 10 degrees
+		emitter->setParticlePosition( window.mapPixelToCoords(sf::Mouse::getPosition(window)) );
 		emitter->setParticleVelocity( thor::Distributions::deflect(velocity, 10.f) );
 
 		// Draw everything
