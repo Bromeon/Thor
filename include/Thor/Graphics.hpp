@@ -31,7 +31,7 @@
 
 #include <Thor/Graphics/BigTexture.hpp>
 #include <Thor/Graphics/BigSprite.hpp>
-#include <Thor/Graphics/Colors.hpp>
+#include <Thor/Graphics/ColorGradient.hpp>
 #include <Thor/Graphics/ToString.hpp>
 #include <Thor/Graphics/UniformAccess.hpp>
 
