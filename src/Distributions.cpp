@@ -36,7 +36,7 @@ namespace thor
 namespace Distributions
 {
 	
-	thor::Distribution<float> uniform(float begin, float end)
+	Distribution<float> uniform(float begin, float end)
 	{
 		assert(begin <= end);
 
@@ -46,7 +46,7 @@ namespace Distributions
 		};
 	}
 
-	thor::Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
+	Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
 	{
 		assert(begin <= end);
 
@@ -59,7 +59,7 @@ namespace Distributions
 		};
 	}
 
-	thor::Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
+	Distribution<sf::Vector2f> rect(sf::Vector2f center, sf::Vector2f halfSize)
 	{
 		assert(halfSize.x >= 0.f && halfSize.y >= 0.f);
 
@@ -71,7 +71,7 @@ namespace Distributions
 		};
 	}
 
-	thor::Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
+	Distribution<sf::Vector2f> circle(sf::Vector2f center, float radius)
 	{
 		assert(radius >= 0.f);
 
@@ -82,7 +82,7 @@ namespace Distributions
 		};
 	}
 
-	thor::Distribution<sf::Vector2f> deflect(sf::Vector2f direction, float maxRotation)
+	Distribution<sf::Vector2f> deflect(sf::Vector2f direction, float maxRotation)
 	{
 		return [=] () -> sf::Vector2f
 		{

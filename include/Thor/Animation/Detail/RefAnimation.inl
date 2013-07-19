@@ -34,7 +34,7 @@ RefAnimation<Animation>::RefAnimation(Animation& referenced)
 
 template <typename Animation>
 template <typename Animated>
-void thor::RefAnimation<Animation>::operator() (Animated& animated, float progress)
+void RefAnimation<Animation>::operator() (Animated& animated, float progress)
 {
 	(*mReferenced)(animated, progress);
 }

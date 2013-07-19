@@ -42,7 +42,7 @@ Arrow::Arrow(sf::Vector2f position, sf::Vector2f direction, const sf::Color& col
 : sf::Drawable()
 , sf::Transformable()
 , mThickness(thickness)
-, mLength(thor::length(direction))
+, mLength(length(direction))
 , mDirection(direction)
 , mColor(color)
 , mNeedsShapeUpdate(true)
@@ -57,7 +57,7 @@ Arrow::Arrow(sf::Vector2f position, sf::Vector2f direction, const sf::Color& col
 void Arrow::setDirection(sf::Vector2f direction)
 {
 	mDirection = direction;
-	mLength = thor::length(direction);
+	mLength = length(direction);
 	mNeedsShapeUpdate = true;
 }
 
@@ -121,7 +121,7 @@ void Arrow::adaptLine() const
 	// Normal arrow
 	else
 	{
-		sf::Vector2f arrowDirection = (mLength - getTriangleHeight()) * thor::unitVector(mDirection);
+		sf::Vector2f arrowDirection = (mLength - getTriangleHeight()) * unitVector(mDirection);
 		
 		mLine = Shapes::line(arrowDirection, mColor, getThickness());
 	}

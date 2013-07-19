@@ -49,23 +49,23 @@ namespace Distributions
 
 	/// @brief %Uniform random distribution in a float interval
 	///
-	thor::Distribution<float> THOR_API			uniform(float begin, float end);
+	Distribution<float> THOR_API			uniform(float begin, float end);
 
 	/// @brief %Uniform random distribution in a time interval
 	///
-	thor::Distribution<sf::Time> THOR_API		uniform(sf::Time begin, sf::Time end);
+	Distribution<sf::Time> THOR_API			uniform(sf::Time begin, sf::Time end);
 
 	/// @brief %Uniform random distribution in a rectangle
 	/// 
-	thor::Distribution<sf::Vector2f> THOR_API	rect(sf::Vector2f center, sf::Vector2f halfSize);
+	Distribution<sf::Vector2f> THOR_API		rect(sf::Vector2f center, sf::Vector2f halfSize);
 
 	/// @brief %Uniform random distribution in a circle
 	/// 
-	thor::Distribution<sf::Vector2f> THOR_API	circle(sf::Vector2f center, float radius);
+	Distribution<sf::Vector2f> THOR_API		circle(sf::Vector2f center, float radius);
 
 	/// @brief Vector rotation with a random angle
 	/// 
-	thor::Distribution<sf::Vector2f> THOR_API	deflect(sf::Vector2f direction, float maxRotation);
+	Distribution<sf::Vector2f> THOR_API		deflect(sf::Vector2f direction, float maxRotation);
 
 } // namespace Distributions
 
