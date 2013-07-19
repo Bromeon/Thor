@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Particles/Affector.hpp>
+#include <Thor/Particles/Affectors.hpp>
 #include <Thor/Particles/Particle.hpp>
 
 #include <cassert>

@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Particles/Emitter.hpp>
+#include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/EmissionAdder.hpp>
 #include <Thor/Particles/Particle.hpp>
 

@@ -30,7 +30,7 @@
 set(THOR_SRC
 	Action.cpp
 	ActionOperations.cpp
-	Affector.cpp
+	Affectors.cpp
 	Arrow.cpp
 	BigSprite.cpp
 	BigTexture.cpp
@@ -40,7 +40,7 @@ set(THOR_SRC
 	ConcaveShape.cpp
 	Connection.cpp
 	Distributions.cpp
-	Emitter.cpp
+	Emitters.cpp
 	FadeAnimation.cpp
 	FrameAnimation.cpp
 	InputNames.cpp

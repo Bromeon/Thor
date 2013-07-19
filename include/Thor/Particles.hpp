@@ -29,8 +29,8 @@
 #ifndef THOR_MODULE_PARTICLES_HPP
 #define THOR_MODULE_PARTICLES_HPP
 
-#include <Thor/Particles/Affector.hpp>
-#include <Thor/Particles/Emitter.hpp>
+#include <Thor/Particles/Affectors.hpp>
+#include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/EmissionAdder.hpp>
 #include <Thor/Particles/Particle.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
