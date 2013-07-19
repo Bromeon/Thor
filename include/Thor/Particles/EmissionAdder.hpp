@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Interfaces thor::Emitter, thor::Affector
+/// @brief Class thor::EmissionAdder
 
 #ifndef THOR_PARTICLEINTERFACES_HPP
 #define THOR_PARTICLEINTERFACES_HPP
