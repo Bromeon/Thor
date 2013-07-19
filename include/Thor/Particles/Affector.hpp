@@ -45,6 +45,32 @@ class Particle;
 /// @addtogroup Particles
 /// @{
 
+/// @brief Creates a functor that references an affector.
+/// @param referenced Affector functor to reference.
+/// @details Use this function if you do not want to copy the affector, but reference it, when you pass it to thor::ParticleSystem.
+///  This allows you to modify the original object after it has been added, and effects are still visible. However, you are responsible
+///  to ensure the lifetime of the referenced object. Example:
+/// @code
+/// // Create affector and particle system
+/// thor::ForceAffector affector(...);
+/// thor::ParticleSystem system(...);
+///
+/// // Add affector to particle system
+/// system.addEmitter(thor::refAffector(affector));
+///
+/// // Change affector properties later
+/// emitter.setEmissionRate(20);
+/// @endcode
+template <typename Affector>
+std::function<void(Particle&, sf::Time)> refAffector(Affector& referenced)
+{
+	return [&referenced] (Particle& particle, sf::Time dt)
+	{
+		return referenced(particle, dt);
+	};
+}
+
+
 /// @brief Applies a translational acceleration to particles over time.
 /// @details Affector class that applies an acceleration vector to each particle. A popular use case is gravity.
 class THOR_API ForceAffector
@@ -145,8 +171,6 @@ class THOR_API ScaleAffector
 ///  by a function with signature <b>void(Particle& animated, float progress)</b>.
 class THOR_API AnimationAffector
 {
-
-
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:

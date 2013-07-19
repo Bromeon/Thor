@@ -21,9 +21,9 @@ int main()
 	emitter.setEmissionRate(30.f);
 	emitter.setParticleLifetime(sf::seconds(5.f));
 
-	// Create particle system
+	// Create particle system, add reference to emitter
 	thor::ParticleSystem system(texture);
-	system.addEmitter(emitter);
+	system.addEmitter(thor::refEmitter(emitter));
 
 	// Build color gradient (green -> teal -> blue)
 	thor::ColorGradient gradient;

@@ -46,6 +46,32 @@ class EmissionAdder;
 /// @addtogroup Particles
 /// @{
 
+/// @brief Creates a functor that references an emitter.
+/// @param referenced Emitter functor to reference.
+/// @details Use this function if you do not want to copy the emitter, but reference it, when you pass it to thor::ParticleSystem.
+///  This allows you to modify the original object after it has been added, and effects are still visible. However, you are responsible
+///  to ensure the lifetime of the referenced object. Example:
+/// @code
+/// // Create emitter and particle system
+/// thor::UniversalEmitter emitter;
+/// thor::ParticleSystem system(...);
+///
+/// // Add emitter to particle system
+/// system.addEmitter(thor::refEmitter(emitter));
+///
+/// // Change emitter properties later
+/// emitter.setEmissionRate(20);
+/// @endcode
+template <typename Emitter>
+std::function<void(EmissionAdder&, sf::Time)> refEmitter(Emitter& referenced)
+{
+	return [&referenced] (EmissionAdder& system, sf::Time dt)
+	{
+		return referenced(system, dt);
+	};
+}
+
+
 /// @brief Class that emits particles with customizable initial conditions.
 /// @details This emitter is universal with respect to the initial conditions of each emitted particle. It works with callbacks
 ///  that return initial values for the particle attributes (position, rotation, color, ...). So you can pass constants, random
