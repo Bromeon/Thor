@@ -33,17 +33,12 @@
 namespace thor
 {
 	
-ForceAffector::Ptr ForceAffector::create(sf::Vector2f acceleration)
-{
-	return std::make_shared<ForceAffector>(acceleration);
-}
-
 ForceAffector::ForceAffector(sf::Vector2f acceleration)
 : mAcceleration(acceleration)
 {
 }
 
-void ForceAffector::affect(Particle& particle, sf::Time dt)
+void ForceAffector::operator() (Particle& particle, sf::Time dt)
 {
 	particle.velocity += dt.asSeconds() * mAcceleration;
 }
@@ -61,17 +56,12 @@ sf::Vector2f ForceAffector::getAcceleration() const
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-TorqueAffector::Ptr TorqueAffector::create(float angularAcceleration)
-{
-	return std::make_shared<TorqueAffector>(angularAcceleration);
-}
-
 TorqueAffector::TorqueAffector(float angularAcceleration)
 : mAngularAcceleration(angularAcceleration)
 {
 }
 
-void TorqueAffector::affect(Particle& particle, sf::Time dt)
+void TorqueAffector::operator() (Particle& particle, sf::Time dt)
 {
 	particle.rotationSpeed += dt.asSeconds() * mAngularAcceleration;
 }
@@ -89,17 +79,12 @@ float TorqueAffector::getAngularAcceleration() const
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-ScaleAffector::Ptr ScaleAffector::create(sf::Vector2f scaleFactor)
-{
-	return std::make_shared<ScaleAffector>(scaleFactor);
-}
-
 ScaleAffector::ScaleAffector(sf::Vector2f scaleFactor)
 : mScaleFactor(scaleFactor)
 {
 }
 
-void ScaleAffector::affect(Particle& particle, sf::Time dt)
+void ScaleAffector::operator() (Particle& particle, sf::Time dt)
 {
 	particle.scale += dt.asSeconds() * mScaleFactor;
 }
@@ -117,17 +102,12 @@ sf::Vector2f ScaleAffector::getScaleFactor() const
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-AnimationAffector::Ptr AnimationAffector::create(std::function<void(Particle&, float)> particleAnimation)
-{
-	return std::make_shared<AnimationAffector>(std::move(particleAnimation));
-}
-
 AnimationAffector::AnimationAffector(std::function<void(Particle&, float)> particleAnimation)
 : mAnimation(std::move(particleAnimation))
 {
 }
 
-void AnimationAffector::affect(Particle& particle, sf::Time)
+void AnimationAffector::operator() (Particle& particle, sf::Time)
 {
 	mAnimation(particle, getElapsedRatio(particle));
 }

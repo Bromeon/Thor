@@ -29,7 +29,6 @@
 #ifndef THOR_AFFECTOR_HPP
 #define THOR_AFFECTOR_HPP
 
-#include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Config.hpp>
 
 #include <SFML/System/Time.hpp>
@@ -41,29 +40,15 @@
 namespace thor
 {
 
+class Particle;
+
 /// @addtogroup Particles
 /// @{
 
 /// @brief Applies a translational acceleration to particles over time.
 /// @details Affector class that applies an acceleration vector to each particle. A popular use case is gravity.
-class THOR_API ForceAffector : public Affector
+class THOR_API ForceAffector
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type referring to ForceAffector objects
-		///
-		typedef std::shared_ptr<ForceAffector> Ptr;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Creates an affector that accelerates particles continuously.
-		/// @copydetails ForceAffector::ForceAffector()
-		static Ptr					create(sf::Vector2f acceleration);
-
-
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -71,7 +56,10 @@ class THOR_API ForceAffector : public Affector
 		/// @param acceleration The acceleration vector. The particle's velocity changes by this vector each second.
 		explicit					ForceAffector(sf::Vector2f acceleration);
 
-		virtual void				affect(Particle& particle, sf::Time dt);
+		/// @brief Affects particles.
+		/// @param particle The particle currently being affected.
+		/// @param dt Time interval during which particles are affected.
+		void						operator() (Particle& particle, sf::Time dt);
 
 		/// @brief Sets the linear acceleration applied to the particles.
 		///
@@ -91,24 +79,8 @@ class THOR_API ForceAffector : public Affector
 
 /// @brief Applies a rotational acceleration to particles over time.
 /// @details Affector class that applies a scalar angular acceleration value to each particle.
-class THOR_API TorqueAffector : public Affector
+class THOR_API TorqueAffector
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type referring to TorqueAffector objects
-		///
-		typedef std::shared_ptr<TorqueAffector> Ptr;
-
-		
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Creates an affector that applies an angular acceleration to particles.
-		/// @copydetails TorqueAffector::TorqueAffector()
-		static Ptr 					create(float angularAcceleration);
-
-
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -117,7 +89,9 @@ class THOR_API TorqueAffector : public Affector
 		///  this value each second.
 		explicit					TorqueAffector(float angularAcceleration);
 
-		virtual void				affect(Particle& particle, sf::Time dt);
+		/// @copydoc ForceAffector::affect
+		///
+		void						operator() (Particle& particle, sf::Time dt);
 
 		/// @brief sets the angular acceleration applied to the particles (in degrees).
 		///
@@ -137,24 +111,8 @@ class THOR_API TorqueAffector : public Affector
 
 /// @brief Scales particles over time.
 /// @details 
-class THOR_API ScaleAffector : public Affector
+class THOR_API ScaleAffector
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type referring to ScaleAffector objects
-		///
-		typedef std::shared_ptr<ScaleAffector> Ptr;
-		
-		
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Creates an affector that continuously scales particles by a given factor.
-		/// @copydetails ScaleAffector::ScaleAffector()
-		static Ptr					create(sf::Vector2f scaleFactor);
-
-		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -162,7 +120,9 @@ class THOR_API ScaleAffector : public Affector
 		/// @param scaleFactor Factor by which particles are scaled every second.
 		explicit					ScaleAffector(sf::Vector2f scaleFactor);
 
-		virtual void				affect(Particle& particle, sf::Time dt);
+		/// @copydoc ForceAffector::affect
+		///
+		void						operator() (Particle& particle, sf::Time dt);
 
 		/// @brief Sets the factor by which particles are scaled every second.
 		/// 
@@ -183,24 +143,8 @@ class THOR_API ScaleAffector : public Affector
 /// @brief %Affector that animates particles using a function.
 /// @details This affector can be used to apply animations of Thor's Animation module to particles. Such animations are described
 ///  by a function with signature <b>void(Particle& animated, float progress)</b>.
-class THOR_API AnimationAffector : public Affector
+class THOR_API AnimationAffector
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type referring to AnimationAffector objects
-		///
-		typedef std::shared_ptr<AnimationAffector> Ptr;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Creates an affector that colorizes particles according to a given particleAnimation.
-		/// @copydetails AnimationAffector::AnimationAffector(std::function<void(Particle&, float)>)
-		static Ptr 					create(std::function<void(Particle&, float)> particleAnimation);
-
-		virtual void				affect(Particle& particle, sf::Time dt);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -209,8 +153,12 @@ class THOR_API AnimationAffector : public Affector
 		/// @brief Constructor
 		/// @details Applies an animation during the whole lifetime of the particles.
 		/// @param particleAnimation An animation function that is applied to the particle. Its second parameter @a progress
-		///  corresponds to getElapsedRatio(particle), the delta time of affect() is ignored.
+		///  corresponds to getElapsedRatio(particle), the delta time of operator() is ignored.
 		explicit					AnimationAffector(std::function<void(Particle&, float)> particleAnimation);
+
+		/// @copydoc ForceAffector::affect
+		///
+		void						operator() (Particle& particle, sf::Time dt);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

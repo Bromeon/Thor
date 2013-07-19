@@ -42,24 +42,7 @@ namespace thor
 namespace
 {
 
-	// Functor as argument for std::find_if() - compares only pair.first
-	template <typename First>
-	struct FirstFinder
-	{
-		explicit FirstFinder(const First& first)
-		: first(&first)
-		{
-		}
-
-		bool operator() (const std::pair<First, sf::Time>& element)
-		{
-			return element.first == *first;
-		}
-
-		const First* first;
-	};
-
-	// Erases emitter/affector at itr from c, if its time has expired. itr will point to the next element.
+	// Erases emitter/affector at itr from ctr, if its time has expired. itr will point to the next element.
 	template <class Container>
 	void incrementCheckExpiry(Container& ctr, typename Container::iterator& itr, sf::Time dt)
 	{
@@ -112,25 +95,14 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
 }
 
-void ParticleSystem::addAffector(Affector::Ptr affector)
+void ParticleSystem::addAffector(const Affector& affector)
 {
 	addAffector(affector, sf::Time::Zero);
 }
 
-void ParticleSystem::addAffector(Affector::Ptr affector, sf::Time timeUntilRemoval)
+void ParticleSystem::addAffector(const Affector& affector, sf::Time timeUntilRemoval)
 {
-	assert(affector);
-	assert(!containsAffector(affector));
-
 	mAffectors.push_back( std::make_pair(affector, timeUntilRemoval) );
-}
-
-void ParticleSystem::removeAffector(Affector::Ptr affector)
-{
-	AffectorContainer::iterator itr = std::find_if(mAffectors.begin(), mAffectors.end(), FirstFinder<Affector::Ptr>(affector));
-	assert(itr != mAffectors.end());
-
-	mAffectors.erase(itr);
 }
 
 void ParticleSystem::clearAffectors()
@@ -138,40 +110,19 @@ void ParticleSystem::clearAffectors()
 	mAffectors.clear();
 }
 
-bool ParticleSystem::containsAffector(Affector::Ptr affector) const
-{
-	return std::find_if(mAffectors.begin(), mAffectors.end(), FirstFinder<Affector::Ptr>(affector)) != mAffectors.end();
-}
-
-void ParticleSystem::addEmitter(Emitter::Ptr emitter)
+void ParticleSystem::addEmitter(const Emitter& emitter)
 {
 	addEmitter(emitter, sf::Time::Zero);
 }
 
-void ParticleSystem::addEmitter(Emitter::Ptr emitter, sf::Time timeUntilRemoval)
+void ParticleSystem::addEmitter(const Emitter& emitter, sf::Time timeUntilRemoval)
 {
-	assert(emitter);
-	assert(!containsEmitter(emitter));
-
 	mEmitters.push_back( std::make_pair(emitter, timeUntilRemoval) );
-}
-
-void ParticleSystem::removeEmitter(Emitter::Ptr emitter)
-{
-	EmitterContainer::iterator itr = std::find_if(mEmitters.begin(), mEmitters.end(), FirstFinder<Emitter::Ptr>(emitter));
-	assert(itr != mEmitters.end());
-
-	mEmitters.erase(itr);
 }
 
 void ParticleSystem::clearEmitters()
 {
 	mEmitters.clear();
-}
-
-bool ParticleSystem::containsEmitter(Emitter::Ptr emitter) const
-{
-	return std::find_if(mEmitters.begin(), mEmitters.end(), FirstFinder<Emitter::Ptr>(emitter)) != mEmitters.end();
 }
 
 void ParticleSystem::update(sf::Time dt)
@@ -182,7 +133,7 @@ void ParticleSystem::update(sf::Time dt)
 	// Emit new particles and remove expiring emitters
 	for (EmitterContainer::iterator itr = mEmitters.begin(); itr != mEmitters.end(); )
 	{
-		itr->first->emit(*this, dt);
+		itr->first(*this, dt);
 		incrementCheckExpiry(mEmitters, itr, dt);
 	}
 
@@ -198,7 +149,7 @@ void ParticleSystem::update(sf::Time dt)
 		{
 			// Only apply affectors to living particles
 			AURORA_FOREACH(auto& affectorPair, mAffectors)
-				affectorPair.first->affect(*reader, dt);
+				affectorPair.first(*reader, dt);
 
 			// Go ahead
 			*writer++ = *reader;

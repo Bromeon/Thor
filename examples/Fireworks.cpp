@@ -1,8 +1,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
+#include <Thor/Particles/EmissionAdder.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
@@ -32,7 +32,7 @@ const std::array<sf::Color, 9> fireworkColors =
 };
 
 // Custom emitter that groups particles in tails
-class FireworkEmitter : public thor::Emitter
+class FireworkEmitter
 {
 	public:
 		explicit FireworkEmitter(sf::Vector2f position)
@@ -42,7 +42,7 @@ class FireworkEmitter : public thor::Emitter
 		{
 		}
 
-		virtual void emit(thor::Emitter::Adder& system, sf::Time dt)
+		void operator() (thor::EmissionAdder& system, sf::Time dt)
 		{
 			const sf::Time tailInterval = explosionDuration / tailsPerExplosion;
 
@@ -56,7 +56,7 @@ class FireworkEmitter : public thor::Emitter
 		}
 
 	private:
-		void emitTail(thor::Emitter::Adder& system)
+		void emitTail(thor::EmissionAdder& system)
 		{
 			// Create initial direction with random vector length and angle
 			thor::PolarVector2f velocity(thor::random(30.f, 70.f), thor::random(0.f, 360.f));
@@ -90,10 +90,10 @@ class FireworkEmitter : public thor::Emitter
 };
 
 // Custom affector that fades particles out and accelerates them according to scale
-class FireworkAffector : public thor::Affector
+class FireworkAffector
 {
 	public:
-		virtual void affect(thor::Particle& particle, sf::Time dt) 
+		void operator() (thor::Particle& particle, sf::Time dt) 
 		{
 			// Apply gravity, where particles with greater scale are affected stronger (quadratic influence)
 			particle.velocity += dt.asSeconds() * sf::Vector2f(0.f, gravity) * particle.scale.x * particle.scale.y;
@@ -116,7 +116,7 @@ int main()
 
 	// Instantiate particle system and add custom affector
 	thor::ParticleSystem system(texture);
-	system.addAffector(std::make_shared<FireworkAffector>());
+	system.addAffector(FireworkAffector());
 
 	// Create timer that can be connected to callbacks. Initial time limit is 1 second, timer immediately starts
 	thor::CallbackTimer explosionTimer;
@@ -135,7 +135,7 @@ int main()
 		sf::Vector2f position(thor::randomDev(400.f, 300.f), thor::randomDev(300.f, 200.f));
 
 		// Add a temporary emitter to the particle system
-		system.addEmitter(std::make_shared<FireworkEmitter>(position), explosionDuration);
+		system.addEmitter(FireworkEmitter(position), explosionDuration);
 	});
 
 	// Main loop

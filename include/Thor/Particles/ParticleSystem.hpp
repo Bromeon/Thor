@@ -29,8 +29,8 @@
 #ifndef THOR_PARTICLESYSTEM_HPP
 #define THOR_PARTICLESYSTEM_HPP
 
-#include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Particles/Particle.hpp>
+#include <Thor/Particles/EmissionAdder.hpp>
 #include <Thor/Config.hpp>
 
 #include <Aurora/Tools/Swap.hpp>
@@ -43,6 +43,7 @@
 
 #include <vector>
 #include <utility>
+#include <functional>
 
 
 namespace sf
@@ -65,15 +66,27 @@ namespace thor
 /// @details Like sprites, particles are represented as sub-rectangles of sf::Texture. During their
 ///  lifetime, the particles can be affected in translation, rotation, scale and coloring.
 /// @n@n This class is noncopyable.
-class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private Emitter::Adder
+class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionAdder
 {		
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public types
+	public:
+		/// @brief Function object for affectors
+		/// 
+		typedef std::function<void(Particle&, sf::Time)>			Affector;
+
+		/// @brief Function object for affectors
+		/// 
+		typedef std::function<void(EmissionAdder&, sf::Time)>		Emitter;
+
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
 		// Container typedefs
-		typedef std::vector< Particle >										ParticleContainer;
-		typedef std::vector< std::pair<Affector::Ptr, sf::Time> >			AffectorContainer;
-		typedef std::vector< std::pair<Emitter::Ptr, sf::Time> >			EmitterContainer;
+		typedef std::vector< Particle >								ParticleContainer;
+		typedef std::vector< std::pair<Affector, sf::Time> >		AffectorContainer;
+		typedef std::vector< std::pair<Emitter, sf::Time> >			EmitterContainer;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -98,57 +111,34 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		/// @details Be aware that multiple affectors can interfere with each other. The affectors are applied in the order they were
 		///  added to the system, therefore affectors at the end may overwrite particle states set by earlier affectors. To completely
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
-		/// @param affector Shared pointer to a derivate of Affector (non-empty).
-		/// @pre @a affector has not been added yet.
-		void						addAffector(Affector::Ptr affector);
+		/// @param affector Affector function object which is copied into the particle system.
+		void						addAffector(const Affector& affector);
 
 		/// @brief Adds a particle affector for a certain amount of time.
 		/// @details Be aware that multiple affectors can interfere with each other. The affectors are applied in the order they were
 		///  added to the system, therefore affectors at the end may overwrite particle states set by earlier affectors. To completely
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
-		/// @param affector Shared pointer to a derivate of Affector (non-empty).
+		/// @param affector Affector function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the affector is automatically removed from the system.
-		/// @pre @a affector has not been added yet.
-		void						addAffector(Affector::Ptr affector, sf::Time timeUntilRemoval);
+		void						addAffector(const Affector& affector, sf::Time timeUntilRemoval);
 
-		/// @brief Removes a particle affector from the system.
-		/// @param affector Shared pointer to a derivate of Affector (non-empty).
-		/// @pre @a affector is currently stored in the particle system.
-		void						removeAffector(Affector::Ptr affector);
-
-		/// @brief Removes all %Affector instances from the system.
-		/// @details All particles lose the influence of any extern affectors. Movement and lifetime
-		///  is still computed.
+		/// @brief Removes all affector instances from the system.
+		/// @details All particles lose the influence of any external affectors. Movement and lifetime is still computed.
 		void						clearAffectors();
 
-		/// @brief Checks whether an affector is currently stored in the particle system.
-		/// @return true if affector is used by this particle system, false otherwise.
-		bool						containsAffector(Affector::Ptr affector) const;
-
 		/// @brief Adds a particle emitter to the system.
-		/// @param emitter Shared pointer to a derivate of Emitter (non-empty).
-		/// @pre @a emitter has not been added yet.
-		void						addEmitter(Emitter::Ptr emitter);
+		/// @param emitter Emitter function object which is copied into the particle system.
+		void						addEmitter(const Emitter& emitter);
 
 		/// @brief Adds a particle emitter for a certain amount of time.
-		/// @param emitter Shared pointer to a derivate of Emitter (non-empty).
+		/// @param emitter Emitter function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the emitter is automatically removed from the system.
-		/// @pre @a emitter has not been added yet.
-		void						addEmitter(Emitter::Ptr emitter, sf::Time timeUntilRemoval);
+		void						addEmitter(const Emitter& emitter, sf::Time timeUntilRemoval);
 
-		/// @brief Removes a particle emitter from the system.
-		/// @param emitter Shared pointer to a derivate of Emitter (non-empty).
-		/// @pre @a emitter is currently stored in the particle system.
-		void						removeEmitter(Emitter::Ptr emitter);
-
-		/// @brief Removes all %Emitter instances from the system.
+		/// @brief Removes all emitter instances from the system.
 		/// @details Particles that are currently in the system are still processed, but no new ones
 		///  are emitted until you add another emitter.
 		void						clearEmitters();
-		
-		/// @brief Checks whether an emitter is currently stored in the particle system.
-		/// @return true if emitter is used by this particle system, false otherwise.
-		bool						containsEmitter(Emitter::Ptr emitter) const;
 
 		/// @brief Updates all particles in the system.
 		/// @details Invokes all emitters and applies all affectors. The lifetime of every particle is decreased,

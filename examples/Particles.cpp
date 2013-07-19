@@ -17,9 +17,9 @@ int main()
 		return EXIT_FAILURE;
 	
 	// Create emitter
-	thor::UniversalEmitter::Ptr emitter = thor::UniversalEmitter::create();
-	emitter->setEmissionRate(30.f);
-	emitter->setParticleLifetime(sf::seconds(5.f));
+	thor::UniversalEmitter emitter;
+	emitter.setEmissionRate(30.f);
+	emitter.setParticleLifetime(sf::seconds(5.f));
 
 	// Create particle system
 	thor::ParticleSystem system(texture);
@@ -36,10 +36,10 @@ int main()
 	thor::FadeAnimation fader(0.1f, 0.1f);
 
 	// Add particle affectors
-	system.addAffector( thor::AnimationAffector::create(colorizer) );
-	system.addAffector( thor::AnimationAffector::create(fader) );
-	system.addAffector( thor::TorqueAffector::create(100.f) );
-	system.addAffector( thor::ForceAffector::create(sf::Vector2f(0.f, 100.f))  );
+	system.addAffector( thor::AnimationAffector(colorizer) );
+	system.addAffector( thor::AnimationAffector(fader) );
+	system.addAffector( thor::TorqueAffector(100.f) );
+	system.addAffector( thor::ForceAffector(sf::Vector2f(0.f, 100.f))  );
 
 	// Attributes that influence emitter
 	thor::PolarVector2f velocity(200.f, -90.f);
@@ -95,8 +95,8 @@ int main()
 			system.update(frameTime);
 
 		// Set initial particle position and velocity, rotate vector randomly by maximal 10 degrees
-		emitter->setParticlePosition( window.mapPixelToCoords(sf::Mouse::getPosition(window)) );
-		emitter->setParticleVelocity( thor::Distributions::deflect(velocity, 10.f) );
+		emitter.setParticlePosition( window.mapPixelToCoords(sf::Mouse::getPosition(window)) );
+		emitter.setParticleVelocity( thor::Distributions::deflect(velocity, 10.f) );
 
 		// Draw everything
 		window.clear(sf::Color(30, 30, 30));

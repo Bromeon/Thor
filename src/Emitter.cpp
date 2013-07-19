@@ -24,22 +24,15 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Particles/Emitter.hpp>
+#include <Thor/Particles/EmissionAdder.hpp>
 #include <Thor/Particles/Particle.hpp>
-
-#include <cassert>
 
 
 namespace thor
 {
 
-UniversalEmitter::Ptr UniversalEmitter::create()
-{
-	return std::make_shared<UniversalEmitter>();
-}
-
 UniversalEmitter::UniversalEmitter()
-: Emitter()
-, mEmissionRate(1.f)
+: mEmissionRate(1.f)
 , mEmissionDifference(0.f)
 , mParticleLifetime(sf::seconds(1.f)) 
 , mParticlePosition(sf::Vector2f(0.f, 0.f))
@@ -51,7 +44,7 @@ UniversalEmitter::UniversalEmitter()
 {
 }
 
-void UniversalEmitter::emit(Adder& system, sf::Time dt)
+void UniversalEmitter::operator() (EmissionAdder& system, sf::Time dt)
 {
 	const unsigned int nbParticles = computeParticleCount(dt);
 

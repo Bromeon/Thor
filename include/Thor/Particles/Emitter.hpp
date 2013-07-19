@@ -29,7 +29,6 @@
 #ifndef THOR_EMITTER_HPP
 #define THOR_EMITTER_HPP
 
-#include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Math/Distribution.hpp>
 #include <Thor/Config.hpp>
 
@@ -41,6 +40,9 @@
 namespace thor
 {
 
+class EmissionAdder;
+
+
 /// @addtogroup Particles
 /// @{
 
@@ -48,24 +50,8 @@ namespace thor
 /// @details This emitter is universal with respect to the initial conditions of each emitted particle. It works with callbacks
 ///  that return initial values for the particle attributes (position, rotation, color, ...). So you can pass constants, random
 ///  distributions, or any functions that compute the value in an arbitrary way.
-class THOR_API UniversalEmitter : public Emitter
+class THOR_API UniversalEmitter
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Shared pointer type referring to UniversalEmitter objects
-		///
-		typedef std::shared_ptr<UniversalEmitter> Ptr;
-
-		
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public static member functions
-	public:
-		/// @brief Creates a shared pointer to a UniversalEmitter.
-		/// @copydetails UniversalEmitter::UniversalEmitter()
-		static Ptr					create();
-
-		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -73,7 +59,10 @@ class THOR_API UniversalEmitter : public Emitter
 		///
 									UniversalEmitter();
 
-		virtual void				emit(Adder& system, sf::Time dt);
+		/// @brief Emits particles into a particle system.
+		/// @param system Indirection to the particle system that stores the particles.
+		/// @param dt Time interval during which particles are emitted.
+		void						operator() (EmissionAdder& system, sf::Time dt);
 
 		/// @brief Sets the particle emission rate.
 		/// @param particlesPerSecond How many particles are emitted in 1 second. The type is not integral to allow

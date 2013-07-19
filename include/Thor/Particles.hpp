@@ -29,10 +29,10 @@
 #ifndef THOR_MODULE_PARTICLES_HPP
 #define THOR_MODULE_PARTICLES_HPP
 
-#include <Thor/Particles/ParticleSystem.hpp>
-#include <Thor/Particles/Particle.hpp>
-#include <Thor/Particles/ParticleInterfaces.hpp>
 #include <Thor/Particles/Affector.hpp>
 #include <Thor/Particles/Emitter.hpp>
+#include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Particles/Particle.hpp>
+#include <Thor/Particles/ParticleSystem.hpp>
 
 #endif // THOR_MODULE_PARTICLES_HPP

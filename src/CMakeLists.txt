@@ -45,7 +45,6 @@ set(THOR_SRC
 	FrameAnimation.cpp
 	InputNames.cpp
 	Particle.cpp
-	ParticleInterfaces.cpp
 	ParticleSystem.cpp
 	Random.cpp
 	Shapes.cpp
