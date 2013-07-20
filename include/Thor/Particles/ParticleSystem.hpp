@@ -69,24 +69,29 @@ namespace thor
 class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionAdder
 {		
 	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Function object for affectors
-		/// 
-		typedef std::function<void(Particle&, sf::Time)>			Affector;
-
-		/// @brief Function object for affectors
-		/// 
-		typedef std::function<void(EmissionAdder&, sf::Time)>		Emitter;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
+		template <typename Signature>
+		struct Function
+		{
+			Function(std::function<Signature> function, sf::Time timeUntilRemoval)
+			: function(std::move(function))
+			, timeUntilRemoval(timeUntilRemoval)
+			{
+			}
+
+			std::function<Signature>		function;
+			sf::Time						timeUntilRemoval;
+		};
+
+		// Function typedefs
+		typedef Function<void(Particle&, sf::Time)>			Affector;
+		typedef Function<void(EmissionAdder&, sf::Time)>	Emitter;
+
 		// Container typedefs
-		typedef std::vector< Particle >								ParticleContainer;
-		typedef std::vector< std::pair<Affector, sf::Time> >		AffectorContainer;
-		typedef std::vector< std::pair<Emitter, sf::Time> >			EmitterContainer;
+		typedef std::vector<Particle>						ParticleContainer;
+		typedef std::vector<Affector>						AffectorContainer;
+		typedef std::vector<Emitter>						EmitterContainer;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -112,7 +117,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		///  added to the system, therefore affectors at the end may overwrite particle states set by earlier affectors. To completely
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
 		/// @param affector Affector function object which is copied into the particle system.
-		void						addAffector(const Affector& affector);
+		void						addAffector(std::function<void(Particle&, sf::Time)> affector);
 
 		/// @brief Adds a particle affector for a certain amount of time.
 		/// @details Be aware that multiple affectors can interfere with each other. The affectors are applied in the order they were
@@ -120,7 +125,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
 		/// @param affector Affector function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the affector is automatically removed from the system.
-		void						addAffector(const Affector& affector, sf::Time timeUntilRemoval);
+		void						addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval);
 
 		/// @brief Removes all affector instances from the system.
 		/// @details All particles lose the influence of any external affectors. Movement and lifetime is still computed.
@@ -128,12 +133,12 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 
 		/// @brief Adds a particle emitter to the system.
 		/// @param emitter Emitter function object which is copied into the particle system.
-		void						addEmitter(const Emitter& emitter);
+		void						addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter);
 
 		/// @brief Adds a particle emitter for a certain amount of time.
 		/// @param emitter Emitter function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the emitter is automatically removed from the system.
-		void						addEmitter(const Emitter& emitter, sf::Time timeUntilRemoval);
+		void						addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval);
 
 		/// @brief Removes all emitter instances from the system.
 		/// @details Particles that are currently in the system are still processed, but no new ones
@@ -173,15 +178,15 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		ParticleContainer					mParticles;
-		AffectorContainer					mAffectors;
-		EmitterContainer					mEmitters;
+		ParticleContainer			mParticles;
+		AffectorContainer			mAffectors;
+		EmitterContainer			mEmitters;
 
-		const sf::Texture*					mTexture;
-		sf::IntRect							mTextureRect;
+		const sf::Texture*			mTexture;
+		sf::IntRect					mTextureRect;
 
-		mutable sf::VertexArray				mVertices;
-		mutable bool						mNeedsVertexUpdate;
+		mutable sf::VertexArray		mVertices;
+		mutable bool				mNeedsVertexUpdate;
 };
 
 /// @relates ParticleSystem

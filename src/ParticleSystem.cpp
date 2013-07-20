@@ -48,7 +48,7 @@ namespace
 	{
 		// itr->second is the remaining time of the emitter/affector.
 		// Time::Zero means infinite time (no removal).
-		if (itr->second != sf::Time::Zero && (itr->second -= dt) <= sf::Time::Zero)
+		if (itr->timeUntilRemoval != sf::Time::Zero && (itr->timeUntilRemoval -= dt) <= sf::Time::Zero)
 			itr = ctr.erase(itr);
 		else
 			++itr;
@@ -95,14 +95,14 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
 }
 
-void ParticleSystem::addAffector(const Affector& affector)
+void ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
 {
-	addAffector(affector, sf::Time::Zero);
+	addAffector(std::move(affector), sf::Time::Zero);
 }
 
-void ParticleSystem::addAffector(const Affector& affector, sf::Time timeUntilRemoval)
+void ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval)
 {
-	mAffectors.push_back( std::make_pair(affector, timeUntilRemoval) );
+	mAffectors.push_back( Affector(std::move(affector), timeUntilRemoval) );
 }
 
 void ParticleSystem::clearAffectors()
@@ -110,14 +110,14 @@ void ParticleSystem::clearAffectors()
 	mAffectors.clear();
 }
 
-void ParticleSystem::addEmitter(const Emitter& emitter)
+void ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter)
 {
 	addEmitter(emitter, sf::Time::Zero);
 }
 
-void ParticleSystem::addEmitter(const Emitter& emitter, sf::Time timeUntilRemoval)
+void ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval)
 {
-	mEmitters.push_back( std::make_pair(emitter, timeUntilRemoval) );
+	mEmitters.push_back( Emitter(std::move(emitter), timeUntilRemoval) );
 }
 
 void ParticleSystem::clearEmitters()
@@ -133,7 +133,7 @@ void ParticleSystem::update(sf::Time dt)
 	// Emit new particles and remove expiring emitters
 	for (EmitterContainer::iterator itr = mEmitters.begin(); itr != mEmitters.end(); )
 	{
-		itr->first(*this, dt);
+		itr->function(*this, dt);
 		incrementCheckExpiry(mEmitters, itr, dt);
 	}
 
@@ -149,7 +149,7 @@ void ParticleSystem::update(sf::Time dt)
 		{
 			// Only apply affectors to living particles
 			AURORA_FOREACH(auto& affectorPair, mAffectors)
-				affectorPair.first(*reader, dt);
+				affectorPair.function(*reader, dt);
 
 			// Go ahead
 			*writer++ = *reader;
