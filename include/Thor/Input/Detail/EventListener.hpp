@@ -73,21 +73,18 @@ namespace detail
 				std::swap(mStrongRef,	other.mStrongRef);
 			}
 		
-			// sets the container and iterator in which this Listener is hold (to be able to create
+			// Sets the container and iterator in which this Listener is hold (to be able to create
 			// Connections from *this)
 			template <class ListenerContainer>
 			void setEnvironment(ListenerContainer& container, typename ListenerContainer::Iterator iterator)
 			{
-				mStrongRef.reset( new ConnectionImpl<ListenerContainer>(container, iterator) );
+				mStrongRef = makeIteratorConnectionImpl(container, iterator);
 			}
 		
 			// Creates a Connection that can disconnect this Listener
 			Connection shareConnection() const
 			{
-				Connection connection;
-				connection.mWeakRef = mStrongRef;
-			
-				return connection;
+				return Connection(mStrongRef);
 			}
 	
 		private:

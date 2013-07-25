@@ -45,17 +45,16 @@ namespace detail
 			}
 	};
 
-
-	// Concrete class implementing the actual disconnection
-	template <class ListenerContainer>
-	class ConnectionImpl : public AbstractConnectionImpl
+	// Concrete class implementing the actual disconnection for std::list and iterator
+	template <typename List>
+	class IteratorConnectionImpl : public AbstractConnectionImpl
 	{
 		private:	
-			typedef typename ListenerContainer::Iterator ListenerIterator;
+			typedef typename List::Iterator Iterator;
 
 		public:
 			// Constructor
-			ConnectionImpl(ListenerContainer& container, ListenerIterator iterator)
+			IteratorConnectionImpl(List& container, Iterator iterator)
 			: mContainer(&container)
 			, mIterator(iterator)
 			{
@@ -67,9 +66,16 @@ namespace detail
 			}
 	
 		private:	
-			ListenerContainer*	mContainer;
-			ListenerIterator	mIterator;
+			List*		mContainer;
+			Iterator	mIterator;
 	};
+
+
+	template <typename List>
+	std::shared_ptr<IteratorConnectionImpl<List>> makeIteratorConnectionImpl(List& container, typename List::Iterator iterator)
+	{
+		return std::make_shared<IteratorConnectionImpl<List>>(container, iterator);
+	}
 
 } // namespace detail
 } // namespace thor

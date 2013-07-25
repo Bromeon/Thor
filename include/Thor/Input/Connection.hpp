@@ -43,9 +43,6 @@ namespace detail
 
 	class AbstractConnectionImpl;
 
-	template <typename Parameter>
-	class Listener;
-
 } // namespace detail
 
 
@@ -73,7 +70,7 @@ class THOR_API Connection
 		/// @details This does not affect the referenced listener (if any) nor other %Connection instances.
 		///  Invalidating an already invalid instance has no effects.
 		///  @n After the invalidation, you can reuse this instance by assigning another one. But normally, it pays
-		///  out to have as few invalid connections as possible, as this saves you from case differentiations.
+		///  off to have as few invalid connections as possible, as this saves you from case differentiations.
 		void						invalidate();
 		
 		/// @brief Disconnects the referenced listener from its triggering event.
@@ -83,15 +80,16 @@ class THOR_API Connection
 
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
+	// Implementation details
+	public:
+		// Create connection from tracker object
+		explicit					Connection(std::weak_ptr<detail::AbstractConnectionImpl> tracker);
+
+		
+	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
 		std::weak_ptr<detail::AbstractConnectionImpl> mWeakRef;
-		
-	
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Friends
-	template <typename Parameter>
-	friend class detail::Listener;
 };
 
 

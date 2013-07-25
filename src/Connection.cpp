@@ -35,6 +35,11 @@ Connection::Connection()
 {
 }
 
+Connection::Connection(std::weak_ptr<detail::AbstractConnectionImpl> tracker)
+: mWeakRef(std::move(tracker))
+{
+}
+
 bool Connection::isConnected() const
 {
 	return !mWeakRef.expired();
@@ -47,9 +52,9 @@ void Connection::invalidate()
 
 void Connection::disconnect()
 {
-	if (isConnected())
+	if (auto shared = mWeakRef.lock())
 	{
-		mWeakRef.lock()->disconnect();
+		shared->disconnect();
 		invalidate();
 	}
 }
