@@ -105,6 +105,12 @@ sf::Vector3<T>				cwiseProduct(const sf::Vector3<T>& lhs, const sf::Vector3<T>& 
 template <typename T>
 sf::Vector3<T>				cwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
 
+/// @brief Returns the vector projection of @a lhs onto @a rhs.
+/// @pre @a rhs is non-zero.
+
+template <typename T>
+sf::Vector3<T>				project(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 

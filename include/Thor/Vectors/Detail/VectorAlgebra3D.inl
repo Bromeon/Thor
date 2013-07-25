@@ -92,6 +92,16 @@ sf::Vector3<T> cwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rh
 	return sf::Vector3<T>(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z);
 }
 
+template <typename T>
+sf::Vector3<T> project(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs)
+{
+	assert(rhs != sf::Vector3<T>());
+	const sf::Vector3<T> rhsUnit = unitVector(rhs);
+	T scalarProjection = dotProduct(lhs, rhs);
+	return (scalarProjection * rhsUnit);
+}
+
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
