@@ -143,7 +143,7 @@ sf::Vector2<T> project(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
 {
 	assert(rhs != sf::Vector2<T>());
 	const sf::Vector2<T> rhsUnit = unitVector(rhs);
-	T scalarProjection = dotProduct(lhs, rhs);
+	T scalarProjection = dotProduct(lhs, rhsUnit);
 	return (scalarProjection * rhsUnit);
 }
 
