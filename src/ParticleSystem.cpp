@@ -25,6 +25,7 @@
 
 #include <Thor/Particles/ParticleSystem.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
+#include <Thor/Input/Detail/ConnectionImpl.hpp>
 
 #include <Aurora/Tools/ForEach.hpp>
 
@@ -95,14 +96,17 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
 }
 
-void ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
+Connection ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
 {
-	addAffector(std::move(affector), sf::Time::Zero);
+	return addAffector(std::move(affector), sf::Time::Zero);
 }
 
-void ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval)
+Connection ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval)
 {
 	mAffectors.push_back( Affector(std::move(affector), timeUntilRemoval) );
+	mAffectors.back().tracker = detail::makeIdConnectionImpl(mAffectors, mAffectors.back().id);
+
+	return Connection(mAffectors.back().tracker);
 }
 
 void ParticleSystem::clearAffectors()
@@ -110,14 +114,17 @@ void ParticleSystem::clearAffectors()
 	mAffectors.clear();
 }
 
-void ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter)
+Connection ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter)
 {
-	addEmitter(emitter, sf::Time::Zero);
+	return addEmitter(emitter, sf::Time::Zero);
 }
 
-void ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval)
+Connection ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval)
 {
 	mEmitters.push_back( Emitter(std::move(emitter), timeUntilRemoval) );
+	mEmitters.back().tracker = detail::makeIdConnectionImpl(mEmitters, mEmitters.back().id);
+
+	return Connection(mEmitters.back().tracker);
 }
 
 void ParticleSystem::clearEmitters()

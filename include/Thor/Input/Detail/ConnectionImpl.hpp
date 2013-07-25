@@ -26,6 +26,9 @@
 #ifndef THOR_CONNECTIONIMPL_HPP
 #define THOR_CONNECTIONIMPL_HPP
 
+#include <algorithm>
+#include <memory>
+
 
 namespace thor
 {
@@ -70,11 +73,45 @@ namespace detail
 			Iterator	mIterator;
 	};
 
+	// Concrete class implementing the actual disconnection for any container and ID
+	template <typename Container>
+	class IdConnectionImpl : public AbstractConnectionImpl
+	{
+		private:	
+			typedef typename Container::value_type ValueType;
+
+		public:
+			// Constructor
+			IdConnectionImpl(Container& container, unsigned int id)
+				: mContainer(&container)
+				, mId(id)
+			{
+			}
+
+			virtual void disconnect()
+			{
+				// TODO: Use binary search
+				auto found = std::find_if(mContainer->begin(), mContainer->end(), [this] (ValueType& v) { return v.id == mId; });
+			
+				if (found != mContainer->end())
+					mContainer->erase(found);
+			}
+
+		private:	
+			Container*			mContainer;
+			unsigned int		mId;
+	};
 
 	template <typename List>
 	std::shared_ptr<IteratorConnectionImpl<List>> makeIteratorConnectionImpl(List& container, typename List::Iterator iterator)
 	{
 		return std::make_shared<IteratorConnectionImpl<List>>(container, iterator);
+	}
+
+	template <typename Container>
+	std::shared_ptr<IdConnectionImpl<Container>> makeIdConnectionImpl(Container& container, unsigned int id)
+	{
+		return std::make_shared<IdConnectionImpl<Container>>(container, id);
 	}
 
 } // namespace detail

@@ -31,6 +31,7 @@
 
 #include <Thor/Particles/Particle.hpp>
 #include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Input/Connection.hpp>
 #include <Thor/Config.hpp>
 
 #include <Aurora/Tools/Swap.hpp>
@@ -44,6 +45,7 @@
 #include <vector>
 #include <utility>
 #include <functional>
+#include <memory>
 
 
 namespace sf
@@ -58,6 +60,10 @@ namespace sf
 
 namespace thor
 {
+namespace detail
+{
+	class AbstractConnectionImpl;
+}
 
 /// @addtogroup Particles
 /// @{
@@ -71,17 +77,28 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
+		// Type to store affector or emitter + time until removal + id for removal
 		template <typename Signature>
 		struct Function
 		{
 			Function(std::function<Signature> function, sf::Time timeUntilRemoval)
 			: function(std::move(function))
 			, timeUntilRemoval(timeUntilRemoval)
+			, id(nextId())
+			, tracker()
 			{
 			}
 
-			std::function<Signature>		function;
-			sf::Time						timeUntilRemoval;
+			static unsigned int nextId()
+			{
+				static unsigned int next = 0;
+				return next++;
+			}
+
+			std::function<Signature>						function;
+			sf::Time										timeUntilRemoval;
+			unsigned int									id;
+			std::shared_ptr<detail::AbstractConnectionImpl> tracker;
 		};
 
 		// Function typedefs
@@ -117,7 +134,8 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		///  added to the system, therefore affectors at the end may overwrite particle states set by earlier affectors. To completely
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
 		/// @param affector Affector function object which is copied into the particle system.
-		void						addAffector(std::function<void(Particle&, sf::Time)> affector);
+		/// @return Object that can be used to disconnect (remove) the affector from the system.
+		Connection					addAffector(std::function<void(Particle&, sf::Time)> affector);
 
 		/// @brief Adds a particle affector for a certain amount of time.
 		/// @details Be aware that multiple affectors can interfere with each other. The affectors are applied in the order they were
@@ -125,7 +143,8 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		///  avoid the issue, only add orthogonal affectors (e.g. one for color, one for acceleration...).
 		/// @param affector Affector function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the affector is automatically removed from the system.
-		void						addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval);
+		/// @return Object that can be used to disconnect (remove) the affector from the system.
+		Connection					addAffector(std::function<void(Particle&, sf::Time)> affector, sf::Time timeUntilRemoval);
 
 		/// @brief Removes all affector instances from the system.
 		/// @details All particles lose the influence of any external affectors. Movement and lifetime is still computed.
@@ -133,12 +152,14 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 
 		/// @brief Adds a particle emitter to the system.
 		/// @param emitter Emitter function object which is copied into the particle system.
-		void						addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter);
+		/// @return Object that can be used to disconnect (remove) the emitter from the system.
+		Connection					addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter);
 
 		/// @brief Adds a particle emitter for a certain amount of time.
 		/// @param emitter Emitter function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the emitter is automatically removed from the system.
-		void						addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval);
+		/// @return Object that can be used to disconnect (remove) the emitter from the system.
+		Connection					addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval);
 
 		/// @brief Removes all emitter instances from the system.
 		/// @details Particles that are currently in the system are still processed, but no new ones
