@@ -109,7 +109,7 @@ sf::Vector3<T>				cwiseQuotient(const sf::Vector3<T>& lhs, const sf::Vector3<T>&
 /// @pre @a rhs is non-zero.
 
 template <typename T>
-sf::Vector3<T>				project(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+sf::Vector3<T>				project(const sf::Vector3<T>& lhs, const sf::Vector3<T>& rhs);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
