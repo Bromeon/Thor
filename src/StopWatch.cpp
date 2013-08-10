@@ -71,7 +71,6 @@ void StopWatch::reset()
 {
 	mTimeBuffer = sf::Time::Zero;
 	mRunning = false;
-	mClock.restart();
 }
 
 void StopWatch::restart()
