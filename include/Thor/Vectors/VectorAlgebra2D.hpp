@@ -138,6 +138,12 @@ sf::Vector2<T>				cwiseProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& 
 template <typename T>
 sf::Vector2<T>				cwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
+/// @brief Returns the vector projection of @a lhs onto @a rhs.
+/// @pre @a rhs is non-zero.
+
+template <typename T>
+sf::Vector2<T>				project(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+
 /// @}
 
 } // namespace thor

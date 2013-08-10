@@ -138,4 +138,13 @@ sf::Vector2<T> cwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rh
 	return sf::Vector2<T>(lhs.x / rhs.x, lhs.y / rhs.y);
 }
 
+template <typename T>
+sf::Vector2<T> project(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
+{
+	assert(rhs != sf::Vector2<T>());
+	const sf::Vector2<T> rhsUnit = unitVector(rhs);
+	T scalarProjection = dotProduct(lhs, rhsUnit);
+	return (scalarProjection * rhsUnit);
+}
+
 } // namespace thor
