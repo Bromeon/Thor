@@ -36,7 +36,7 @@ int main()
 		"T      Start/pause timer\n"
 		"R      Reset stopwatch and timer\n"
 		"Esc  Quit",
-		font, 12);
+		font, 14u);
 
 	sf::Text stopWatchMeasurement;
 	stopWatchMeasurement.setCharacterSize(20);

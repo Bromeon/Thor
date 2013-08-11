@@ -66,9 +66,9 @@ int main()
 	for (unsigned int i = 0; i < Count; ++i)
 	{
 		texts[i].setColor(colors[i]);
-		texts[i].setCharacterSize(12u);
+		texts[i].setCharacterSize(14u);
 		texts[i].setFont(font);
-		texts[i].setPosition(10.f, 10.f + 15.f * i);
+		texts[i].setPosition(0.f, 16.f * i);
 
 		arrows[i].setColor(colors[i]);
 		arrows[i].setPosition(sf::Vector2f(window.getSize() / 2u));

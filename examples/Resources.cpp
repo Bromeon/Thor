@@ -42,7 +42,7 @@ int main()
 	sf::Sprite sprite1(*texture1);
 	sf::Sprite sprite2(*texture2);
 	sf::Sound sound(*soundBuffer);
-	sf::Text instructions("Press return to play sound, escape to quit", *font, 12);
+	sf::Text instructions("Press return to play sound, escape to quit", *font, 14u);
 
 	// Move second sprite so that the sprites don't overlap
 	sprite2.move( 0.f, static_cast<float>(texture1->getSize().y) );

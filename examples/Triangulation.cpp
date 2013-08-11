@@ -36,7 +36,7 @@ int main()
 		"Left click to add point\n"
 		"Right click to remove point\n"
 		"C key to clear everything",
-		font, 12);
+		font, 14u);
 		
 	// Main loop
 	for (;;)

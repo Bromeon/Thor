@@ -32,9 +32,9 @@ int main()
 		"A:      Play attack animation\n"
 		"S:      Stop current animation\n"
 		"Esc:  Quit",
-		font, 12);
+		font, 14u);
 
-	sf::Text animationText("", font, 12);
+	sf::Text animationText("", font, 14u);
 	animationText.setPosition(100.f, 150.f);
 
 	// Load image that contains animation steps

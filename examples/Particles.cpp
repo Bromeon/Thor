@@ -53,7 +53,7 @@ int main()
 	sf::Text instructions(
 		"Left click: Pause\n"
 		"Mouse wheel: Change direction\n",
-		font, 12);
+		font, 14u);
 
 	// Create clock to measure frame time
 	sf::Clock frameClock;
