@@ -35,9 +35,9 @@
 /// </table>
 /// Other functions:
 /// <table>
-///	 <tr><td>dotProduct(v,w)</td>				<td>unitVector(v)</td>					<td>squaredLength(v)</td>		</tr>
-///	 <tr><td>crossProduct(v,w)</td>				<td>perpendicularVector(v)</td>			<td>signedAngle(v,w)</td>		</tr>
-///	 <tr><td>cwiseProduct(v,w)</td>		<td>cwiseQuotient(v,w)</td>										</tr>
+///	 <tr><td>dotProduct(v,w)</td>		<td>unitVector(v)</td>					<td>squaredLength(v)</td>		</tr>
+///	 <tr><td>crossProduct(v,w)</td>		<td>perpendicularVector(v)</td>			<td>signedAngle(v,w)</td>		</tr>
+///	 <tr><td>cwiseProduct(v,w)</td>		<td>cwiseQuotient(v,w)</td>				<td>projectedVector(v,w)</td>	</tr>
 /// </table>
 
 #ifndef THOR_VECTORALGEBRA2D_HPP
@@ -137,6 +137,12 @@ sf::Vector2<T>				cwiseProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& 
 /// @pre Neither component of @a rhs is zero.
 template <typename T>
 sf::Vector2<T>				cwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+
+/// @brief Returns the projection of @a vector onto @a axis.
+/// @param vector Vector to project onto another.
+/// @param axis Vector being projected onto. Need not be a unit vector, but may not have length zero.
+template <typename T>
+sf::Vector2<T>				projectedVector(const sf::Vector2<T>& vector, const sf::Vector2<T>& axis);
 
 /// @}
 
