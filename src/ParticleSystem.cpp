@@ -24,7 +24,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Particles/ParticleSystem.hpp>
-#include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Input/Detail/ConnectionImpl.hpp>
 
 #include <Aurora/Tools/ForEach.hpp>
@@ -209,27 +208,19 @@ void ParticleSystem::computeVertices() const
 	// Clear vertex array (keeps memory allocated)
 	mVertices.clear();
 
-	// Compute offsets to vertex positions in rendering coordinates
-	const sf::Vector2f halfSize = sf::Vector2f(mTexture->getSize()) / 2.f;
-	const std::array<sf::Vector2f, 4> positionOffsets =
-	{
-		-halfSize,
-		perpendicularVector(halfSize),
-		halfSize,
-		-perpendicularVector(halfSize)
-	};
+	// Split rect into position and size vectors
+	sf::FloatRect rect(mTextureRect);
+	sf::Vector2f texCoord(rect.left, rect.top);
+	sf::Vector2f size(rect.width, rect.height);
+	sf::Vector2f halfSize = size / 2.f;
 
-	// Compute absolute positions of vertex texture coordinates
-	const float left	= static_cast<float>(mTextureRect.left);
-	const float right	= static_cast<float>(mTextureRect.left + mTextureRect.width);
-	const float top		= static_cast<float>(mTextureRect.top);
-	const float bottom	= static_cast<float>(mTextureRect.top + mTextureRect.height);
-	const std::array<sf::Vector2f, 4> texCoords =
+	// Compute quad offsets
+	const std::array<sf::Vector2f, 4> offsets =
 	{
-		sf::Vector2f(left,	top),
-		sf::Vector2f(right,	top),
-		sf::Vector2f(right,	bottom),
-		sf::Vector2f(left,	bottom)
+		sf::Vector2f(0.f,    0.f),
+		sf::Vector2f(size.x, 0.f),
+		sf::Vector2f(size.x, size.y),
+		sf::Vector2f(0.f,    size.y)
 	};
 
 	// Fill vertex array
@@ -241,7 +232,14 @@ void ParticleSystem::computeVertices() const
 		transform.scale(p.scale);
 
 		for (unsigned int i = 0; i < 4; ++i)
-			mVertices.append( sf::Vertex(transform.transformPoint(positionOffsets[i]), p.color, texCoords[i]) );
+		{
+			sf::Vertex vertex;
+			vertex.position = transform.transformPoint(offsets[i] - halfSize);
+			vertex.texCoords = texCoord + offsets[i];
+			vertex.color = p.color;
+
+			mVertices.append(vertex);
+		}
 	}
 }
 
