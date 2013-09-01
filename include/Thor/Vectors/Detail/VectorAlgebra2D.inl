@@ -141,8 +141,8 @@ sf::Vector2<T> cwiseQuotient(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rh
 template <typename T>
 sf::Vector2<T> projectedVector(const sf::Vector2<T>& vector, const sf::Vector2<T>& axis)
 {
-	sf::Vector2<T> axisUnit = unitVector(axis);
-	return dotProduct(vector, axisUnit) * axisUnit;
+	assert(axis != sf::Vector2<T>());
+	return dotProduct(vector, axis) / squaredLength(axis) * axis;
 }
 
 } // namespace thor
