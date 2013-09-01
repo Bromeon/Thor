@@ -115,7 +115,8 @@ int main()
 		return EXIT_FAILURE;
 
 	// Instantiate particle system and add custom affector
-	thor::ParticleSystem system(texture);
+	thor::ParticleSystem system;
+	system.setTexture(texture);
 	system.addAffector(FireworkAffector());
 
 	// Create timer that can be connected to callbacks. Initial time limit is 1 second, timer immediately starts

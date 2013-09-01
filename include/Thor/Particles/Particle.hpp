@@ -65,8 +65,9 @@ class THOR_API Particle
 		float						rotationSpeed;		///< Angular velocity (change in rotation per second).
 		sf::Vector2f				scale;				///< Scale, where (1,1) represents the original size.
 		sf::Color					color;				///< %Particle color.
+		unsigned int				textureIndex;		///< Index of the used texture rect, returned by ParticleSystem::addTextureRect()
 	
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:

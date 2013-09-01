@@ -5,7 +5,6 @@
 #include <Thor/Math/Distributions.hpp>
 #include <SFML/Graphics.hpp>
 
-
 int main()
 {
 	// Create window
@@ -22,7 +21,8 @@ int main()
 	emitter.setParticleLifetime(sf::seconds(5.f));
 
 	// Create particle system, add reference to emitter
-	thor::ParticleSystem system(texture);
+	thor::ParticleSystem system;
+	system.setTexture(texture);
 	system.addEmitter(thor::refEmitter(emitter));
 
 	// Build color gradient (green -> teal -> blue)

@@ -35,6 +35,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cassert>
 
 
 namespace thor
@@ -54,31 +55,36 @@ namespace
 			++itr;
 	}
 
+	sf::IntRect getFullRect(const sf::Texture& texture)
+	{
+		return sf::IntRect(0, 0, texture.getSize().x, texture.getSize().y);
+	}
+
 } // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-ParticleSystem::ParticleSystem(const sf::Texture& texture)
+ParticleSystem::ParticleSystem()
 : mParticles()
 , mAffectors()
 , mEmitters()
-, mTexture(&texture)
-, mTextureRect(0, 0, texture.getSize().x, texture.getSize().y)
+, mTexture(nullptr)
+, mTextureRects()
 , mVertices(sf::Quads)
 , mNeedsVertexUpdate(true)
 {
 }
 
-ParticleSystem::ParticleSystem(const sf::Texture& texture, const sf::IntRect& textureRect)
-: mParticles()
-, mAffectors()
-, mEmitters()
-, mTexture(&texture)
-, mTextureRect(textureRect)
-, mVertices(sf::Quads)
-, mNeedsVertexUpdate(true)
+void ParticleSystem::setTexture(const sf::Texture& texture)
 {
+	mTexture = &texture;
+}
+
+unsigned int ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
+{
+	mTextureRects.push_back(textureRect);
+	return mTextureRects.size() - 1;
 }
 
 void ParticleSystem::swap(ParticleSystem& other)
@@ -89,8 +95,8 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mParticles,			other.mParticles);
 	swap(mAffectors,			other.mAffectors);
 	swap(mEmitters,				other.mEmitters);
-	swap(mTexture,				other.mTexture); 
-	swap(mTextureRect,			other.mTextureRect);
+	swap(mTexture,				other.mTexture);
+	swap(mTextureRects,			other.mTextureRects);
 	swap(mVertices,				other.mVertices);
 	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
 }
@@ -205,23 +211,11 @@ void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
 
 void ParticleSystem::computeVertices() const
 {
+	// Ensure setTexture() has been called
+	assert(mTexture);
+
 	// Clear vertex array (keeps memory allocated)
 	mVertices.clear();
-
-	// Split rect into position and size vectors
-	sf::FloatRect rect(mTextureRect);
-	sf::Vector2f texCoord(rect.left, rect.top);
-	sf::Vector2f size(rect.width, rect.height);
-	sf::Vector2f halfSize = size / 2.f;
-
-	// Compute quad offsets
-	const std::array<sf::Vector2f, 4> offsets =
-	{
-		sf::Vector2f(0.f,    0.f),
-		sf::Vector2f(size.x, 0.f),
-		sf::Vector2f(size.x, size.y),
-		sf::Vector2f(0.f,    size.y)
-	};
 
 	// Fill vertex array
 	AURORA_FOREACH(const Particle& p, mParticles)
@@ -230,6 +224,24 @@ void ParticleSystem::computeVertices() const
 		transform.translate(p.position);
 		transform.rotate(p.rotation);
 		transform.scale(p.scale);
+
+		// Ensure valid index -- if this fails, you have not called addTextureRect() enough times, or p.textureIndex is simply wrong
+		assert(p.textureIndex == 0 || p.textureIndex < mTextureRects.size());
+
+		// Get texture rect corresponding to particle, split it into position and size vectors
+		sf::FloatRect rect(mTextureRects.empty() ? getFullRect(*mTexture) : mTextureRects[p.textureIndex]);
+		sf::Vector2f texCoord(rect.left, rect.top);
+		sf::Vector2f size(rect.width, rect.height);
+		sf::Vector2f halfSize = size / 2.f;
+
+		// Compute quad offsets
+		std::array<sf::Vector2f, 4> offsets =
+		{
+			sf::Vector2f(0.f,    0.f),
+			sf::Vector2f(size.x, 0.f),
+			sf::Vector2f(size.x, size.y),
+			sf::Vector2f(0.f,    size.y)
+		};
 
 		for (unsigned int i = 0; i < 4; ++i)
 		{

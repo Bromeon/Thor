@@ -41,6 +41,7 @@ UniversalEmitter::UniversalEmitter()
 , mParticleRotationSpeed(0.f)
 , mParticleScale(sf::Vector2f(1.f, 1.f))
 , mParticleColor(sf::Color::White)
+, mParticleTextureIndex(0u)
 {
 }
 
@@ -58,6 +59,7 @@ void UniversalEmitter::operator() (EmissionAdder& system, sf::Time dt)
 		particle.rotationSpeed = mParticleRotationSpeed();
 		particle.scale = mParticleScale();
 		particle.color = mParticleColor();
+		particle.textureIndex = mParticleTextureIndex();
 
 		system.addParticle(particle);
 	}
@@ -101,6 +103,11 @@ void UniversalEmitter::setParticleScale(Distribution<sf::Vector2f> particleScale
 void UniversalEmitter::setParticleColor(Distribution<sf::Color> particleColor)
 {
 	mParticleColor.swap(particleColor);
+}
+
+void UniversalEmitter::setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex)
+{
+	mParticleTextureIndex.swap(particleTextureIndex);
 }
 
 unsigned int UniversalEmitter::computeParticleCount(sf::Time dt)

@@ -123,6 +123,10 @@ class THOR_API UniversalEmitter
 		/// @param particleColor Constant or function returning the initial particle color.
 		void						setParticleColor(Distribution<sf::Color> particleColor);
 
+		/// @brief Sets the initial particle texture index.
+		/// @param particleTextureIndex Constant or function returning the initial index of the particle's texture rectangle.
+		void						setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex);
+
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
@@ -144,6 +148,7 @@ class THOR_API UniversalEmitter
 		Distribution<float>			mParticleRotationSpeed;
 		Distribution<sf::Vector2f>	mParticleScale;
 		Distribution<sf::Color>		mParticleColor;
+		Distribution<unsigned int>	mParticleTextureIndex;
 };
 
 /// @}

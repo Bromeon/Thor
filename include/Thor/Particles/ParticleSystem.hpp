@@ -69,8 +69,8 @@ namespace detail
 /// @{
 
 /// @brief Class for simple particle systems.
-/// @details Like sprites, particles are represented as sub-rectangles of sf::Texture. During their
-///  lifetime, the particles can be affected in translation, rotation, scale and coloring.
+/// @details Like sprites, particles are represented as texture rectangles of sf::Texture. During their lifetime, 
+///  the particles can be affected in translation, rotation, scale and coloring, by specifying emitter and affector functions.
 /// @n@n This class is noncopyable.
 class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionAdder
 {		
@@ -114,21 +114,29 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Constructor: Create particle system from a whole sf::Texture
-		/// @param texture Reference to the sf::Texture used as particle texture. The texture must remain valid as long as the
-		///  particle system uses it.
-		explicit					ParticleSystem(const sf::Texture& texture);
-
-		/// @brief Constructor: Create particle system using parts of a sf::Texture
-		/// @param texture Reference to the sf::Texture used as particle texture. The texture must remain valid as long as the
-		///  particle system uses it.
-		/// @param textureRect Area of the texture that is used to draw the particle.
-									ParticleSystem(const sf::Texture& texture, const sf::IntRect& textureRect);
+		/// @brief Default constructor
+		/// @details Requires a call to setTexture() and possibly addTextureRect() before the particle system can be used.
+									ParticleSystem();
 
 		/// @brief Swaps the contents of two instances in constant time.
 		///
 		void						swap(ParticleSystem& other);
-				
+
+		/// @brief Sets the used texture.
+		/// @details Only one texture can be used at a time. If you need multiple particle representations, specify different texture
+		///  rectangles using the method addTextureRect(). If no texture rect is added, the whole texture will be used.
+		/// @param texture Reference to the sf::Texture used as particle texture. The texture must remain valid as long as the
+		///  particle system uses it.
+		void						setTexture(const sf::Texture& texture);
+
+		/// @brief Defines a new texture rect to represent a particle.
+		/// @details Can be used to create different visual representations of a particle, for example different shapes of debris.
+		/// @param textureRect Area of the texture that is used to draw the particle.
+		/// @return Index of the texture rect just added. This number shall be assigned to the Particle::textureIndex variable,
+		///  in order to render a particle using @a textureRect.
+		/// @see setTexture()
+		unsigned int				addTextureRect(const sf::IntRect& textureRect);
+
 		/// @brief Adds a particle affector to the system.
 		/// @details Be aware that multiple affectors can interfere with each other. The affectors are applied in the order they were
 		///  added to the system, therefore affectors at the end may overwrite particle states set by earlier affectors. To completely
@@ -204,7 +212,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		EmitterContainer			mEmitters;
 
 		const sf::Texture*			mTexture;
-		sf::IntRect					mTextureRect;
+		std::vector<sf::IntRect>	mTextureRects;
 
 		mutable sf::VertexArray		mVertices;
 		mutable bool				mNeedsVertexUpdate;
