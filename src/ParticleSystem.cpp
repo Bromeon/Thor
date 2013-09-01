@@ -73,17 +73,22 @@ ParticleSystem::ParticleSystem()
 , mTextureRects()
 , mVertices(sf::Quads)
 , mNeedsVertexUpdate(true)
+, mQuads()
+, mNeedsQuadUpdate(true)
 {
 }
 
 void ParticleSystem::setTexture(const sf::Texture& texture)
 {
 	mTexture = &texture;
+	mNeedsQuadUpdate = true;
 }
 
 unsigned int ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
 {
 	mTextureRects.push_back(textureRect);
+	mNeedsQuadUpdate = true;
+
 	return mTextureRects.size() - 1;
 }
 
@@ -99,6 +104,8 @@ void ParticleSystem::swap(ParticleSystem& other)
 	swap(mTextureRects,			other.mTextureRects);
 	swap(mVertices,				other.mVertices);
 	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
+	swap(mQuads,				other.mQuads);
+	swap(mNeedsQuadUpdate,		other.mNeedsQuadUpdate);
 }
 
 Connection ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
@@ -185,10 +192,18 @@ void ParticleSystem::clearParticles()
 
 void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	// Check cached vertices
 	if (mNeedsVertexUpdate)
 	{
 		computeVertices();
 		mNeedsVertexUpdate = false;
+	}
+
+	// Check cached rectangles
+	if (mNeedsQuadUpdate)
+	{
+		computeQuads();
+		mNeedsQuadUpdate = false;
 	}
 
 	// Draw the vertex array with our texture
@@ -211,9 +226,6 @@ void ParticleSystem::updateParticle(Particle& particle, sf::Time dt)
 
 void ParticleSystem::computeVertices() const
 {
-	// Ensure setTexture() has been called
-	assert(mTexture);
-
 	// Clear vertex array (keeps memory allocated)
 	mVertices.clear();
 
@@ -228,31 +240,53 @@ void ParticleSystem::computeVertices() const
 		// Ensure valid index -- if this fails, you have not called addTextureRect() enough times, or p.textureIndex is simply wrong
 		assert(p.textureIndex == 0 || p.textureIndex < mTextureRects.size());
 
-		// Get texture rect corresponding to particle, split it into position and size vectors
-		sf::FloatRect rect(mTextureRects.empty() ? getFullRect(*mTexture) : mTextureRects[p.textureIndex]);
-		sf::Vector2f texCoord(rect.left, rect.top);
-		sf::Vector2f size(rect.width, rect.height);
-		sf::Vector2f halfSize = size / 2.f;
-
-		// Compute quad offsets
-		std::array<sf::Vector2f, 4> offsets =
-		{
-			sf::Vector2f(0.f,    0.f),
-			sf::Vector2f(size.x, 0.f),
-			sf::Vector2f(size.x, size.y),
-			sf::Vector2f(0.f,    size.y)
-		};
-
+		const auto& quad = mQuads[p.textureIndex];
 		for (unsigned int i = 0; i < 4; ++i)
 		{
 			sf::Vertex vertex;
-			vertex.position = transform.transformPoint(offsets[i] - halfSize);
-			vertex.texCoords = texCoord + offsets[i];
+			vertex.position = transform.transformPoint(quad[i].position);
+			vertex.texCoords = quad[i].texCoords;
 			vertex.color = p.color;
 
 			mVertices.append(vertex);
 		}
 	}
+}
+
+void ParticleSystem::computeQuads() const
+{
+	// Ensure setTexture() has been called
+	assert(mTexture);
+
+	// No texture rects: Use full texture, cache single rectangle
+	if (mTextureRects.empty())
+	{
+		mQuads.resize(1);
+		computeQuad(mQuads[0], getFullRect(*mTexture));
+	}
+
+	// Specified texture rects: Cache every one
+	else
+	{
+		mQuads.resize(mTextureRects.size());
+		for (std::size_t i = 0; i < mTextureRects.size(); ++i)
+			computeQuad(mQuads[i], mTextureRects[i]);
+	}
+}
+
+void ParticleSystem::computeQuad(Quad& quad, const sf::IntRect& textureRect) const
+{
+	sf::FloatRect rect(textureRect);
+
+	quad[0].texCoords = sf::Vector2f(rect.left,              rect.top);
+	quad[1].texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
+	quad[2].texCoords = sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
+	quad[3].texCoords = sf::Vector2f(rect.left,              rect.top + rect.height);
+
+	quad[0].position = sf::Vector2f(-rect.width, -rect.height) / 2.f;
+	quad[1].position = sf::Vector2f( rect.width, -rect.height) / 2.f;
+	quad[2].position = sf::Vector2f( rect.width,  rect.height) / 2.f;
+	quad[3].position = sf::Vector2f(-rect.width,  rect.height) / 2.f;
 }
 
 } // namespace thor

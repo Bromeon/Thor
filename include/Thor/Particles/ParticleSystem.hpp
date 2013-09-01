@@ -46,6 +46,7 @@
 #include <utility>
 #include <functional>
 #include <memory>
+#include <array>
 
 
 namespace sf
@@ -100,6 +101,9 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 			unsigned int									id;
 			std::shared_ptr<detail::AbstractConnectionImpl> tracker;
 		};
+
+		// Vertex quads, used to cache texture rectangles
+		typedef std::array<sf::Vertex, 4>					Quad;
 
 		// Function typedefs
 		typedef Function<void(Particle&, sf::Time)>			Affector;
@@ -203,6 +207,10 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		// Recomputes the vertex array.
 		void						computeVertices() const;
 
+		// Recomputes the cached rectangles (position and texCoords quads)
+		void						computeQuads() const;
+		void						computeQuad(Quad& quad, const sf::IntRect& textureRect) const;
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
@@ -216,6 +224,8 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 
 		mutable sf::VertexArray		mVertices;
 		mutable bool				mNeedsVertexUpdate;
+		mutable std::vector<Quad>	mQuads;
+		mutable bool				mNeedsQuadUpdate;
 };
 
 /// @relates ParticleSystem
