@@ -69,9 +69,10 @@ namespace detail
 /// @addtogroup Particles
 /// @{
 
-/// @brief Class for simple particle systems.
-/// @details Like sprites, particles are represented as texture rectangles of sf::Texture. During their lifetime, 
-///  the particles can be affected in translation, rotation, scale and coloring, by specifying emitter and affector functions.
+/// @brief Class for particle systems.
+/// @details A particle system stores, updates and draws particles. It also stores emitter and affector functions that control
+///  how particles are generated and modified over time. To represent particles graphically, a particle system requires a texture, 
+///  and optionally one or multiple texture rectangles.
 /// @n@n This class is noncopyable.
 class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionInterface
 {		

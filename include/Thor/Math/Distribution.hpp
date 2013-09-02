@@ -68,6 +68,14 @@ namespace detail
 /// @details Contains a callback that returns values on demand. These can be constant (always the same value), according to a
 ///  random distribution, or be read from a value elsewhere in your code. Generally, the callback can be any function, member
 ///  function or functor returning a value of type T and taking no arguments.
+/// @n@n thor::Distribution can be linked to random distributions of the standard library:
+/// @code
+/// std::mt19937 engine;
+/// std::uniform_int_distribution<int> distr(0, 7);
+/// auto randomizer = std::bind(distr, engine);
+///
+/// thor::Distribution<int> thorDistr(randomizer);
+/// @endcode
 template <typename T>
 class Distribution
 {

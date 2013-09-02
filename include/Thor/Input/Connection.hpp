@@ -49,10 +49,11 @@ namespace detail
 /// @addtogroup Input
 /// @{
 
-/// @brief Class that manages the connection between an event and a listener.
-/// @details You need a connection, if you want to remove listeners bound to events. The class %Connection uses
-///  shared-ownership semantics, that means copying its instances results in multiple references to the same listener.
-///  It automatically invalidates when the referenced listener is disconnected from the event system.
+/// @brief Class that maintains control over a registered object.
+/// @details You need a connection if you want to remove event listeners, particle emitters or affectors from their containers.
+///  The class %Connection uses shared-ownership semantics, that means copying its instances results in multiple references to
+///  the same listener. A connection automatically invalidates when the referenced object is removed. Therefore, you don't have
+///  to worry about dangling connections.
 class THOR_API Connection
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -93,9 +94,10 @@ class THOR_API Connection
 };
 
 
-/// @brief Class that manages the connection between an event and a listener and disconnects it at destruction.
+/// @brief RAII style connection with automatic disconnect.
 /// @details In contrast to thor::Connection, the thor::ScopedConnection class disconnects its referenced listener
 ///  in the destructor. You can use ScopedConnection for temporary listeners that aren't needed after the end of scope.
+///  Alternatively, you can link a connection to the lifetime of another object by making it a member variable.
 ///  @n ScopedConnection is noncopyable.
 class THOR_API ScopedConnection : private sf::NonCopyable
 {

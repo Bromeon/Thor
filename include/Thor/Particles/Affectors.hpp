@@ -56,10 +56,10 @@ class Particle;
 /// thor::ParticleSystem system(...);
 ///
 /// // Add affector to particle system
-/// system.addEmitter(thor::refAffector(affector));
+/// system.addAffector(thor::refAffector(affector));
 ///
 /// // Change affector properties later
-/// emitter.setEmissionRate(20);
+/// affector.setAcceleration(acceleration);
 /// @endcode
 template <typename Affector>
 std::function<void(Particle&, sf::Time)> refAffector(Affector& referenced)

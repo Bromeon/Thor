@@ -75,7 +75,8 @@ std::function<void(EmissionInterface&, sf::Time)> refEmitter(Emitter& referenced
 /// @brief Class that emits particles with customizable initial conditions.
 /// @details This emitter is universal with respect to the initial conditions of each emitted particle. It works with callbacks
 ///  that return initial values for the particle attributes (position, rotation, color, ...). So you can pass constants, random
-///  distributions, or any functions that compute the value in an arbitrary way.
+///  distributions, or any functions that compute the value in an arbitrary way. Have a look at the thor::Distributions namespace
+///  for useful predefined functions.
 class THOR_API UniversalEmitter
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
