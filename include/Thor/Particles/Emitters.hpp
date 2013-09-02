@@ -40,7 +40,7 @@
 namespace thor
 {
 
-class EmissionAdder;
+class EmissionInterface;
 
 
 /// @addtogroup Particles
@@ -63,9 +63,9 @@ class EmissionAdder;
 /// emitter.setEmissionRate(20);
 /// @endcode
 template <typename Emitter>
-std::function<void(EmissionAdder&, sf::Time)> refEmitter(Emitter& referenced)
+std::function<void(EmissionInterface&, sf::Time)> refEmitter(Emitter& referenced)
 {
-	return [&referenced] (EmissionAdder& system, sf::Time dt)
+	return [&referenced] (EmissionInterface& system, sf::Time dt)
 	{
 		return referenced(system, dt);
 	};
@@ -88,7 +88,7 @@ class THOR_API UniversalEmitter
 		/// @brief Emits particles into a particle system.
 		/// @param system Indirection to the particle system that stores the particles.
 		/// @param dt Time interval during which particles are emitted.
-		void						operator() (EmissionAdder& system, sf::Time dt);
+		void						operator() (EmissionInterface& system, sf::Time dt);
 
 		/// @brief Sets the particle emission rate.
 		/// @param particlesPerSecond How many particles are emitted in 1 second. The type is not integral to allow

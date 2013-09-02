@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Particles/Emitters.hpp>
-#include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Particles/Particle.hpp>
 
 
@@ -45,7 +45,7 @@ UniversalEmitter::UniversalEmitter()
 {
 }
 
-void UniversalEmitter::operator() (EmissionAdder& system, sf::Time dt)
+void UniversalEmitter::operator() (EmissionInterface& system, sf::Time dt)
 {
 	const unsigned int nbParticles = computeParticleCount(dt);
 

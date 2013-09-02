@@ -30,7 +30,7 @@
 #define THOR_PARTICLESYSTEM_HPP
 
 #include <Thor/Particles/Particle.hpp>
-#include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Input/Connection.hpp>
 #include <Thor/Config.hpp>
 
@@ -73,7 +73,7 @@ namespace detail
 /// @details Like sprites, particles are represented as texture rectangles of sf::Texture. During their lifetime, 
 ///  the particles can be affected in translation, rotation, scale and coloring, by specifying emitter and affector functions.
 /// @n@n This class is noncopyable.
-class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionAdder
+class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionInterface
 {		
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
@@ -107,7 +107,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 
 		// Function typedefs
 		typedef Function<void(Particle&, sf::Time)>			Affector;
-		typedef Function<void(EmissionAdder&, sf::Time)>	Emitter;
+		typedef Function<void(EmissionInterface&, sf::Time)>	Emitter;
 
 		// Container typedefs
 		typedef std::vector<Particle>						ParticleContainer;
@@ -165,13 +165,13 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		/// @brief Adds a particle emitter to the system.
 		/// @param emitter Emitter function object which is copied into the particle system.
 		/// @return Object that can be used to disconnect (remove) the emitter from the system.
-		Connection					addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter);
+		Connection					addEmitter(std::function<void(EmissionInterface&, sf::Time)> emitter);
 
 		/// @brief Adds a particle emitter for a certain amount of time.
 		/// @param emitter Emitter function object which is copied into the particle system.
 		/// @param timeUntilRemoval Time after which the emitter is automatically removed from the system.
 		/// @return Object that can be used to disconnect (remove) the emitter from the system.
-		Connection					addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval);
+		Connection					addEmitter(std::function<void(EmissionInterface&, sf::Time)> emitter, sf::Time timeUntilRemoval);
 
 		/// @brief Removes all emitter instances from the system.
 		/// @details Particles that are currently in the system are still processed, but no new ones

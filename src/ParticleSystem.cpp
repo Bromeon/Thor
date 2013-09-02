@@ -126,12 +126,12 @@ void ParticleSystem::clearAffectors()
 	mAffectors.clear();
 }
 
-Connection ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter)
+Connection ParticleSystem::addEmitter(std::function<void(EmissionInterface&, sf::Time)> emitter)
 {
 	return addEmitter(emitter, sf::Time::Zero);
 }
 
-Connection ParticleSystem::addEmitter(std::function<void(EmissionAdder&, sf::Time)> emitter, sf::Time timeUntilRemoval)
+Connection ParticleSystem::addEmitter(std::function<void(EmissionInterface&, sf::Time)> emitter, sf::Time timeUntilRemoval)
 {
 	mEmitters.push_back( Emitter(std::move(emitter), timeUntilRemoval) );
 	mEmitters.back().tracker = detail::makeIdConnectionImpl(mEmitters, mEmitters.back().id);

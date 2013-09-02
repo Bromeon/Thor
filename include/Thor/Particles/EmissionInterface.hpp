@@ -24,16 +24,12 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::EmissionAdder
+/// @brief Class thor::EmissionInterface
 
-#ifndef THOR_PARTICLEINTERFACES_HPP
-#define THOR_PARTICLEINTERFACES_HPP
+#ifndef THOR_EMISSIONINTERFACE_HPP
+#define THOR_EMISSIONINTERFACE_HPP
 
 #include <Thor/Config.hpp>
-
-#include <memory>
-
-#include <SFML/System/Time.hpp>
 
 
 namespace thor
@@ -46,18 +42,18 @@ class Particle;
 /// @{
 
 /// @brief Class that connects emitters with their corresponding particle system.
-/// @details Provides a virtual method that adds particles to the system.
-class THOR_API EmissionAdder
+/// @details This class acts as an interface from emitters to particle systems. A single method to emit particles is provided.
+class THOR_API EmissionInterface
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Virtual destructor
 		///
-		virtual						~EmissionAdder() {}
+		virtual						~EmissionInterface() {}
 
-		/// @brief Adds a particle to the system.
-		/// @param particle Particle to add.
+		/// @brief Emits a particle into the particle system.
+		/// @param particle Particle to emit.
 		virtual void				emitParticle(const Particle& particle) = 0;
 };
 
@@ -65,4 +61,4 @@ class THOR_API EmissionAdder
 
 } // namespace thor
 
-#endif // THOR_PARTICLEINTERFACES_HPP
+#endif // THOR_EMISSIONINTERFACE_HPP

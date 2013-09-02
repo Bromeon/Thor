@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <Thor/Particles/ParticleSystem.hpp>
-#include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
@@ -42,7 +42,7 @@ class FireworkEmitter
 		{
 		}
 
-		void operator() (thor::EmissionAdder& system, sf::Time dt)
+		void operator() (thor::EmissionInterface& system, sf::Time dt)
 		{
 			const sf::Time tailInterval = explosionDuration / tailsPerExplosion;
 
@@ -56,7 +56,7 @@ class FireworkEmitter
 		}
 
 	private:
-		void emitTail(thor::EmissionAdder& system)
+		void emitTail(thor::EmissionInterface& system)
 		{
 			// Create initial direction with random vector length and angle
 			thor::PolarVector2f velocity(thor::random(30.f, 70.f), thor::random(0.f, 360.f));

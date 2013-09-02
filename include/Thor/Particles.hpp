@@ -31,7 +31,7 @@
 
 #include <Thor/Particles/Affectors.hpp>
 #include <Thor/Particles/Emitters.hpp>
-#include <Thor/Particles/EmissionAdder.hpp>
+#include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Particles/Particle.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 
