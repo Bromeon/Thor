@@ -38,17 +38,17 @@ namespace thor
 /// @addtogroup Math
 /// @{
 
-/// @brief Returns an int random number in the interval [begin, end].
-/// @pre begin <= end
-int THOR_API random(int begin, int end);
+/// @brief Returns an int random number in the interval [min, max].
+/// @pre min <= max
+int THOR_API random(int min, int max);
 
-/// @brief Returns an unsigned int random number in the interval [begin, end].
-/// @pre begin <= end
-unsigned int THOR_API random(unsigned int begin, unsigned int end);
+/// @brief Returns an unsigned int random number in the interval [min, max].
+/// @pre min <= max
+unsigned int THOR_API random(unsigned int min, unsigned int max);
 
-/// @brief Returns a float random number in the interval [begin, end].
-/// @pre begin <= end
-float THOR_API random(float begin, float end);
+/// @brief Returns a float random number in the interval [min, max].
+/// @pre min <= max
+float THOR_API random(float min, float max);
 
 /// @brief Returns a float random number in the interval [middle-deviation, middle+deviation].
 /// @pre deviation >= 0

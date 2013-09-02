@@ -36,26 +36,26 @@ namespace thor
 namespace Distributions
 {
 	
-	Distribution<float> uniform(float begin, float end)
+	Distribution<float> uniform(float min, float max)
 	{
-		assert(begin <= end);
+		assert(min <= max);
 
 		return [=] () -> float
 		{
-			return random(begin, end);
+			return random(min, max);
 		};
 	}
 
-	Distribution<sf::Time> uniform(sf::Time begin, sf::Time end)
+	Distribution<sf::Time> uniform(sf::Time min, sf::Time max)
 	{
-		assert(begin <= end);
+		assert(min <= max);
 
-		const float floatBegin = begin.asSeconds();
-		const float floatEnd = end.asSeconds();
+		const float floatMin = min.asSeconds();
+		const float floatMax = max.asSeconds();
 
 		return [=] () -> sf::Time
 		{
-			return sf::seconds(random(floatBegin, floatEnd));
+			return sf::seconds(random(floatMin, floatMax));
 		};
 	}
 

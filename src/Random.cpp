@@ -30,7 +30,6 @@
 #include <random>
 #include <ctime>
 #include <cassert>
-#include <climits>
 
 
 namespace thor
@@ -39,10 +38,6 @@ namespace
 {
 
 #ifdef THOR_USE_STD_RANDOMENGINE
-
-	// Note: Don't use std::variate_generator, because it contains bugs.
-	// If the distribution type is not unsigned long (like the engine's number type), a cast is performed,
-	// truncating values and leading to completely wrong random numbers.
 
 	// Use Mersenne Twister as default standard random engine
 	typedef std::mt19937 Engine;
@@ -112,24 +107,24 @@ namespace
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-int random(int begin, int end)
+int random(int min, int max)
 {
-	assert(begin <= end);
-	std::uniform_int_distribution<int> distribution(begin, end);
+	assert(min <= max);
+	std::uniform_int_distribution<int> distribution(min, max);
 	return distribution(globalEngine);
 }
 
-unsigned int random(unsigned int begin, unsigned int end)
+unsigned int random(unsigned int min, unsigned int max)
 {
-	assert(begin <= end);
-	std::uniform_int_distribution<unsigned int> distribution(begin, end);
+	assert(min <= max);
+	std::uniform_int_distribution<unsigned int> distribution(min, max);
 	return distribution(globalEngine);
 }
 
-float random(float begin, float end)
+float random(float min, float max)
 {
-	assert(begin <= end);
-	std::uniform_real_distribution<float> distribution(begin, end);
+	assert(min <= max);
+	std::uniform_real_distribution<float> distribution(min, max);
 	return distribution(globalEngine);
 }
 

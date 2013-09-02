@@ -49,11 +49,11 @@ namespace Distributions
 
 	/// @brief %Uniform random distribution in a float interval
 	///
-	Distribution<float> THOR_API			uniform(float begin, float end);
+	Distribution<float> THOR_API			uniform(float min, float max);
 
 	/// @brief %Uniform random distribution in a time interval
 	///
-	Distribution<sf::Time> THOR_API			uniform(sf::Time begin, sf::Time end);
+	Distribution<sf::Time> THOR_API			uniform(sf::Time min, sf::Time max);
 
 	/// @brief %Uniform random distribution in a rectangle
 	/// 
