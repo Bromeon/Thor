@@ -35,15 +35,36 @@ namespace thor
 {
 namespace Distributions
 {
+	namespace
+	{
+		template <typename T>
+		Distribution<T> uniformT(T min, T max)
+		{
+			assert(min <= max);
+
+			return [=] () -> T
+			{
+				return random(min, max);
+			};
+		}
+	}
 	
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
+	
+	Distribution<int> uniform(int min, int max)
+	{
+		return uniformT(min, max);
+	}
+
+	Distribution<unsigned int> uniform(unsigned int min, unsigned int max)
+	{
+		return uniformT(min, max);
+	}
+
 	Distribution<float> uniform(float min, float max)
 	{
-		assert(min <= max);
-
-		return [=] () -> float
-		{
-			return random(min, max);
-		};
+		return uniformT(min, max);
 	}
 
 	Distribution<sf::Time> uniform(sf::Time min, sf::Time max)

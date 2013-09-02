@@ -47,6 +47,14 @@ namespace thor
 namespace Distributions
 {
 
+	/// @brief %Uniform random distribution in an int interval
+	///
+	Distribution<int> THOR_API				uniform(int min, int max);
+
+	/// @brief %Uniform random distribution in an unsigned int interval
+	///
+	Distribution<unsigned int> THOR_API		uniform(unsigned int min, unsigned int max);
+
 	/// @brief %Uniform random distribution in a float interval
 	///
 	Distribution<float> THOR_API			uniform(float min, float max);
