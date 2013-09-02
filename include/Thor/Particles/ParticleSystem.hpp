@@ -197,9 +197,9 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		/// @param states Current render states (shader, blend mode, ...)
 		virtual void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		
-		/// @brief Adds a particle to the system.
-		/// @param particle Particle to add.
-		virtual void				addParticle(const Particle& particle);
+		/// @brief Emits a particle into the system.
+		/// @param particle Particle to emit.
+		virtual void				emitParticle(const Particle& particle);
 			
 		// Updates a single particle.
 		void						updateParticle(Particle& particle, sf::Time dt);

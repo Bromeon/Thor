@@ -79,7 +79,7 @@ class FireworkEmitter
 				particle.velocity = velocity;
 
 				// Add adapted particle to particle system
-				system.addParticle(particle);
+				system.emitParticle(particle);
 			}
 		}
 

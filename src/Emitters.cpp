@@ -61,7 +61,7 @@ void UniversalEmitter::operator() (EmissionAdder& system, sf::Time dt)
 		particle.color = mParticleColor();
 		particle.textureIndex = mParticleTextureIndex();
 
-		system.addParticle(particle);
+		system.emitParticle(particle);
 	}
 }
 

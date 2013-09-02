@@ -211,7 +211,7 @@ void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	target.draw(mVertices, states);
 }
 
-void ParticleSystem::addParticle(const Particle& particle)
+void ParticleSystem::emitParticle(const Particle& particle)
 {
 	mParticles.push_back(particle);
 }

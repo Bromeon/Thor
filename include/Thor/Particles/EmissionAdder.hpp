@@ -58,7 +58,7 @@ class THOR_API EmissionAdder
 
 		/// @brief Adds a particle to the system.
 		/// @param particle Particle to add.
-		virtual void				addParticle(const Particle& particle) = 0;
+		virtual void				emitParticle(const Particle& particle) = 0;
 };
 
 /// @}
