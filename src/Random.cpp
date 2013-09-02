@@ -119,10 +119,11 @@ int random(int begin, int end)
 	return distribution(globalEngine);
 }
 
-int randomDev(int middle, int deviation)
+unsigned int random(unsigned int begin, unsigned int end)
 {
-	assert(deviation >= 0);
-	return random(middle-deviation, middle+deviation);
+	assert(begin <= end);
+	std::uniform_int_distribution<unsigned int> distribution(begin, end);
+	return distribution(globalEngine);
 }
 
 float random(float begin, float end)

@@ -42,9 +42,9 @@ namespace thor
 /// @pre begin <= end
 int THOR_API random(int begin, int end);
 
-/// @brief Returns an int random number in the interval [middle-deviation, middle+deviation].
-/// @pre deviation >= 0
-int THOR_API randomDev(int middle, int deviation);
+/// @brief Returns an unsigned int random number in the interval [begin, end].
+/// @pre begin <= end
+unsigned int THOR_API random(unsigned int begin, unsigned int end);
 
 /// @brief Returns a float random number in the interval [begin, end].
 /// @pre begin <= end
