@@ -79,13 +79,6 @@ class THOR_API ColorGradient
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		// Normalizes the transition times so that their sum is 1
-		void						normalize();
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Private variables
-	private:
 		std::map<float, sf::Color>	mColors;
 };
 
