@@ -144,6 +144,9 @@ class ActionMap : private aurora::NonCopyable
 		/// // In the main loop: Forward actions to the callback system
 		/// map.invokeCallbacks(system, &window);
 		/// @endcode
+		/// @warning While this function is being called, any modifications to @a system result in undefined behavior. That is,
+		///  do not remove or insert callbacks during the invocation of another callback. If you need to modify the system, delay
+		///  the modifications until invokeCallbacks() returns.
 		void						invokeCallbacks(CallbackSystem& system, sf::Window* window) const;
 
 

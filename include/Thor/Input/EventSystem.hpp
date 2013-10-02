@@ -75,6 +75,8 @@ class EventSystem : private aurora::NonCopyable
 		/// @param listener The function that is invoked when a @a trigger event is fired.
 		/// @return A connection which can be used to remove the listener.
 		///  If you don't need this functionality, just ignore the return value.
+		/// @warning Inside the listener functions, you are not allowed to modify the EventSystem instance that calls them.
+		///  If you want a callback to insert or remove other callbacks, delay these modifications until the callback returns.
 		Connection					connect(const EventId& trigger, const Listener& listener);
 		
 		/// @brief Disconnects listeners associated with a given event type.
