@@ -192,18 +192,18 @@ void ParticleSystem::clearParticles()
 
 void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// Check cached vertices
-	if (mNeedsVertexUpdate)
-	{
-		computeVertices();
-		mNeedsVertexUpdate = false;
-	}
-
 	// Check cached rectangles
 	if (mNeedsQuadUpdate)
 	{
 		computeQuads();
 		mNeedsQuadUpdate = false;
+	}
+
+	// Check cached vertices
+	if (mNeedsVertexUpdate)
+	{
+		computeVertices();
+		mNeedsVertexUpdate = false;
 	}
 
 	// Draw the vertex array with our texture
