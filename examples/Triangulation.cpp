@@ -13,9 +13,9 @@ typedef std::vector<sf::Vector2f>					VertexContainer;
 typedef std::vector<thor::Triangle<sf::Vector2f>>	TriangleContainer;
 
 // Declarations of functions
-VertexContainer::const_iterator findVertex(const VertexContainer& vertices, sf::Vector2f position);
-bool							handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& vertices);
-bool							handleEvents(sf::RenderWindow& window, VertexContainer& vertices, TriangleContainer& triangles);
+bool	removeVertex(const VertexContainer& vertices, sf::Vector2f position);
+bool	handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& vertices);
+bool	handleEvents(sf::RenderWindow& window, VertexContainer& vertices, TriangleContainer& triangles);
 
 int main()
 {
@@ -83,16 +83,19 @@ int main()
 }
 
 // Finds out whether a vertex is near a given position.
-VertexContainer::iterator findVertex(VertexContainer& vertices, sf::Vector2f position)
+bool removeVertex(VertexContainer& vertices, sf::Vector2f position)
 {
 	// Find out which point was clicked on (tolerance radius is 6 pixels, as big as the circle's radius)
 	for (auto itr = vertices.begin(); itr != vertices.end(); ++itr)
 	{
 		if (thor::squaredLength(position - *itr) <= 36.f)
-			return itr;
+		{
+			vertices.erase(itr);
+			return true;
+		}
 	}
-	
-	return vertices.end();
+
+	return false;
 }
 
 // Handles clicks on a vertex. Returns true if a new triangulation is required.
@@ -118,12 +121,8 @@ bool handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& 
 	// Remove point when right-clicking
 	else if (mouseEvent.button == sf::Mouse::Right)
 	{
-		VertexContainer::iterator vertexItr = findVertex(vertices, clickPos);
-		if (vertexItr != vertices.end())
-		{
-			vertices.erase(vertexItr);
+		if (removeVertex(vertices, clickPos))
 			return true;
-		}
 	}
 	
 	return false;
@@ -139,28 +138,28 @@ bool handleEvents(sf::RenderWindow& window, VertexContainer& vertices, TriangleC
 		{
 			// Mouse buttons: Add or remove vertex
 			case sf::Event::MouseButtonPressed:
+			{
+				// Compute new triangulation for points if necessary
+				if (handleVertexClick(event.mouseButton, vertices))
 				{
-					// Compute new triangulation for points if necessary
-					if (handleVertexClick(event.mouseButton, vertices))
-					{
-						triangles.clear();
-						thor::triangulate(vertices.begin(), vertices.end(), std::back_inserter(triangles));
-					}
-				} break;
+					triangles.clear();
+					thor::triangulate(vertices.begin(), vertices.end(), std::back_inserter(triangles));
+				}
+			} break;
 
 			// Keys (C -> Clear, Escape -> Quit)
 			case sf::Event::KeyPressed:
+			{
+				switch (event.key.code)
 				{
-					switch (event.key.code)
-					{
-						case sf::Keyboard::Escape:
-							return false;
+					case sf::Keyboard::Escape:
+						return false;
 
-						case sf::Keyboard::C:
-							vertices.clear();
-							triangles.clear();
-					}
-				} break;
+					case sf::Keyboard::C:
+						vertices.clear();
+						triangles.clear();
+				}
+			} break;
 
 			// [X] clicked
 			case sf::Event::Closed:
