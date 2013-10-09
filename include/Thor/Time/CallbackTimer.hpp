@@ -43,8 +43,28 @@ namespace thor
 /// @{
 
 /// @brief Advanced timer with the ability to trigger function calls.
-/// @details Clock class that counts time down. As an extension of Timer, this class is able
-///  to register functions that are called at expiration time.
+/// @details Clock class that counts time down. As an extension of Timer, this class is able to register functions that are 
+/// called at expiration time. When you use this class, make sure you invoke the update() method every frame. Possible usage:
+/// @code
+/// #include <Thor/Time/CallbackTimer.hpp>
+/// #include <iostream>
+/// 
+/// void listener(thor::CallbackTimer& trigger)
+/// {
+///     std::cout << "expired" << std::endl;
+///     trigger.restart(sf::seconds(1.f));
+/// }
+/// 
+/// int main()
+/// {
+///     thor::CallbackTimer timer;
+///     timer.connect(&listener);
+///     timer.restart(sf::seconds(1.f));
+/// 
+///     for (;;)
+///         timer.update();
+/// }
+/// @endcode
 class THOR_API CallbackTimer : public Timer
 {	
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -66,10 +86,10 @@ class THOR_API CallbackTimer : public Timer
 
 		virtual void				restart(sf::Time timeLimit);
 
-		/// @brief Trigger listeners, if expired
-		/// @details This is the most important function of this class. You should call update() 
-		/// every frame (or, the better way, let this an automated routine do) to assure that
-		/// all associated listeners are invoked when the timer expires.
+		/// @brief Trigger listeners, if expired.
+		/// @details This is the most important function of this class. You should call update() every frame (or, even better,
+		/// let this an automated routine do) to assure that all associated listeners are invoked when the timer expires.
+		/// If you restart the timer, call update() before restarting; otherwise the listeners won't fire.
 		void						update();
 		
 		/// @brief Registers a function which will be called when the time reaches zero.
