@@ -76,20 +76,20 @@ bool ActionMap<ActionId>::isActive(const ActionId& id) const
 template <typename ActionId>
 void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system, sf::Window* window) const
 {
-	AURORA_CITR_FOREACH(actionItr, mActionMap)
+	AURORA_FOREACH(const auto& actionPair, mActionMap)
 	{
 		// Check if current action is active, collect additional information in result
 		detail::ActionResult result = {};
-		if (!actionItr->second.isActive(mEventBuffer, result))
+		if (!actionPair.second.isActive(mEventBuffer, result))
 			continue;
+
+		// Invoke callback once for every sf::Event
+		AURORA_FOREACH(const sf::Event& event, result.eventContainer)
+			system.triggerEvent( ActionContext<ActionId>(window, &event, actionPair.first) );
 
 		// If at least one realtime constellation triggers this action, invoke callback for it
 		if (result.nbRealtimeTriggers > 0)
-			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionItr->first) );
-
-		// Additionally, invoke callback once for every sf::Event
-		AURORA_CITR_FOREACH(eventItr, result.eventContainer)
-			system.triggerEvent( ActionContext<ActionId>(window, &*eventItr, actionItr->first) );
+			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionPair.first) );
 	}
 }
 

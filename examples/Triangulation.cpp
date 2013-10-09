@@ -49,25 +49,25 @@ int main()
 		window.clear();
 		
 		// Draw all triangles
-		AURORA_CITR_FOREACH(itr, triangles)
+		AURORA_FOREACH(const thor::Triangle<sf::Vector2f>& triangle, triangles)
 		{
-			sf::ConvexShape triangle;
-			triangle.setPointCount(3);
-			triangle.setFillColor(sf::Color(0, 150, 255, 100));
-			triangle.setOutlineColor(sf::Color::Blue);
-			triangle.setOutlineThickness(1.f);
+			sf::ConvexShape shape;
+			shape.setPointCount(3);
+			shape.setFillColor(sf::Color(0, 150, 255, 100));
+			shape.setOutlineColor(sf::Color::Blue);
+			shape.setOutlineThickness(1.f);
 
 			for (unsigned int i = 0; i < 3; ++i)
-				triangle.setPoint(i, (*itr)[i]);
+				shape.setPoint(i, triangle[i]);
 			
-			window.draw(triangle);
+			window.draw(shape);
 		}
 		
 		// Draw all points
-		AURORA_CITR_FOREACH(itr, vertices)
+		AURORA_FOREACH(sf::Vector2f vertex, vertices)
 		{
 			sf::CircleShape circle;
-			circle.setPosition(*itr - sf::Vector2f(6.f, 6.f));
+			circle.setPosition(vertex - sf::Vector2f(6.f, 6.f));
 			circle.setRadius(6.f);
 			circle.setFillColor(sf::Color(255, 0, 150));
 
@@ -86,7 +86,7 @@ int main()
 VertexContainer::iterator findVertex(VertexContainer& vertices, sf::Vector2f position)
 {
 	// Find out which point was clicked on (tolerance radius is 6 pixels, as big as the circle's radius)
-	AURORA_ITR_FOREACH(itr, vertices)
+	for (auto itr = vertices.begin(); itr != vertices.end(); ++itr)
 	{
 		if (thor::squaredLength(position - *itr) <= 36.f)
 			return itr;
@@ -104,9 +104,9 @@ bool handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& 
 	if (mouseEvent.button == sf::Mouse::Left)
 	{
 		// Don't insert the same point twice
-		AURORA_CITR_FOREACH(itr, vertices)
+		AURORA_FOREACH(sf::Vector2f vertex, vertices)
 		{
-			if (*itr == clickPos)
+			if (vertex == clickPos)
 				return false;
 		}
 		
