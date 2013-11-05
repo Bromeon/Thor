@@ -112,13 +112,16 @@ else()
 endif()
 
 
-# Macro for easy linkage of SFML
+# Macro to link SFML
 macro(thor_link_sfml THOR_TARGET)
 	target_link_libraries(${THOR_TARGET} ${SFML_LIBRARIES})
 endmacro()
 
+macro(thor_link_sfml_dependencies THOR_TARGET)
+	target_link_libraries(${THOR_TARGET} ${SFML_DEPENDENCIES})
+endmacro()
 
-# Macro for easy linkage of Thor (for examples)
+# Macro to link Thor (for examples)
 macro(thor_link_thor THOR_TARGET)
 	target_link_libraries(${THOR_TARGET} thor)
 endmacro()

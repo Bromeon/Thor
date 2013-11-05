@@ -31,12 +31,16 @@ macro(thor_example THOR_EXAMPLE_NAME)
 	project(${THOR_EXAMPLE_NAME})
 
 	add_executable(${THOR_EXAMPLE_NAME} "${THOR_EXAMPLE_NAME}.cpp")
-	if(NOT THOR_SHARED_LIBS)
-		add_definitions(-DSFML_STATIC)
-	endif()
 
 	thor_link_thor(${THOR_EXAMPLE_NAME})
 	thor_link_sfml(${THOR_EXAMPLE_NAME})
+
+	# Static link: Link also dependencies and define SFML_STATIC
+	if(NOT THOR_SHARED_LIBS)
+		add_definitions(-DSFML_STATIC)
+		thor_link_sfml_dependencies(${THOR_EXAMPLE_NAME})
+	endif()
+
 
 	install(TARGETS ${THOR_EXAMPLE_NAME}
 			RUNTIME DESTINATION ${THOR_EXAMPLE_INSTALL_DIR}/examples)
