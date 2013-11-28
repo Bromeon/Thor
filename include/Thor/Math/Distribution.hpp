@@ -32,10 +32,15 @@
 #include <Aurora/Tools/Metaprogramming.hpp>
 
 #include <functional>
+#include <type_traits>
 
 
 namespace thor
 {
+
+template <typename T>
+class Distribution;
+
 namespace detail
 {
 
@@ -54,6 +59,21 @@ namespace detail
 		}
 
 		T value;
+	};
+
+	// Metafunction for SFINAE and reasonable compiler errors
+	template <typename Fn, typename T>
+	struct IsCompatibleFunction
+	{
+		// General case: Fn is a functor/function -> if it's not convertible to T (and thus not a constant), accept it
+		static const bool value = !std::is_convertible<Fn, T>::value;
+	};
+
+	template <typename U, typename T>
+	struct IsCompatibleFunction<Distribution<U>, T>
+	{
+		// If Fn is another Distribution<U>, accept it iff U is convertible to T (like all functors, but clearer error message)
+		static const bool value = std::is_convertible<U, T>::value;
 	};
 
 } // namespace detail
@@ -102,7 +122,7 @@ class Distribution
 		///  it returns the return value of the specified function.
 		template <typename Fn>
 									Distribution(Fn function
-										AURORA_ENABLE_IF(!std::is_convertible<Fn, T>::value))
+										AURORA_ENABLE_IF(detail::IsCompatibleFunction<Fn, T>::value))
 		: mFactory(function)
 		{
 		}
