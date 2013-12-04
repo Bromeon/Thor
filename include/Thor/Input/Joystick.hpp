@@ -48,13 +48,13 @@ struct JoystickButton
 	/// @code
 	/// thor::JoystickButton j = thor::joy(id).button(b);
 	/// @endcode
-	JoystickButton(unsigned int id, unsigned int button)
-	: id(id)
+	JoystickButton(unsigned int joystickId, unsigned int button)
+	: joystickId(joystickId)
 	, button(button)
 	{
 	}
 
-	unsigned int		id;			///< The joystick number
+	unsigned int		joystickId;	///< The joystick number
 	unsigned int		button;		///< The joystick button number
 };
 
@@ -69,15 +69,15 @@ struct JoystickAxis
 	/// thor::JoystickAxis j1 = thor::joy(id).axis(a).above(pos);
 	/// thor::JoystickAxis j2 = thor::joy(id).axis(a).below(pos);
 	/// @endcode
-	JoystickAxis(unsigned int id, sf::Joystick::Axis axis, float threshold, bool above)
-	: id(id)
+	JoystickAxis(unsigned int joystickId, sf::Joystick::Axis axis, float threshold, bool above)
+	: joystickId(joystickId)
 	, axis(axis)
 	, threshold(threshold)
 	, above(above)
 	{
 	}
 
-	unsigned int		id;			///< The joystick number
+	unsigned int		joystickId;	///< The joystick number
 	sf::Joystick::Axis	axis;		///< The joystick axis
 	float				threshold;	///< Position threshold above/below which an action is triggered
 	bool				above;		///< True if position must be above threshold, false if below
@@ -95,37 +95,37 @@ namespace detail
 		{
 			JoystickAxis above(float threshold)
 			{
-				return JoystickAxis(id, axis, threshold, true);
+				return JoystickAxis(joystickId, axis, threshold, true);
 			}
 
 			JoystickAxis below(float threshold)
 			{
-				return JoystickAxis(id, axis, threshold, false);
+				return JoystickAxis(joystickId, axis, threshold, false);
 			}
 
 			sf::Joystick::Axis	axis;
-			unsigned int		id;
+			unsigned int		joystickId;
 		};
 
-		explicit JoyBuilder(unsigned int id)
-		: id(id)
+		explicit JoyBuilder(unsigned int joystickId)
+		: joystickId(joystickId)
 		{
 		}
 
 		JoystickButton button(unsigned int button)
 		{
-			return JoystickButton(id, button);
+			return JoystickButton(joystickId, button);
 		}
 
 		Axis axis(sf::Joystick::Axis axis)
 		{
 			Axis a;
-			a.id = id;
+			a.joystickId = joystickId;
 			a.axis = axis;
 			return a;
 		}
 
-		unsigned int		id;
+		unsigned int		joystickId;
 	};
 
 } // namespace detail

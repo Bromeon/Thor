@@ -241,7 +241,7 @@ namespace detail
 
 	bool RealtimeJoystickButtonLeaf::isActionActive(const EventBuffer& buffer) const
 	{
-		return buffer.isRealtimeInputEnabled() && sf::Joystick::isButtonPressed(mJoystick.id, mJoystick.button);
+		return buffer.isRealtimeInputEnabled() && sf::Joystick::isButtonPressed(mJoystick.joystickId, mJoystick.button);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -258,7 +258,7 @@ namespace detail
 		if (!buffer.isRealtimeInputEnabled())
 			return false;
 
-		float axisPos = sf::Joystick::getAxisPosition(mJoystick.id, mJoystick.axis);
+		float axisPos = sf::Joystick::getAxisPosition(mJoystick.joystickId, mJoystick.axis);
 
 		return mJoystick.above && axisPos > mJoystick.threshold
 			|| !mJoystick.above && axisPos < mJoystick.threshold;
@@ -272,7 +272,7 @@ namespace detail
 	, mJoystickEvent()
 	{
 		mJoystickEvent.type = pressed ? sf::Event::JoystickButtonPressed : sf::Event::JoystickButtonReleased;
-		mJoystickEvent.joystickButton.joystickId = joystick.id;
+		mJoystickEvent.joystickButton.joystickId = joystick.joystickId;
 		mJoystickEvent.joystickButton.button = joystick.button;
 	}
 
