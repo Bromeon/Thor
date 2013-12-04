@@ -44,7 +44,7 @@ struct Joystick
 	/// @details Note that you can also construct a joystick id and button property
 	///  with the following more expressive syntax:
 	/// @code
-	/// thor::Joystick j = thor::Joy(id).Button(button);
+	/// thor::Joystick j = thor::joy(id).button(button);
 	/// @endcode
 	Joystick(unsigned int id, unsigned int button)
 	: id(id)
@@ -58,22 +58,32 @@ struct Joystick
 
 /// @}
 
-// Proxy class that allows the Joy(id).Button(button) syntax
-struct Joy
+
+namespace detail
 {
-	explicit Joy(unsigned int id)
-	: id(id)
+
+	// Proxy class that allows the Joy(id).button(button) syntax
+	struct JoyBuilder
 	{
-	}
+		explicit JoyBuilder(unsigned int id)
+		: id(id)
+		{
+		}
 
-	Joystick button(unsigned int button)
-	{
-		return Joystick(id, button);
-	}
+		Joystick button(unsigned int button)
+		{
+			return Joystick(id, button);
+		}
 
-	unsigned int id;
-};
+		unsigned int id;
+	};
 
+} // namespace detail
+
+inline detail::JoyBuilder joy(unsigned int joystickId)
+{
+	return detail::JoyBuilder(joystickId);
+}
 
 } // namespace thor
 

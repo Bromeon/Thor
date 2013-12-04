@@ -34,7 +34,7 @@ int main()
 	map[Run] = (Action(sf::Keyboard::LShift) || Action(sf::Keyboard::RShift)) && Action(sf::Keyboard::R);
 
 	// Shoot: Press left mouse button or button 2 of joystick number 0 (single events)
-	map[Shoot] = Action(sf::Mouse::Left, Action::PressOnce) || Action(thor::Joy(0).button(2), Action::PressOnce);
+	map[Shoot] = Action(sf::Mouse::Left, Action::PressOnce) || Action(thor::joy(0).button(2), Action::PressOnce);
 
 	// Quit: Release the escape key or click the [X] (single events)
 	map[Quit] = Action(sf::Keyboard::Escape, Action::ReleaseOnce) || Action(sf::Event::Closed);
