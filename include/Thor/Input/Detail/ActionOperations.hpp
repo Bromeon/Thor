@@ -167,14 +167,25 @@ namespace detail
 	};
 
 	// Operation node class for joystick buttons currently held down
-	class RealtimeJoystickLeaf : public RealtimeNode
+	class RealtimeJoystickButtonLeaf : public RealtimeNode
 	{
 		public:
-			explicit					RealtimeJoystickLeaf(JoystickButton joystick);
+			explicit					RealtimeJoystickButtonLeaf(JoystickButton joystick);
 			virtual bool				isActionActive(const EventBuffer& buffer) const;
 
 		private:
-			JoystickButton					mJoystick;
+			JoystickButton				mJoystick;
+	};
+
+	// Operation node class for joystick axis events (movement of certain axis above threshold)
+	class RealtimeJoystickAxisLeaf : public RealtimeNode
+	{
+		public:
+										RealtimeJoystickAxisLeaf(JoystickAxis joystick);
+			virtual bool				isActionActive(const EventBuffer& buffer) const;
+
+		private:
+			JoystickAxis				mJoystick;
 	};
 
 	// Operation node class for joystick button events (either pressed or released)

@@ -86,6 +86,13 @@ class THOR_API Action
 		///  sf::Joystick::isButtonPressed() act as action source.
 		explicit					Action(JoystickButton joystickState, ActionType action = Hold);
 
+		/// @brief Construct joystick axis action
+		/// @details Creates an action that is in effect when the absolute value of the joystick axis position exceeds a threshold
+		///  (both axis and threshold are stored in @a joystickAxis). The source of the action is sf::Joystick::getAxisPosition()
+		///  and not JoystickMoved events. This implies that the action will also be active if the axis remains unchanged in a
+		///  position above the threshold.
+		explicit					Action(JoystickAxis joystickState);
+
 		/// @brief Construct SFML event action
 		/// @details Creates an action that is in effect when a SFML event of the type @a eventType is fired.
 		explicit					Action(sf::Event::EventType eventType);

@@ -230,19 +230,38 @@ namespace detail
 		return event.type != mMouseEvent.type || event.mouseButton.button != mMouseEvent.mouseButton.button;
 	}
 
-
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 
-	RealtimeJoystickLeaf::RealtimeJoystickLeaf(JoystickButton joystick)
+	RealtimeJoystickButtonLeaf::RealtimeJoystickButtonLeaf(JoystickButton joystick)
 	: RealtimeNode()
 	, mJoystick(joystick)
 	{
 	}
 
-	bool RealtimeJoystickLeaf::isActionActive(const EventBuffer& buffer) const
+	bool RealtimeJoystickButtonLeaf::isActionActive(const EventBuffer& buffer) const
 	{
 		return buffer.isRealtimeInputEnabled() && sf::Joystick::isButtonPressed(mJoystick.id, mJoystick.button);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
+
+	RealtimeJoystickAxisLeaf::RealtimeJoystickAxisLeaf(JoystickAxis joystick)
+	: RealtimeNode()
+	, mJoystick(joystick)
+	{
+	}
+
+	bool RealtimeJoystickAxisLeaf::isActionActive(const EventBuffer& buffer) const
+	{
+		if (!buffer.isRealtimeInputEnabled())
+			return false;
+
+		float axisPos = sf::Joystick::getAxisPosition(mJoystick.id, mJoystick.axis);
+
+		return mJoystick.above && axisPos > mJoystick.threshold
+			|| !mJoystick.above && axisPos < mJoystick.threshold;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -352,8 +371,8 @@ namespace detail
 	
 	
 	NotNode::NotNode(ActionNode::CopiedPtr action)
-		: ActionNode()
-		, mAction(std::move(action))
+	: ActionNode()
+	, mAction(std::move(action))
 	{
 	}
 

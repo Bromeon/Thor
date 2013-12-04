@@ -29,6 +29,8 @@
 #ifndef THOR_JOYSTICK_HPP
 #define THOR_JOYSTICK_HPP
 
+#include <SFML/Window/Joystick.hpp>
+
 
 namespace thor
 {
@@ -56,15 +58,55 @@ struct JoystickButton
 	unsigned int		button;		///< The joystick button number
 };
 
+/// @brief Contains information about a joystick number, an axis and its threshold
+///
+struct JoystickAxis
+{
+	/// @brief Constructor
+	/// @details Note that you can also construct a joystick id and axis property
+	///  with the following more expressive syntax:
+	/// @code
+	/// thor::JoystickAxis j1 = thor::joy(id).axis(a).above(pos);
+	/// thor::JoystickAxis j2 = thor::joy(id).axis(a).below(pos);
+	/// @endcode
+	JoystickAxis(unsigned int id, sf::Joystick::Axis axis, float threshold, bool above)
+	: id(id)
+	, axis(axis)
+	, threshold(threshold)
+	, above(above)
+	{
+	}
+
+	unsigned int		id;			///< The joystick number
+	sf::Joystick::Axis	axis;		///< The joystick axis
+	float				threshold;	///< Position threshold above/below which an action is triggered
+	bool				above;		///< True if position must be above threshold, false if below
+};
 /// @}
 
 
 namespace detail
 {
 
-	// Proxy class that allows the Joy(id).button(button) syntax
+	// Proxy class that allows the joy(id) named parameter syntax
 	struct JoyBuilder
 	{
+		struct Axis
+		{
+			JoystickAxis above(float threshold)
+			{
+				return JoystickAxis(id, axis, threshold, true);
+			}
+
+			JoystickAxis below(float threshold)
+			{
+				return JoystickAxis(id, axis, threshold, false);
+			}
+
+			sf::Joystick::Axis	axis;
+			unsigned int		id;
+		};
+
 		explicit JoyBuilder(unsigned int id)
 		: id(id)
 		{
@@ -75,7 +117,15 @@ namespace detail
 			return JoystickButton(id, button);
 		}
 
-		unsigned int id;
+		Axis axis(sf::Joystick::Axis axis)
+		{
+			Axis a;
+			a.id = id;
+			a.axis = axis;
+			return a;
+		}
+
+		unsigned int		id;
 	};
 
 } // namespace detail

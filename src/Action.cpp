@@ -75,7 +75,7 @@ Action::Action(JoystickButton joystick, ActionType action)
 	switch (action)
 	{
 		case Hold:
-			mOperation.reset(new detail::RealtimeJoystickLeaf(joystick));
+			mOperation.reset(new detail::RealtimeJoystickButtonLeaf(joystick));
 			break;
 
 		case PressOnce:
@@ -83,6 +83,11 @@ Action::Action(JoystickButton joystick, ActionType action)
 			mOperation.reset(new detail::EventJoystickLeaf(joystick, action == PressOnce));
 			break;
 	}
+}
+
+Action::Action(JoystickAxis joystickState)
+: mOperation(new detail::RealtimeJoystickAxisLeaf(joystickState))
+{
 }
 
 Action::Action(sf::Event::EventType eventType)
