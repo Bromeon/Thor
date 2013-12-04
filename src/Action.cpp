@@ -69,7 +69,7 @@ Action::Action(sf::Mouse::Button mouseButton, ActionType action)
 	}
 }
 
-Action::Action(Joystick joystick, ActionType action)
+Action::Action(JoystickButton joystick, ActionType action)
 : mOperation()
 {
 	switch (action)

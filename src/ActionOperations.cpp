@@ -234,7 +234,7 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 
-	RealtimeJoystickLeaf::RealtimeJoystickLeaf(Joystick joystick)
+	RealtimeJoystickLeaf::RealtimeJoystickLeaf(JoystickButton joystick)
 	: RealtimeNode()
 	, mJoystick(joystick)
 	{
@@ -248,7 +248,7 @@ namespace detail
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
-	EventJoystickLeaf::EventJoystickLeaf(Joystick joystick, bool pressed)
+	EventJoystickLeaf::EventJoystickLeaf(JoystickButton joystick, bool pressed)
 	: ActionNode()
 	, mJoystickEvent()
 	{

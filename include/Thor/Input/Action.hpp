@@ -84,7 +84,7 @@ class THOR_API Action
 		/// @details Creates an action that is in effect when the joystick button stored in @a joystickState is manipulated.
 		///  The second parameter specifies whether JoyButtonPressed events, JoyButtonReleased events or
 		///  sf::Joystick::isButtonPressed() act as action source.
-		explicit					Action(Joystick joystickState, ActionType action = Hold);
+		explicit					Action(JoystickButton joystickState, ActionType action = Hold);
 
 		/// @brief Construct SFML event action
 		/// @details Creates an action that is in effect when a SFML event of the type @a eventType is fired.

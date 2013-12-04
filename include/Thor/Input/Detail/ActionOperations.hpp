@@ -170,18 +170,18 @@ namespace detail
 	class RealtimeJoystickLeaf : public RealtimeNode
 	{
 		public:
-			explicit					RealtimeJoystickLeaf(Joystick joystick);
+			explicit					RealtimeJoystickLeaf(JoystickButton joystick);
 			virtual bool				isActionActive(const EventBuffer& buffer) const;
 
 		private:
-			Joystick					mJoystick;
+			JoystickButton					mJoystick;
 	};
 
 	// Operation node class for joystick button events (either pressed or released)
 	class EventJoystickLeaf : public ActionNode
 	{
 		public:
-										EventJoystickLeaf(Joystick joystick, bool pressed);
+										EventJoystickLeaf(JoystickButton joystick, bool pressed);
 			virtual bool				isActionActive(const EventBuffer& buffer) const;
 			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
 			virtual bool				filterOut(const sf::Event& event) const;

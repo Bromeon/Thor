@@ -36,24 +36,24 @@ namespace thor
 /// @addtogroup Input
 /// @{
 
-/// @brief Small wrapper class for joystick number and button number
+/// @brief Contains information about a joystick number and button number
 ///
-struct Joystick
+struct JoystickButton
 {
 	/// @brief Constructor
 	/// @details Note that you can also construct a joystick id and button property
 	///  with the following more expressive syntax:
 	/// @code
-	/// thor::Joystick j = thor::joy(id).button(button);
+	/// thor::JoystickButton j = thor::joy(id).button(b);
 	/// @endcode
-	Joystick(unsigned int id, unsigned int button)
+	JoystickButton(unsigned int id, unsigned int button)
 	: id(id)
 	, button(button)
 	{
 	}
 
-	unsigned int id;		///< The joystick number
-	unsigned int button;	///< The joystick button number
+	unsigned int		id;			///< The joystick number
+	unsigned int		button;		///< The joystick button number
 };
 
 /// @}
@@ -70,9 +70,9 @@ namespace detail
 		{
 		}
 
-		Joystick button(unsigned int button)
+		JoystickButton button(unsigned int button)
 		{
-			return Joystick(id, button);
+			return JoystickButton(id, button);
 		}
 
 		unsigned int id;
