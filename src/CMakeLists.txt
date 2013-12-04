@@ -44,6 +44,7 @@ set(THOR_SRC
 	FadeAnimation.cpp
 	FrameAnimation.cpp
 	InputNames.cpp
+	Joystick.cpp
 	Particle.cpp
 	ParticleSystem.cpp
 	Random.cpp
