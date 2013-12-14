@@ -59,12 +59,12 @@ sf::Time getRemainingLifetime(const Particle& particle)
 
 float getElapsedRatio(const Particle& particle)
 {
-	return getElapsedLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
+	return getElapsedLifetime(particle) / getTotalLifetime(particle);
 }
 
 float getRemainingRatio(const Particle& particle)
 {
-	return getRemainingLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
+	return getRemainingLifetime(particle) / getTotalLifetime(particle);
 }
 
 } // namespace thor
