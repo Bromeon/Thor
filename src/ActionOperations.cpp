@@ -38,19 +38,8 @@ namespace thor
 {
 namespace detail
 {
-
-	bool CompareEvents::operator() (const sf::Event& lhs, const sf::Event& rhs) const
-	{
-		// Note: Events with the same type member are equivalent.
-		// They are differentiated by the filterOut() functions if necessary.
-		return lhs.type < rhs.type;
-	}
-	
-	// ---------------------------------------------------------------------------------------------------------------------------
-
-
 	EventBuffer::EventBuffer()
-	: mEventSet()
+	: mEvents()
 	, mRealtimeEnabled(true)
 	{
 	}
@@ -71,34 +60,27 @@ namespace detail
 		}
 
 		// Store event
-		mEventSet.insert(event);
+		mEvents.push_back(event);
 	}
 
 	void EventBuffer::clearEvents()
 	{
-		mEventSet.clear();
+		mEvents.clear();
 	}
 
-	bool EventBuffer::containsEvent(const sf::Event& event, const ActionNode& filterNode) const
+	bool EventBuffer::containsEvent(const EventNode& filterNode) const
 	{
 		std::vector<sf::Event> unused;
-		return filterEvents(event.type, unused, filterNode);
+		return filterEvents(filterNode, unused);
 	}
 
-	bool EventBuffer::filterEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const
+	bool EventBuffer::filterEvents(const EventNode& filterNode, std::vector<sf::Event>& out) const
 	{
-		// Event as key for std::set
-		sf::Event key = {};
-		key.type = eventType;
-
-		// Find range of events with event.type == eventType
-		auto range = mEventSet.equal_range(key);
-
 		// Variable to check if something was actually inserted (don't look at range, it's not filtered yet)
 		std::size_t oldSize = out.size();
 
-		// Copy events that are really equal (e.g. same key) and thus are not filtered out to the end of the output vector
-		std::copy_if(range.first, range.second, std::back_inserter(out), std::bind(&ActionNode::filter, &filterNode, _1));
+		// Copy events that fulfill filter criterion to the end of the output vector
+		std::copy_if(mEvents.begin(), mEvents.end(), std::back_inserter(out), std::bind(&EventNode::isEventActive, &filterNode, _1));
 		return oldSize != out.size();
 	}
 
@@ -121,11 +103,6 @@ namespace detail
 	ActionNode::~ActionNode()
 	{
 	}
-
-	bool ActionNode::filter(const sf::Event&) const
-	{
-		return true;
-	}
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
@@ -137,23 +114,33 @@ namespace detail
 
 	bool EventNode::isActionActive(const EventBuffer& buffer) const
 	{
-		return buffer.containsEvent(mEvent, *this);
+		return buffer.containsEvent(*this);
 	}
 
 	bool EventNode::isActionActive(const EventBuffer& buffer, ActionResult& out) const
 	{
-		return buffer.filterEvents(mEvent.type, out.eventContainer, *this);
+		return buffer.filterEvents(*this, out.eventContainer);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 
+	bool RealtimeNode::isActionActive(const EventBuffer& buffer) const
+	{
+		return buffer.isRealtimeInputEnabled() && isRealtimeActive();
+	}
+
 	bool RealtimeNode::isActionActive(const EventBuffer& buffer, ActionResult& out) const
 	{
-		// Increase counter if derived class (Realtime leaf) returns true
-		bool active = isActionActive(buffer);
-		out.nbRealtimeTriggers += static_cast<unsigned int>(active);
-		return active;
+		if (isActionActive(buffer))
+		{
+			++out.nbRealtimeTriggers;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -165,9 +152,9 @@ namespace detail
 	{
 	}
 
-	bool RealtimeKeyLeaf::isActionActive(const EventBuffer& buffer) const
+	bool RealtimeKeyLeaf::isRealtimeActive() const
 	{
-		return buffer.isRealtimeInputEnabled() && sf::Keyboard::isKeyPressed(mKey);
+		return sf::Keyboard::isKeyPressed(mKey);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -180,7 +167,7 @@ namespace detail
 		mEvent.key.code = key;
 	}
 
-	bool EventKeyLeaf::filter(const sf::Event& event) const
+	bool EventKeyLeaf::isEventActive(const sf::Event& event) const
 	{
 		return event.type == mEvent.type && event.key.code == mEvent.key.code;
 	}
@@ -194,9 +181,9 @@ namespace detail
 	{
 	}
 
-	bool RealtimeMouseLeaf::isActionActive(const EventBuffer& buffer) const
+	bool RealtimeMouseLeaf::isRealtimeActive() const
 	{
-		return buffer.isRealtimeInputEnabled() && sf::Mouse::isButtonPressed(mMouseButton);
+		return sf::Mouse::isButtonPressed(mMouseButton);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -209,7 +196,7 @@ namespace detail
 		mEvent.mouseButton.button = mouseButton;
 	}
 
-	bool EventMouseLeaf::filter(const sf::Event& event) const
+	bool EventMouseLeaf::isEventActive(const sf::Event& event) const
 	{
 		return event.type == mEvent.type && event.mouseButton.button == mEvent.mouseButton.button;
 	}
@@ -223,9 +210,9 @@ namespace detail
 	{
 	}
 
-	bool RealtimeJoystickButtonLeaf::isActionActive(const EventBuffer& buffer) const
+	bool RealtimeJoystickButtonLeaf::isRealtimeActive() const
 	{
-		return buffer.isRealtimeInputEnabled() && sf::Joystick::isButtonPressed(mJoystick.joystickId, mJoystick.button);
+		return sf::Joystick::isButtonPressed(mJoystick.joystickId, mJoystick.button);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -237,11 +224,8 @@ namespace detail
 	{
 	}
 
-	bool RealtimeJoystickAxisLeaf::isActionActive(const EventBuffer& buffer) const
+	bool RealtimeJoystickAxisLeaf::isRealtimeActive() const
 	{
-		if (!buffer.isRealtimeInputEnabled())
-			return false;
-
 		float axisPos = sf::Joystick::getAxisPosition(mJoystick.joystickId, mJoystick.axis);
 
 		return mJoystick.above && axisPos > mJoystick.threshold
@@ -259,7 +243,7 @@ namespace detail
 		mEvent.joystickButton.button = joystick.button;
 	}
 
-	bool EventJoystickLeaf::filter(const sf::Event& event) const
+	bool EventJoystickLeaf::isEventActive(const sf::Event& event) const
 	{
 		return event.type == mEvent.type && event.joystickButton.button == mEvent.joystickButton.button;
 	}
@@ -272,6 +256,12 @@ namespace detail
 	{
 		mEvent.type = eventType;
 	}
+
+	bool MiscEventLeaf::isEventActive(const sf::Event& event) const
+	{
+		return mEvent.type == event.type;
+	}
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	

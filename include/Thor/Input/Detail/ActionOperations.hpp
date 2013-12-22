@@ -23,8 +23,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef THOR_EVENTOPERATIONS_HPP
-#define THOR_EVENTOPERATIONS_HPP
+#ifndef THOR_ACTIONOPERATIONS_HPP
+#define THOR_ACTIONOPERATIONS_HPP
 
 #include <Thor/Input/Joystick.hpp>
 #include <Thor/Config.hpp>
@@ -37,7 +37,6 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/Joystick.hpp>
 
-#include <set>
 #include <vector>
 
 
@@ -53,20 +52,12 @@ namespace thor
 {
 namespace detail
 {
-	class ActionNode;
-
-	// Functor to compare sf::Event instances
-	struct CompareEvents
-	{
-		bool						operator() (const sf::Event& lhs, const sf::Event& rhs) const;
-	};
+	class EventNode;
 
 	// Class that stores events and provides methods for lookup
+	// Note: Since there are at most a few dozens of events per frame (at a decent framerate not even that), std::vector and linear search is fine
 	class THOR_API EventBuffer : private sf::NonCopyable
 	{
-		private:
-			typedef std::multiset<sf::Event, CompareEvents> EventSet;
-
 		public:
 										EventBuffer();
 
@@ -76,12 +67,12 @@ namespace detail
 			void						pollEvents(sf::Window& window);
 
 			// Accessors
-			bool						containsEvent(const sf::Event& event, const ActionNode& filterNode) const;
-			bool						filterEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const;
+			bool						containsEvent(const EventNode& filterNode) const;
+			bool						filterEvents(const EventNode& filterNode, std::vector<sf::Event>& out) const;
 			bool						isRealtimeInputEnabled() const;
 
 		private:
-			EventSet					mEventSet;
+			std::vector<sf::Event>		mEvents;
 			bool						mRealtimeEnabled;
 	};
 	
@@ -105,7 +96,6 @@ namespace detail
 			virtual						~ActionNode();
 			virtual bool				isActionActive(const EventBuffer& buffer) const = 0;
 			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const = 0;
-			virtual bool				filter(const sf::Event& event) const;
 	};
 
 	// Class between ActionNode and concrete Event classes
@@ -116,6 +106,7 @@ namespace detail
 
 			virtual bool				isActionActive(const EventBuffer& buffer) const;
 			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
+			virtual bool				isEventActive(const sf::Event& event) const = 0;
 
 		protected:
 			sf::Event					mEvent;
@@ -125,8 +116,9 @@ namespace detail
 	class RealtimeNode : public ActionNode
 	{
 		public:
-			using						ActionNode::isActionActive;
+			virtual bool				isActionActive(const EventBuffer& buffer) const;
 			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
+			virtual bool				isRealtimeActive() const = 0;
 	};
 
 	// Operation node class for keys currently held down
@@ -134,7 +126,7 @@ namespace detail
 	{
 		public:
 			explicit					RealtimeKeyLeaf(sf::Keyboard::Key key);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isRealtimeActive() const;
 
 		private:
 			sf::Keyboard::Key			mKey;
@@ -145,7 +137,7 @@ namespace detail
 	{
 		public:
 										EventKeyLeaf(sf::Keyboard::Key key, bool pressed);
-			virtual bool				filter(const sf::Event& event) const;
+			virtual bool				isEventActive(const sf::Event& event) const;
 	};
 
 	// Operation node class for mouse buttons currently held down
@@ -153,7 +145,7 @@ namespace detail
 	{
 		public:
 			explicit					RealtimeMouseLeaf(sf::Mouse::Button mouseButton);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isRealtimeActive() const;
 
 		private:
 			sf::Mouse::Button			mMouseButton;
@@ -164,7 +156,7 @@ namespace detail
 	{
 		public:
 										EventMouseLeaf(sf::Mouse::Button mouseButton, bool pressed);
-			virtual bool				filter(const sf::Event& event) const;
+			virtual bool				isEventActive(const sf::Event& event) const;
 	};
 
 	// Operation node class for joystick buttons currently held down
@@ -172,7 +164,7 @@ namespace detail
 	{
 		public:
 			explicit					RealtimeJoystickButtonLeaf(JoystickButton joystick);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isRealtimeActive() const;
 
 		private:
 			JoystickButton				mJoystick;
@@ -183,7 +175,7 @@ namespace detail
 	{
 		public:
 										RealtimeJoystickAxisLeaf(JoystickAxis joystick);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isRealtimeActive() const;
 
 		private:
 			JoystickAxis				mJoystick;
@@ -194,7 +186,7 @@ namespace detail
 	{
 		public:
 										EventJoystickLeaf(JoystickButton joystick, bool pressed);
-			virtual bool				filter(const sf::Event& event) const;
+			virtual bool				isEventActive(const sf::Event& event) const;
 	};
 
 	// Operation node class for other SFML events
@@ -202,6 +194,7 @@ namespace detail
 	{
 		public:
 			explicit					MiscEventLeaf(sf::Event::EventType eventType);
+			virtual bool				isEventActive(const sf::Event& event) const;
 	};
 
 	// Logical OR operator
@@ -245,4 +238,4 @@ namespace detail
 } // namespace detail
 } // namespace thor
 
-#endif // THOR_EVENTOPERATIONS_HPP
+#endif // THOR_ACTIONOPERATIONS_HPP
