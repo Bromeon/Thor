@@ -79,38 +79,26 @@ namespace detail
 		mEventSet.clear();
 	}
 
-	bool EventBuffer::containsEvent(const sf::Event& event) const
-	{
-		return mEventSet.find(event) != mEventSet.end();
-	}
-
 	bool EventBuffer::containsEvent(const sf::Event& event, const ActionNode& filterNode) const
 	{
 		std::vector<sf::Event> unused;
-		return getEvents(event.type, unused, filterNode);
+		return filterEvents(event.type, unused, filterNode);
 	}
 
-	bool EventBuffer::getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out) const
+	bool EventBuffer::filterEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const
 	{
-		// Create event object acting as key in the multiset
+		// Event as key for std::set
 		sf::Event key = {};
 		key.type = eventType;
 
-		// Copy found range to output vector
-		std::pair<EventSet::const_iterator, EventSet::const_iterator> range = mEventSet.equal_range(key);
-		out.insert(out.end(), range.first, range.second);
-		return range.first != range.second;
-	}
+		// Find range of events with event.type == eventType
+		auto range = mEventSet.equal_range(key);
 
-	bool EventBuffer::getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const
-	{
-		// Collect all events with event.Type == eventType
-		std::vector<sf::Event> newEvents;
-		getEvents(eventType, newEvents);
-
-		// Copy events that are really equal (e.g. same key) to the end of the output vector
+		// Variable to check if something was actually inserted (don't look at range, it's not filtered yet)
 		std::size_t oldSize = out.size();
-		std::remove_copy_if(newEvents.begin(), newEvents.end(), std::back_inserter(out), std::bind(&ActionNode::filterOut, &filterNode, _1));
+
+		// Copy events that are really equal (e.g. same key) and thus are not filtered out to the end of the output vector
+		std::remove_copy_if(range.first, range.second, std::back_inserter(out), std::bind(&ActionNode::filterOut, &filterNode, _1));
 		return oldSize != out.size();
 	}
 
@@ -141,6 +129,24 @@ namespace detail
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
+	
+	EventNode::EventNode()
+	: mEvent()
+	{
+	}
+
+	bool EventNode::isActionActive(const EventBuffer& buffer) const
+	{
+		return buffer.containsEvent(mEvent, *this);
+	}
+
+	bool EventNode::isActionActive(const EventBuffer& buffer, ActionResult& out) const
+	{
+		return buffer.filterEvents(mEvent.type, out.eventContainer, *this);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	
 
 	bool RealtimeNode::isActionActive(const EventBuffer& buffer, ActionResult& out) const
 	{
@@ -168,26 +174,15 @@ namespace detail
 
 
 	EventKeyLeaf::EventKeyLeaf(sf::Keyboard::Key key, bool pressed)
-	: ActionNode()
-	, mKeyEvent()
+	: EventNode()
 	{
-		mKeyEvent.type = pressed ? sf::Event::KeyPressed : sf::Event::KeyReleased;
-		mKeyEvent.key.code = key;
-	}
-
-	bool EventKeyLeaf::isActionActive(const EventBuffer& buffer) const
-	{
-		return buffer.containsEvent(mKeyEvent, *this);
-	}
-
-	bool EventKeyLeaf::isActionActive(const EventBuffer& buffer, ActionResult& out) const
-	{
-		return buffer.getEvents(mKeyEvent.type, out.eventContainer, *this);
+		mEvent.type = pressed ? sf::Event::KeyPressed : sf::Event::KeyReleased;
+		mEvent.key.code = key;
 	}
 
 	bool EventKeyLeaf::filterOut(const sf::Event& event) const
 	{
-		return event.type != mKeyEvent.type || event.key.code != mKeyEvent.key.code;
+		return event.type != mEvent.type || event.key.code != mEvent.key.code;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -208,26 +203,15 @@ namespace detail
 
 
 	EventMouseLeaf::EventMouseLeaf(sf::Mouse::Button mouseButton, bool pressed)
-	: ActionNode()
-	, mMouseEvent()
+	: EventNode()
 	{
-		mMouseEvent.type = pressed ? sf::Event::MouseButtonPressed : sf::Event::MouseButtonReleased;
-		mMouseEvent.mouseButton.button = mouseButton;
-	}
-
-	bool EventMouseLeaf::isActionActive(const EventBuffer& buffer) const
-	{
-		return buffer.containsEvent(mMouseEvent, *this);
-	}
-
-	bool EventMouseLeaf::isActionActive(const EventBuffer& buffer, ActionResult& out) const
-	{
-		return buffer.getEvents(mMouseEvent.type, out.eventContainer, *this);
+		mEvent.type = pressed ? sf::Event::MouseButtonPressed : sf::Event::MouseButtonReleased;
+		mEvent.mouseButton.button = mouseButton;
 	}
 
 	bool EventMouseLeaf::filterOut(const sf::Event& event) const
 	{
-		return event.type != mMouseEvent.type || event.mouseButton.button != mMouseEvent.mouseButton.button;
+		return event.type != mEvent.type || event.mouseButton.button != mEvent.mouseButton.button;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -268,46 +252,25 @@ namespace detail
 
 
 	EventJoystickLeaf::EventJoystickLeaf(JoystickButton joystick, bool pressed)
-	: ActionNode()
-	, mJoystickEvent()
+	: EventNode()
 	{
-		mJoystickEvent.type = pressed ? sf::Event::JoystickButtonPressed : sf::Event::JoystickButtonReleased;
-		mJoystickEvent.joystickButton.joystickId = joystick.joystickId;
-		mJoystickEvent.joystickButton.button = joystick.button;
-	}
-
-	bool EventJoystickLeaf::isActionActive(const EventBuffer& buffer) const
-	{
-		return buffer.containsEvent(mJoystickEvent, *this);
-	}
-
-	bool EventJoystickLeaf::isActionActive(const EventBuffer& buffer, ActionResult& out) const
-	{
-		return buffer.getEvents(mJoystickEvent.type, out.eventContainer, *this);
+		mEvent.type = pressed ? sf::Event::JoystickButtonPressed : sf::Event::JoystickButtonReleased;
+		mEvent.joystickButton.joystickId = joystick.joystickId;
+		mEvent.joystickButton.button = joystick.button;
 	}
 
 	bool EventJoystickLeaf::filterOut(const sf::Event& event) const
 	{
-		return event.type != mJoystickEvent.type || event.joystickButton.button != mJoystickEvent.joystickButton.button;
+		return event.type != mEvent.type || event.joystickButton.button != mEvent.joystickButton.button;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 
 	MiscEventLeaf::MiscEventLeaf(sf::Event::EventType eventType)
-	: mEvent()
+	: EventNode()
 	{
 		mEvent.type = eventType;
-	}
-
-	bool MiscEventLeaf::isActionActive(const EventBuffer& buffer) const
-	{
-		return buffer.containsEvent(mEvent);
-	}
-
-	bool MiscEventLeaf::isActionActive(const EventBuffer& buffer, ActionResult& out) const
-	{
-		return buffer.getEvents(mEvent.type, out.eventContainer);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------

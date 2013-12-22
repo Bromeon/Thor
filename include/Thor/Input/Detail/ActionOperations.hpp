@@ -76,10 +76,8 @@ namespace detail
 			void						pollEvents(sf::Window& window);
 
 			// Accessors
-			bool						containsEvent(const sf::Event& event) const;
 			bool						containsEvent(const sf::Event& event, const ActionNode& filterNode) const;
-			bool						getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out) const;
-			bool						getEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const;
+			bool						filterEvents(sf::Event::EventType eventType, std::vector<sf::Event>& out, const ActionNode& filterNode) const;
 			bool						isRealtimeInputEnabled() const;
 
 		private:
@@ -110,6 +108,19 @@ namespace detail
 			virtual bool				filterOut(const sf::Event& event) const;
 	};
 
+	// Class between ActionNode and concrete Event classes
+	class EventNode : public ActionNode
+	{
+		public:
+										EventNode();
+
+			virtual bool				isActionActive(const EventBuffer& buffer) const;
+			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
+
+		protected:
+			sf::Event					mEvent;
+	};
+
 	// Class between ActionNode and concrete Realtime classes
 	class RealtimeNode : public ActionNode
 	{
@@ -126,20 +137,15 @@ namespace detail
 			virtual bool				isActionActive(const EventBuffer& buffer) const;
 
 		private:
-			sf::Keyboard::Key				mKey;
+			sf::Keyboard::Key			mKey;
 	};
 
 	// Operation node class for key events (either pressed or released)
-	class EventKeyLeaf : public ActionNode
+	class EventKeyLeaf : public EventNode
 	{
 		public:
 										EventKeyLeaf(sf::Keyboard::Key key, bool pressed);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
-			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
 			virtual bool				filterOut(const sf::Event& event) const;
-
-		private:
-			sf::Event					mKeyEvent;
 	};
 
 	// Operation node class for mouse buttons currently held down
@@ -154,16 +160,11 @@ namespace detail
 	};
 
 	// Operation node class for mouse button events (either pressed or released)
-	class EventMouseLeaf : public ActionNode
+	class EventMouseLeaf : public EventNode
 	{
 		public:
 										EventMouseLeaf(sf::Mouse::Button mouseButton, bool pressed);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
-			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
 			virtual bool				filterOut(const sf::Event& event) const;
-
-		private:
-			sf::Event					mMouseEvent;
 	};
 
 	// Operation node class for joystick buttons currently held down
@@ -189,28 +190,18 @@ namespace detail
 	};
 
 	// Operation node class for joystick button events (either pressed or released)
-	class EventJoystickLeaf : public ActionNode
+	class EventJoystickLeaf : public EventNode
 	{
 		public:
 										EventJoystickLeaf(JoystickButton joystick, bool pressed);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
-			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
 			virtual bool				filterOut(const sf::Event& event) const;
-
-		private:
-			sf::Event					mJoystickEvent;
 	};
 
 	// Operation node class for other SFML events
-	class MiscEventLeaf : public ActionNode
+	class MiscEventLeaf : public EventNode
 	{
 		public:
 			explicit					MiscEventLeaf(sf::Event::EventType eventType);
-			virtual bool				isActionActive(const EventBuffer& buffer) const;
-			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const;
-
-		private:
-			sf::Event					mEvent;					
 	};
 
 	// Logical OR operator
