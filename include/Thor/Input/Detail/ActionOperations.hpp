@@ -105,7 +105,7 @@ namespace detail
 			virtual						~ActionNode();
 			virtual bool				isActionActive(const EventBuffer& buffer) const = 0;
 			virtual bool				isActionActive(const EventBuffer& buffer, ActionResult& out) const = 0;
-			virtual bool				filterOut(const sf::Event& event) const;
+			virtual bool				filter(const sf::Event& event) const;
 	};
 
 	// Class between ActionNode and concrete Event classes
@@ -145,7 +145,7 @@ namespace detail
 	{
 		public:
 										EventKeyLeaf(sf::Keyboard::Key key, bool pressed);
-			virtual bool				filterOut(const sf::Event& event) const;
+			virtual bool				filter(const sf::Event& event) const;
 	};
 
 	// Operation node class for mouse buttons currently held down
@@ -164,7 +164,7 @@ namespace detail
 	{
 		public:
 										EventMouseLeaf(sf::Mouse::Button mouseButton, bool pressed);
-			virtual bool				filterOut(const sf::Event& event) const;
+			virtual bool				filter(const sf::Event& event) const;
 	};
 
 	// Operation node class for joystick buttons currently held down
@@ -194,7 +194,7 @@ namespace detail
 	{
 		public:
 										EventJoystickLeaf(JoystickButton joystick, bool pressed);
-			virtual bool				filterOut(const sf::Event& event) const;
+			virtual bool				filter(const sf::Event& event) const;
 	};
 
 	// Operation node class for other SFML events

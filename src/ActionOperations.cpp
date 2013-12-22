@@ -98,7 +98,7 @@ namespace detail
 		std::size_t oldSize = out.size();
 
 		// Copy events that are really equal (e.g. same key) and thus are not filtered out to the end of the output vector
-		std::remove_copy_if(range.first, range.second, std::back_inserter(out), std::bind(&ActionNode::filterOut, &filterNode, _1));
+		std::copy_if(range.first, range.second, std::back_inserter(out), std::bind(&ActionNode::filter, &filterNode, _1));
 		return oldSize != out.size();
 	}
 
@@ -122,9 +122,9 @@ namespace detail
 	{
 	}
 
-	bool ActionNode::filterOut(const sf::Event&) const
+	bool ActionNode::filter(const sf::Event&) const
 	{
-		return false;
+		return true;
 	}
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -180,9 +180,9 @@ namespace detail
 		mEvent.key.code = key;
 	}
 
-	bool EventKeyLeaf::filterOut(const sf::Event& event) const
+	bool EventKeyLeaf::filter(const sf::Event& event) const
 	{
-		return event.type != mEvent.type || event.key.code != mEvent.key.code;
+		return event.type == mEvent.type && event.key.code == mEvent.key.code;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -209,9 +209,9 @@ namespace detail
 		mEvent.mouseButton.button = mouseButton;
 	}
 
-	bool EventMouseLeaf::filterOut(const sf::Event& event) const
+	bool EventMouseLeaf::filter(const sf::Event& event) const
 	{
-		return event.type != mEvent.type || event.mouseButton.button != mEvent.mouseButton.button;
+		return event.type == mEvent.type && event.mouseButton.button == mEvent.mouseButton.button;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -259,9 +259,9 @@ namespace detail
 		mEvent.joystickButton.button = joystick.button;
 	}
 
-	bool EventJoystickLeaf::filterOut(const sf::Event& event) const
+	bool EventJoystickLeaf::filter(const sf::Event& event) const
 	{
-		return event.type != mEvent.type || event.joystickButton.button != mEvent.joystickButton.button;
+		return event.type == mEvent.type && event.joystickButton.button == mEvent.joystickButton.button;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
