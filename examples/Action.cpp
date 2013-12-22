@@ -34,11 +34,11 @@ int main()
 	map[Jetpack] = (Action(sf::Keyboard::LShift) || Action(sf::Keyboard::RShift)) && Action(sf::Keyboard::J);
 
 	// Run: Displace X axis of joystick number 0 by more than 30% in either direction
-	map[Run] = Action(thor::joy(0).axis(sf::Joystick::X).above(30.f))
-	        || Action(thor::joy(0).axis(sf::Joystick::X).below(-30.f));
+	map[Run] = Action(thor::joystick(0).axis(sf::Joystick::X).above(30.f))
+	        || Action(thor::joystick(0).axis(sf::Joystick::X).below(-30.f));
 
 	// Shoot: Press left mouse button or button 2 of joystick number 0 (single events)
-	map[Shoot] = Action(sf::Mouse::Left, Action::PressOnce) || Action(thor::joy(0).button(2), Action::PressOnce);
+	map[Shoot] = Action(sf::Mouse::Left, Action::PressOnce) || Action(thor::joystick(0).button(2), Action::PressOnce);
 
 	// Quit: Release the escape key or click the [X] (single events)
 	map[Quit] = Action(sf::Keyboard::Escape, Action::ReleaseOnce) || Action(sf::Event::Closed);

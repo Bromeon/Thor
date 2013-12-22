@@ -43,9 +43,9 @@ JoystickAxis::JoystickAxis(unsigned int joystickId, sf::Joystick::Axis axis, flo
 {
 }
 
-detail::JoyBuilder joy(unsigned int joystickId)
+detail::JoystickBuilder joystick(unsigned int joystickId)
 {
-	return detail::JoyBuilder(joystickId);
+	return detail::JoystickBuilder(joystickId);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -54,27 +54,27 @@ detail::JoyBuilder joy(unsigned int joystickId)
 namespace detail
 {
 
-	JoystickAxis JoyBuilder::Axis::above(float threshold)
+	JoystickAxis JoystickBuilder::Axis::above(float threshold)
 	{
 		return JoystickAxis(joystickId, axis, threshold, true);
 	}
 
-	JoystickAxis JoyBuilder::Axis::below(float threshold)
+	JoystickAxis JoystickBuilder::Axis::below(float threshold)
 	{
 		return JoystickAxis(joystickId, axis, threshold, false);
 	}
 
-	JoyBuilder::JoyBuilder(unsigned int joystickId)
+	JoystickBuilder::JoystickBuilder(unsigned int joystickId)
 	: joystickId(joystickId)
 	{
 	}
 
-	JoystickButton JoyBuilder::button(unsigned int button)
+	JoystickButton JoystickBuilder::button(unsigned int button)
 	{
 		return JoystickButton(joystickId, button);
 	}
 
-	JoyBuilder::Axis JoyBuilder::axis(sf::Joystick::Axis axis)
+	JoystickBuilder::Axis JoystickBuilder::axis(sf::Joystick::Axis axis)
 	{
 		Axis a;
 		a.joystickId = joystickId;

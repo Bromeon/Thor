@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::Joystick
+/// @brief Classes thor::JoystickButton, thor::JoystickAxis
 
 #ifndef THOR_JOYSTICK_HPP
 #define THOR_JOYSTICK_HPP
@@ -48,7 +48,7 @@ struct THOR_API JoystickButton
 	/// @details Note that you can also construct a joystick id and button property
 	///  with the following more expressive syntax:
 	/// @code
-	/// thor::JoystickButton j = thor::joy(id).button(b);
+	/// thor::JoystickButton j = thor::joystick(id).button(b);
 	/// @endcode
 								JoystickButton(unsigned int joystickId, unsigned int button);
 
@@ -64,8 +64,8 @@ struct THOR_API JoystickAxis
 	/// @details Note that you can also construct a joystick id and axis property
 	///  with the following more expressive syntax:
 	/// @code
-	/// thor::JoystickAxis j1 = thor::joy(id).axis(a).above(pos);
-	/// thor::JoystickAxis j2 = thor::joy(id).axis(a).below(pos);
+	/// thor::JoystickAxis j1 = thor::joystick(id).axis(a).above(pos);
+	/// thor::JoystickAxis j2 = thor::joystick(id).axis(a).below(pos);
 	/// @endcode
 								JoystickAxis(unsigned int joystickId, sf::Joystick::Axis axis, float threshold, bool above);
 
@@ -84,7 +84,7 @@ namespace detail
 {
 
 	// Proxy class that allows the joy(id) named parameter syntax
-	struct THOR_API JoyBuilder
+	struct THOR_API JoystickBuilder
 	{
 		struct THOR_API Axis
 		{
@@ -95,7 +95,7 @@ namespace detail
 			unsigned int					joystickId;
 		};
 
-		explicit						JoyBuilder(unsigned int joystickId);
+		explicit						JoystickBuilder(unsigned int joystickId);
 		JoystickButton					button(unsigned int button);
 		Axis							axis(sf::Joystick::Axis axis);
 
@@ -104,7 +104,7 @@ namespace detail
 
 } // namespace detail
 
-detail::JoyBuilder THOR_API			joy(unsigned int joystickId);
+detail::JoystickBuilder THOR_API		joystick(unsigned int joystickId);
 
 } // namespace thor
 
