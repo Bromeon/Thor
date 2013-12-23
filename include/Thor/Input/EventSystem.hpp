@@ -51,14 +51,6 @@ template <typename Event, typename EventId = Event>
 class EventSystem : private aurora::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Function type of listeners associated with Event
-		///
-		typedef std::function< void(const Event&) >		Listener;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Default constructor
@@ -77,7 +69,7 @@ class EventSystem : private aurora::NonCopyable
 		///  If you don't need this functionality, just ignore the return value.
 		/// @warning Inside the listener functions, you are not allowed to modify the EventSystem instance that calls them.
 		///  If you want a callback to insert or remove other callbacks, delay these modifications until the callback returns.
-		Connection					connect(const EventId& trigger, const Listener& listener);
+		Connection					connect(const EventId& trigger, std::function<void(const Event&)> listener);
 		
 		/// @brief Disconnects listeners associated with a given event type.
 		/// @param identifier The event type identifier of which you want to remove all connected listeners.

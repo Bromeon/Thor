@@ -68,14 +68,6 @@ namespace thor
 class THOR_API CallbackTimer : public Timer
 {	
 	// ---------------------------------------------------------------------------------------------------------------------------
-	// Public types
-	public:
-		/// @brief Callback type for events being processed by CallbackTimer.
-		///
-		typedef std::function< void(CallbackTimer&) >		Listener;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Default constructor: Creates a callback timer that is initially expired.
@@ -96,7 +88,7 @@ class THOR_API CallbackTimer : public Timer
 		/// @details Make sure to call update() each frame to invoke potential listeners.
 		/// @param listener The function you want to associate with the timer expiration.
 		/// @return %Connection that can be used to disconnect the listener.
-		Connection					connect(const Listener& listener);
+		Connection					connect(std::function<void(CallbackTimer&)> listener);
 			
 		/// @brief Removes all currently associated timer listeners.
 		/// @details This also invalidates all connections to those listeners.

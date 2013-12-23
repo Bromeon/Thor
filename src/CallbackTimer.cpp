@@ -60,9 +60,9 @@ void CallbackTimer::update()
 	}
 }
 
-Connection CallbackTimer::connect(const Listener& listener)
+Connection CallbackTimer::connect(std::function<void(CallbackTimer&)> listener)
 {
-	return mListeners.add(listener);
+	return mListeners.add(std::move(listener));
 }
 
 void CallbackTimer::clearConnections()
