@@ -32,6 +32,8 @@
 #include <Thor/Input/Detail/ActionOperations.hpp>
 #include <Thor/Config.hpp>
 
+#include <functional>
+
 
 namespace thor
 {
@@ -130,6 +132,8 @@ class THOR_API Action
 	friend Action THOR_API operator|| (const Action& lhs, const Action& rhs);
 	friend Action THOR_API operator&& (const Action& lhs, const Action& rhs);
 	friend Action THOR_API operator! (const Action& action);
+	friend Action THOR_API eventAction(std::function<bool(const sf::Event&)> filter);
+	friend Action THOR_API realtimeAction(std::function<bool()> filter);
 	/// @endcond
 };
 
@@ -145,6 +149,39 @@ Action THOR_API				operator&& (const Action& lhs, const Action& rhs);
 /// @relates Action
 /// @brief NOT operator of an action: The resulting action is in effect if @a action is not active.
 Action THOR_API				operator! (const Action& action);
+
+/// @relates Action
+/// @brief Creates a custom action that operates on events
+/// @param filter Functor that is called for every event (which is passed as a parameter). It shall return true when the
+///  passed event makes the action active.
+/// @details Code example: An action that is active when the X key is pressed. This is just an example, in this specific case you
+///  should prefer the equivalent expression <i>thor::Action(sf::Keyboard::X, thor::Action::PressOnce)</i>.
+/// @code
+/// bool isXPressed(const sf::Event& event)
+/// {
+///     return event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::X;
+/// }
+///
+/// thor::Action xPressed = thor::eventAction(&isXPressed);
+/// @endcode
+Action THOR_API				eventAction(std::function<bool(const sf::Event&)> filter);
+
+/// @relates Action
+/// @brief Creates a custom action that operates on realtime input
+/// @param filter Functor that is called exactly once per frame, independent of any events. It shall return true when a certain realtime
+///  input state should make the action active.
+/// @details Code example: An action that is active as long as the X key is held down. This is just an example, in this specific case you
+///  should prefer the equivalent expression <i>thor::Action(sf::Keyboard::X, thor::Action::Hold)</i>.
+/// @code
+/// bool isXHeldDown()
+/// {
+///     return sf::Keyboard::isKeyPressed(sf::Keyboard::X);
+/// }
+///
+/// thor::Action xHeldDown = thor::realtimeAction(&isXHeldDown);
+/// @endcode
+Action THOR_API				realtimeAction(std::function<bool()> filter);
+
 
 /// @}
 

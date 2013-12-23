@@ -110,6 +110,7 @@ Action::Action(detail::ActionNode::CopiedPtr operation)
 	mOperation.swap(operation);
 }
 
+// TODO: Avoid copies
 Action operator|| (const Action& lhs, const Action& rhs)
 {
 	detail::ActionNode::CopiedPtr result( new detail::OrNode(lhs.mOperation, rhs.mOperation) );
@@ -125,6 +126,18 @@ Action operator&& (const Action& lhs, const Action& rhs)
 Action operator! (const Action& action)
 {
 	detail::ActionNode::CopiedPtr result( new detail::NotNode(action.mOperation) );
+	return Action(result);
+}
+
+Action eventAction(std::function<bool(const sf::Event&)> filter)
+{
+	detail::ActionNode::CopiedPtr result( new detail::CustomEventLeaf(std::move(filter)) );
+	return Action(result);
+}
+
+Action realtimeAction(std::function<bool()> filter)
+{
+	detail::ActionNode::CopiedPtr result(new detail::CustomRealtimeLeaf(std::move(filter)));
 	return Action(result);
 }
 

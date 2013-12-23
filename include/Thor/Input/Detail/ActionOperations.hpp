@@ -38,6 +38,7 @@
 #include <SFML/Window/Joystick.hpp>
 
 #include <vector>
+#include <functional>
 
 
 namespace sf
@@ -52,6 +53,7 @@ namespace thor
 {
 namespace detail
 {
+
 	class EventNode;
 
 	// Class that stores events and provides methods for lookup
@@ -195,6 +197,28 @@ namespace detail
 		public:
 			explicit					MiscEventLeaf(sf::Event::EventType eventType);
 			virtual bool				isEventActive(const sf::Event& event) const;
+	};
+
+	// Operation node class for user-defined event-based actions
+	class CustomEventLeaf : public EventNode
+	{
+		public:
+			explicit					CustomEventLeaf(std::function<bool(const sf::Event&)> filter);
+			virtual bool				isEventActive(const sf::Event& event) const;
+
+		private:
+			std::function<bool(const sf::Event&)>	mFilter;
+	};
+
+	// Operation node class for user-defined realtime-based actions
+	class CustomRealtimeLeaf : public RealtimeNode
+	{
+		public:
+			explicit					CustomRealtimeLeaf(std::function<bool()> filter);
+			virtual bool				isRealtimeActive() const;
+
+		private:
+			std::function<bool()>		mFilter;
 	};
 
 	// Logical OR operator

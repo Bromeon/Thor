@@ -27,7 +27,6 @@
 
 #include <SFML/Window/Window.hpp>
 
-#include <functional>
 #include <iterator>
 #include <algorithm>
 
@@ -262,7 +261,32 @@ namespace detail
 		return mEvent.type == event.type;
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------------
 
+
+	CustomEventLeaf::CustomEventLeaf(std::function<bool(const sf::Event&)> filter)
+	: mFilter(std::move(filter))
+	{
+	}
+
+	bool CustomEventLeaf::isEventActive(const sf::Event& event) const
+	{
+		return mFilter(event);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+
+	CustomRealtimeLeaf::CustomRealtimeLeaf(std::function<bool()> filter)
+	: mFilter(std::move(filter))
+	{
+	}
+
+	bool CustomRealtimeLeaf::isRealtimeActive() const
+	{
+		return mFilter();
+	}
+	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	
 	
