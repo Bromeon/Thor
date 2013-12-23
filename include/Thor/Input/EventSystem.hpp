@@ -61,16 +61,28 @@ class EventSystem : private aurora::NonCopyable
 		/// @details Calls all listener functions that are currently associated with @a event.
 		void						triggerEvent(const Event& event);
 	
-		/// @brief Connects an event to the specified listener.
-		/// @details Duplicates are allowed (thus, the listener is invoked multiple times).
+		/// @brief Connects an event to the specified unary listener.
+		/// @details Duplicates are allowed (thus, the listener is invoked multiple times). Use this function if your callback
+		///  should receive the event that triggered it as a parameter.
 		/// @param trigger The event you want to associate with a listener function.
-		/// @param listener The function that is invoked when a @a trigger event is fired.
+		/// @param unaryListener The function that is invoked when a @a trigger event is fired.
 		/// @return A connection which can be used to remove the listener.
 		///  If you don't need this functionality, just ignore the return value.
 		/// @warning Inside the listener functions, you are not allowed to modify the EventSystem instance that calls them.
 		///  If you want a callback to insert or remove other callbacks, delay these modifications until the callback returns.
-		Connection					connect(const EventId& trigger, std::function<void(const Event&)> listener);
-		
+		Connection					connect(const EventId& trigger, std::function<void(const Event&)> unaryListener);
+
+		/// @brief Connects an event to the specified nullary listener.
+		/// @details Duplicates are allowed (thus, the listener is invoked multiple times). Use this function if you don't care
+		///  about the event that triggered the callback, and thus don't need a parameter for it.
+		/// @param trigger The event you want to associate with a listener function.
+		/// @param nullaryListener The function that is invoked when a @a trigger event is fired.
+		/// @return A connection which can be used to remove the listener.
+		///  If you don't need this functionality, just ignore the return value.
+		/// @warning Inside the listener functions, you are not allowed to modify the EventSystem instance that calls them.
+		///  If you want a callback to insert or remove other callbacks, delay these modifications until the callback returns.
+		Connection					connect0(const EventId& trigger, std::function<void()> nullaryListener);
+
 		/// @brief Disconnects listeners associated with a given event type.
 		/// @param identifier The event type identifier of which you want to remove all connected listeners.
 		void						clearConnections(EventId identifier);

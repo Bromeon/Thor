@@ -84,16 +84,29 @@ class THOR_API CallbackTimer : public Timer
 		/// If you restart the timer, call update() before restarting; otherwise the listeners won't fire.
 		void						update();
 		
-		/// @brief Registers a function which will be called when the time reaches zero.
-		/// @details Make sure to call update() each frame to invoke potential listeners.
-		/// @param listener The function you want to associate with the timer expiration.
+		/// @brief Registers a unary function which will be called when the time reaches zero.
+		/// @details Make sure to call update() each frame to invoke potential listeners. Use this function if your callback
+		///  should get the timer as a parameter.
+		/// @param unaryListener The function you want to associate with the timer expiration. The first parameter is a reference
+		///  to the CallbackTimer instance that just expired.
 		/// @return %Connection that can be used to disconnect the listener.
-		Connection					connect(std::function<void(CallbackTimer&)> listener);
+		/// @warning Inside a callback, you may not modify the connections of the timer that invokes it. Insertion and removal of
+		///  callbacks need to be postponed after the update() call.
+		Connection					connect(std::function<void(CallbackTimer&)> unaryListener);
 			
+		/// @brief Registers a nullary function which will be called when the time reaches zero.
+		/// @details Make sure to call update() each frame to invoke potential listeners. Use this function if you don't care
+		///  about the timer that fired the callback, and thus don't need a parameter for it in your callback.
+		/// @param nullaryListener The function you want to associate with the timer expiration.
+		/// @return %Connection that can be used to disconnect the listener.
+		/// @warning Inside a callback, you may not modify the connections of the timer that invokes it. Insertion and removal of
+		///  callbacks need to be postponed after the update() call.
+		Connection					connect0(std::function<void()> nullaryListener);
+
 		/// @brief Removes all currently associated timer listeners.
 		/// @details This also invalidates all connections to those listeners.
 		void						clearConnections();
-	
+
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types

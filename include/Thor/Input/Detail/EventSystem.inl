@@ -42,9 +42,15 @@ void EventSystem<Event, EventId>::triggerEvent(const Event& event)
 }
 
 template <typename Event, typename EventId>
-Connection EventSystem<Event, EventId>::connect(const EventId& trigger, std::function<void(const Event&)> listener)
+Connection EventSystem<Event, EventId>::connect(const EventId& trigger, std::function<void(const Event&)> unaryListener)
 {
-	return mListeners.add(trigger, std::move(listener));
+	return mListeners.add(trigger, std::move(unaryListener));
+}
+
+template <typename Event, typename EventId>
+Connection EventSystem<Event, EventId>::connect0(const EventId& trigger, std::function<void()> nullaryListener)
+{
+	return connect(trigger, std::bind(std::move(nullaryListener)));
 }
 
 template <typename Event, typename EventId>
