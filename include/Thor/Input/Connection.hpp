@@ -98,16 +98,28 @@ class THOR_API Connection
 /// @details In contrast to thor::Connection, the thor::ScopedConnection class disconnects its referenced listener
 ///  in the destructor. You can use ScopedConnection for temporary listeners that aren't needed after the end of scope.
 ///  Alternatively, you can link a connection to the lifetime of another object by making it a member variable.
-///  @n ScopedConnection is noncopyable.
+///  @n ScopedConnection is noncopyable, but it is movable.
 class THOR_API ScopedConnection : private sf::NonCopyable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
+		/// @brief Default constructor
+		/// @details Initializes an invalid connection.
+									ScopedConnection();
+
 		/// @brief Constructor: Initializes the instance with a given %Connection.
 		/// @details Scoped connections must be initialized in the constructor. You cannot assign a new value later.
 		/// @param connection Connection which is copied. It may be invalid.
 		explicit					ScopedConnection(const Connection& connection);
+
+		/// @brief Move constructor
+		/// @details Invalidates @a source such that it no longer disconnects the connection upon destruction.
+									ScopedConnection(ScopedConnection&& source);
+
+		/// @brief Move assignment operator
+		/// @details Invalidates @a source such that it no longer disconnects the connection upon destruction.
+		ScopedConnection&			operator= (ScopedConnection&& source);
 				
 		/// @brief Destructor: Disconnects the event-listener connection.
 		/// @details In case the instance isn't connected, nothing happens.

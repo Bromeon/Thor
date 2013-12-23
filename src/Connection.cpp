@@ -62,9 +62,28 @@ void Connection::disconnect()
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
+ScopedConnection::ScopedConnection()
+: mConnection()
+{
+}
+
 ScopedConnection::ScopedConnection(const Connection& connection)
 : mConnection(connection)
 {
+}
+
+ScopedConnection::ScopedConnection(ScopedConnection&& source)
+: mConnection(source.mConnection)
+{
+	source.mConnection.invalidate();
+}
+
+ScopedConnection& ScopedConnection::operator= (ScopedConnection&& source)
+{
+	mConnection = source.mConnection;
+	source.mConnection.invalidate();
+
+	return *this;
 }
 
 ScopedConnection::~ScopedConnection()
