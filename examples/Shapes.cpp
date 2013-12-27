@@ -26,17 +26,14 @@ int main()
 	circle.setPosition(40.f, 340.f);
 
 	// Create a few predefined shapes
-	thor::ConcaveShape pie     = thor::Shapes::pie(60.f, 135.f, sf::Color::Green);
-	sf::ConvexShape    polygon = thor::Shapes::polygon(7, 60.f, sf::Color::Transparent, 3.f, sf::Color(175, 40, 250));
-	sf::ConvexShape    star    = thor::Shapes::star(7, 40.f, 60.f, sf::Color(255, 225, 10), 5.f, sf::Color(250, 190, 20));
+	sf::ConvexShape polygon = thor::Shapes::polygon(7, 60.f, sf::Color::Transparent, 3.f, sf::Color(175, 40, 250));
+	sf::ConvexShape star = thor::Shapes::star(7, 40.f, 60.f, sf::Color(255, 225, 10), 5.f, sf::Color(250, 190, 20));
+	sf::ConvexShape roundedRect = thor::Shapes::roundedRect(sf::Vector2f(200.f, 100.f), 30.f, sf::Color(200, 190, 120), 3.f, sf::Color(150, 140, 80));
 
 	// Move star and polygon shapes
-	pie.move(100.f, 400.f);
-	star.move(500.f, 100.f);
-	polygon.move(500.f, 100.f);
-
-	// Create an arrow pointing towards the mouse cursor
-	thor::Arrow arrow(sf::Vector2f(window.getSize()) / 2.f, sf::Vector2f(), sf::Color(0, 150, 200));
+	star.move(480.f, 120.f);
+	polygon.move(480.f, 120.f);
+	roundedRect.move(380.f, 350.f);
 
 	// Create clock to measure frame time
 	sf::Clock frameClock;
@@ -53,10 +50,6 @@ int main()
 				case sf::Event::Closed:
 				case sf::Event::KeyPressed:
 					return 0;
-
-				case sf::Event::MouseMoved:
-					arrow.setDirection(event.mouseMove.x - window.getSize().x / 2.f, event.mouseMove.y - window.getSize().y / 2.f);
-					break;
 			}
 		}
 
@@ -69,10 +62,9 @@ int main()
 		window.clear();
 		window.draw(concaveShape);
 		window.draw(circle);
-		window.draw(pie);
 		window.draw(polygon);
 		window.draw(star);
-		window.draw(arrow);
+		window.draw(roundedRect);
 		window.display();	
 	}
 }

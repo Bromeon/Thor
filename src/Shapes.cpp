@@ -24,7 +24,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Shapes/Shapes.hpp>
-#include <Thor/Shapes/ConcaveShape.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 
 #include <SFML/Graphics/ConvexShape.hpp>
@@ -110,8 +109,8 @@ namespace Shapes
 		shape.setOutlineThickness(outlineThickness);
 		shape.setOutlineColor(outlineColor);
 
-		sf::Vector2f	currentCorner(size.x - cornerRadius, size.y - cornerRadius);
-		PolarVector2f	radialVec(cornerRadius, 0.f);
+		sf::Vector2f currentCorner(size.x - cornerRadius, size.y - cornerRadius);
+		PolarVector2f radialVec(cornerRadius, 0.f);
 
 		const unsigned int nbSegmentsPerCorner = 20;
 		const float difference = 90.f / nbSegmentsPerCorner;
@@ -171,8 +170,8 @@ namespace Shapes
 		assert(outlineThickness >= 0.f);
 
 		// Calculate points of the inner, regular polygon and the outer star points
-		PolarVector2f      inner(innerRadius, 0.f);
-		PolarVector2f      outer(outerRadius, 0.f);
+		PolarVector2f inner(innerRadius, 0.f);
+		PolarVector2f outer(outerRadius, 0.f);
 	
 		sf::ConvexShape shape;
 		shape.setFillColor(fillColor);
@@ -189,37 +188,6 @@ namespace Shapes
 			addPoint(shape, outer);
 		}
 
-		return shape;
-	}
-
-	ConcaveShape pie(float radius, float filledAngle, const sf::Color& fillColor,
-		float outlineThickness, const sf::Color& outlineColor)
-	{
-		assert(radius > 0.f);
-	
-		ConcaveShape shape;
-		shape.setFillColor(fillColor);
-		shape.setOutlineThickness(outlineThickness);
-		shape.setOutlineColor(outlineColor);
-	
-		filledAngle = std::fmod(filledAngle, 360.f);
-
-		// nbTotalPoints = the points that would be there at a full circle; nbActualPoints = the actual points
-		const unsigned int nbTotalPoints = 40;
-		const unsigned int nbActualPoints = static_cast<unsigned int>(filledAngle / 360.f * nbTotalPoints);
-
-		// Add center point, unless the pie is full
-		if (filledAngle != 0.f)
-			addPoint(shape, sf::Vector2f(0.f, 0.f));
-	
-		PolarVector2f vector(radius, 0.f);
-		for (unsigned int i = 0; i <= nbActualPoints; ++i)
-		{
-			vector.phi = 360.f * i / nbTotalPoints;
-		
-			addPoint(shape, vector);
-		}
-	
 		return shape;
 	}
 

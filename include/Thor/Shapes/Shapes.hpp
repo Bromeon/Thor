@@ -34,6 +34,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Color.hpp>
 
+
 namespace sf
 {
 
@@ -45,8 +46,6 @@ namespace sf
 
 namespace thor
 {
-
-class ConcaveShape;
 
 /// @addtogroup Shapes
 /// @{
@@ -99,16 +98,6 @@ namespace Shapes
 	/// @return A convex shape representing the star.
 	sf::ConvexShape THOR_API	star(unsigned int nbStarPoints, float innerRadius, float outerRadius, const sf::Color& fillColor,
 									float outlineThickness = 0.f, const sf::Color& outlineColor = sf::Color());
-
-	/// @brief Creates a pie (a sector of a circle).
-	/// @param radius Radius of the circle.
-	/// @param filledAngle The part of the circle which is filled (angle in degrees). The value doesn't have to be inside [0,360[.
-	/// @param fillColor The color which is used to fill the pie.
-	/// @param outlineThickness The thickness of the outline.
-	/// @param outlineColor The color used for the outline.
-	/// @return A concave shape representing the pie.
-	ConcaveShape THOR_API		pie(float radius, float filledAngle, const sf::Color& fillColor, float outlineThickness = 0.f,
-									const sf::Color& outlineColor = sf::Color());
 
 } // namespace Shapes
 
