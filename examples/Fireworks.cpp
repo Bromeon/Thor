@@ -1,12 +1,10 @@
 
 #include <SFML/Graphics.hpp>
-
 #include <Thor/Particles/ParticleSystem.hpp>
 #include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
-
 #include <array>
 #include <memory>
 
@@ -130,7 +128,7 @@ int main()
 	});
 
 	// Connect timer to a lambda expression that creates an explosion at expiration
-	explosionTimer.connect( [&system] (thor::CallbackTimer&)
+	explosionTimer.connect0( [&system] ()
 	{
 		// Compute random position on screen
 		sf::Vector2f position(thor::randomDev(400.f, 300.f), thor::randomDev(300.f, 200.f));

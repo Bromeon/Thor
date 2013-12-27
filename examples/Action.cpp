@@ -17,7 +17,7 @@ enum MyAction
 // Callback function for Resize, Shoot (mouse click) and Run (joystick axis) actions
 void onResize(thor::ActionContext<MyAction> context);
 void onShoot(thor::ActionContext<MyAction> context);
-void onRun(thor::ActionContext<MyAction> context);
+void onRun();
 
 int main()
 {
@@ -47,10 +47,11 @@ int main()
 	map[Resize] = Action(sf::Event::Resized);
 	
 	// Create thor::EventSystem to connect Resize and Shoot actions with callbacks
+	// Use connect0() instead of connect() when callback has no parameter
 	thor::ActionMap<MyAction>::CallbackSystem system;
 	system.connect(Resize, &onResize);
 	system.connect(Shoot, &onShoot);
-	system.connect(Run, &onRun);
+	system.connect0(Run, &onRun);
 
 	// Main loop
 	for (;;)
@@ -89,7 +90,7 @@ void onShoot(thor::ActionContext<MyAction> context)
 	std::cout << "Shoot: " << thor::toString(mousePosition) << std::endl;
 }
 
-void onRun(thor::ActionContext<MyAction>)
+void onRun()
 {
 	// Since no event is associated with a joystick axis action, we access the global sf::Joystick
 	float axisPosition = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
