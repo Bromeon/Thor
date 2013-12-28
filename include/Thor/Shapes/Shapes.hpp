@@ -61,7 +61,9 @@ namespace Shapes
 	///  specific information (such as a circle radius) during this conversion.
 	sf::ConvexShape THOR_API	toConvexShape(const sf::Shape& shape);
 
-	/// @brief Creates a rectangle with radiused corners.
+	/// @brief Creates a line shape.
+	/// @details This is a simple function that returns directly a shape. If you want a more flexible line implementation that can also be
+	///  changed after creation, look at the thor::Arrow class and its Line style.
 	/// @param direction Line direction.
 	/// @param thickness Line thickness (> 0.f).
 	/// @param color Color of the line.

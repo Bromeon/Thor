@@ -48,6 +48,18 @@ namespace thor
 class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public types
+	public:
+		/// @brief Determines whether the arrow has a triangle on his endpoint
+		/// 
+		enum Style
+		{
+			Line,		///< Straight line without any triangles
+			Forward,	///< Normal unidirectional arrow
+		};
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public static member functions
 	public:
 		/// @brief Specifies the zero length tolerance.
@@ -99,6 +111,14 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		/// 
 		sf::Color					getColor() const;
 
+		/// @brief sets the arrow's visual style (Arrow::Forward by default).
+		///
+		void						setStyle(Style style);
+
+		/// @brief Returns the arrow's visual style.
+		///
+		Style						getStyle() const;
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
@@ -116,6 +136,7 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		float						mLength;
 		sf::Vector2f				mDirection;
 		sf::Color					mColor;
+		Style						mStyle;
 	
 		mutable bool				mNeedsShapeUpdate;
 		mutable sf::ConvexShape		mLine;

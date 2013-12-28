@@ -45,6 +45,7 @@ Arrow::Arrow(sf::Vector2f position, sf::Vector2f direction, const sf::Color& col
 , mLength(length(direction))
 , mDirection(direction)
 , mColor(color)
+, mStyle(Forward)
 , mNeedsShapeUpdate(true)
 , mLine()
 , mTriangle()
@@ -96,9 +97,22 @@ sf::Color Arrow::getColor() const
 	return mColor;
 }
 
+void Arrow::setStyle(Style style)
+{
+	mStyle = style;
+}
+
+Arrow::Style Arrow::getStyle() const
+{
+	return mStyle;
+}
+
 float Arrow::getTriangleHeight() const
 {
-	return 4.f * mThickness;
+	if (mStyle == Line)
+		return 0.f;
+	else
+		return 4.f * mThickness;
 }
 
 void Arrow::adaptLine() const
@@ -129,8 +143,8 @@ void Arrow::adaptLine() const
 
 void Arrow::adaptTriangle() const
 {
-	// Don't draw triangle when arrow is too short
-	if (mLength < zeroVectorTolerance)
+	// Don't draw triangle when arrow is too short or when arrow is actually a line
+	if (mLength < zeroVectorTolerance || mStyle == Line)
 	{
 		mTriangle = sf::ConvexShape();
 	}
