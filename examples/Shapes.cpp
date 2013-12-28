@@ -1,5 +1,6 @@
 
-#include <Thor/Shapes.hpp>
+#include <Thor/Shapes/ConcaveShape.hpp>
+#include <Thor/Shapes/Shapes.hpp>
 #include <SFML/Graphics.hpp>
 
 int main()

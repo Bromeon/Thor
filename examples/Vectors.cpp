@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
-
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Shapes/Arrow.hpp>
-
 #include <array>
 
 // Computes a vector from the center of the window to the mouse position

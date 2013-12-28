@@ -6,9 +6,7 @@
 #include <iterator>
 #include <vector>
 
-
-// Typedefs for simplicity. Instead of thor::Vertex, you may also use a class derived from
-// thor::Vertex to store more information than just the position. Just replace the types.
+// Typedefs for simplicity. You can also use a different type than sf::Vector2f if you fulfill some requirements (see doc)
 typedef std::vector<sf::Vector2f>					VertexContainer;
 typedef std::vector<thor::Triangle<sf::Vector2f>>	TriangleContainer;
 
@@ -24,8 +22,8 @@ int main()
 	window.setFramerateLimit(20);
 
 	// Create containers in which we store the vertices and the computed triangles
-	VertexContainer		vertices;
-	TriangleContainer	triangles;
+	VertexContainer vertices;
+	TriangleContainer triangles;
 	
 	sf::Font font;
 	if (!font.loadFromFile("Media/sansation.ttf"))
@@ -101,7 +99,7 @@ bool removeVertex(VertexContainer& vertices, sf::Vector2f position)
 // Handles clicks on a vertex. Returns true if a new triangulation is required.
 bool handleVertexClick(sf::Event::MouseButtonEvent mouseEvent, VertexContainer& vertices)
 {
-	sf::Vector2f clickPos(static_cast<float>(mouseEvent.x), static_cast<float>(mouseEvent.y));
+	sf::Vector2f clickPos(sf::Vector2i(mouseEvent.x, mouseEvent.y));
 	
 	// Add point when left-clicking
 	if (mouseEvent.button == sf::Mouse::Left)
