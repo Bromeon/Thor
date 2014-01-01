@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -26,112 +26,31 @@
 namespace aurora
 {
 
-template <class B, typename R>
-SingleDispatcher<B, R>::SingleDispatcher(bool supportDerivedToBase)
+template <class B, typename R, typename Traits>
+SingleDispatcher<B, R, Traits>::SingleDispatcher()
 : mMap()
-, mCachedMap()
-, mNeedsCacheUpdate(false)
-, mDerivedToBase(supportDerivedToBase)
 {
 }
 
-template <class B, typename R>
-template <class D>
-void SingleDispatcher<B, R>::add(R (*globalFunction)( AURORA_REPLICATE(B,D) ))
+template <class B, typename R, typename Traits>
+template <typename Id, typename Fn>
+void SingleDispatcher<B, R, Traits>::bind(Id identifier, Fn function)
 {
-	// Without derived-to-base conversions, we can directly edit the cached map and save memory
-	registerFunction(mDerivedToBase ? mMap : mCachedMap, typeid(D), 
-		Value(new detail::UnaryGlobalFunction<B, AURORA_REPLICATE(B,D), R>(globalFunction)));
+	mMap[Traits::keyFromId(identifier)] = Traits::template trampoline1<Id>(function);
 }
 
-template <class B, typename R>
-template <class D, class C>
-void SingleDispatcher<B, R>::add(R (C::*memberFunction)( AURORA_REPLICATE(B,D) ), C& object)
+template <class B, typename R, typename Traits>
+R SingleDispatcher<B, R, Traits>::call(B arg) const
 {
-	registerFunction(mDerivedToBase ? mMap : mCachedMap, typeid(D),
-		Value(new detail::UnaryMemberFunction<B, AURORA_REPLICATE(B,D), R, C>(memberFunction, object)));
-}
-
-template <class B, typename R>
-template <class D, typename Fn>
-void SingleDispatcher<B, R>::add(const Fn& functionObject)
-{
-	registerFunction(mDerivedToBase ? mMap : mCachedMap, typeid(D),
-		Value(new detail::UnaryGlobalFunction<B, AURORA_REPLICATE(B,D), R, Fn>(functionObject)));
-}
-
-template <class B, typename R>
-R SingleDispatcher<B, R>::call(B arg) const
-{
-	ensureCacheUpdate();
-
-	std::type_index key = detail::derefTypeid(arg);
-	typename FnMap::const_iterator directDispatchItr = findFunction(key, true);
-
-	// If function is directly found, call it
-	if (directDispatchItr != mCachedMap.end())
-		return directDispatchItr->value->call(arg);
-
-	// If derived-to-base conversions are enabled, look for base class functions to dispatch
-	if (mDerivedToBase)
-	{
-		std::vector<std::type_index> bases;
-		detail::getRttiBaseClasses(key, bases);
-
-		// Iterate through all direct and indirect base classes
-		AURORA_CITR_FOREACH(baseItr, bases)
-		{
-			typename FnMap::const_iterator dispatchItr = findFunction(*baseItr);
-
-			// Found match: Add entry to cache, call function
-			if (dispatchItr != mMap.end())
-			{
-				// We are sure the key isn't stored yet, otherwise the direct lookup would have found it
-				registerFunction(mCachedMap, key, dispatchItr->value);
-				return dispatchItr->value->call(arg);
-			}
-		}
-	}
+	Key key = Traits::keyFromBase(arg);
 
 	// If no corresponding class (or base class) has been found, throw exception
-	throw FunctionCallException(std::string("SingleDispatcher::Call() - function with parameter \"") + key.name() +  "\" not registered");
-}
+	auto itr = mMap.find(key);
+	if (itr == mMap.end())
+		throw FunctionCallException(std::string("SingleDispatcher::call() - function with parameter \"") + Traits::name(key) +  "\" not registered");
 
-template <class B, typename R>
-void SingleDispatcher<B, R>::registerFunction(FnMap& fnMap, std::type_index key, Value value) const
-{
-	// If we update the normal map, the cache becomes invalid
-	if (&fnMap == &mMap)
-		mNeedsCacheUpdate = true;
-
-	// Create pair of typeids and function
-	Pair pair(key, value);
-
-	// If this assertion fails, you are trying to register an already registered function.
-	assert(!std::binary_search(fnMap.begin(), fnMap.end(), pair));
-
-	fnMap.push_back(pair);
-	std::sort(fnMap.begin(), fnMap.end());
-}
-
-template <class B, typename R>
-typename SingleDispatcher<B, R>::FnMap::const_iterator SingleDispatcher<B, R>::findFunction(std::type_index key, bool useCache) const
-{
-	const FnMap& fnMap = useCache ? mCachedMap : mMap;
-
-	// Note: We only compare keys anyway, that's why we can pass a null pointer as value	
-	return detail::binarySearch(fnMap.begin(), fnMap.end(), Pair(key, Value()));
-}
-
-template <class B, typename R>
-void SingleDispatcher<B, R>::ensureCacheUpdate() const
-{
-	// If map has been changed, apply changes to cache
-	if (mNeedsCacheUpdate)
-	{
-		mCachedMap = mMap;
-		mNeedsCacheUpdate = false;
-	}
+	// Otherwise, call dispatched function
+	return itr->second(arg);
 }
 
 } // namespace aurora

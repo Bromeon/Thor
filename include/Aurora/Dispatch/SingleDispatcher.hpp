@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -30,19 +30,15 @@
 #define AURORA_SINGLEDISPATCHER_HPP
 
 #include <Aurora/Dispatch/Rtti.hpp>
-#include <Aurora/Dispatch/Detail/UnaryFunction.hpp>
-#include <Aurora/Dispatch/Detail/AssociativeHelpers.hpp>
-#include <Aurora/SmartPtr/CopiedPtr.hpp>
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
-#include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Config.hpp>
 
-#include <vector>
+#include <unordered_map>
+#include <functional>
 #include <algorithm>
 #include <cassert>
-#include <typeindex>
 
 
 namespace aurora
@@ -61,98 +57,87 @@ namespace aurora
 ///  If @a B is a pointer or reference to const, the dispatched functions cannot modify their arguments. In this case,
 ///  the dispatched functions shall have arguments of type pointer or reference to const, too.
 /// @tparam R Return type of the dispatched functions.
-template <class B, typename R = void>
+/// @tparam Traits Traits class to customize the usage of the dispatcher. To define your own traits, you can (but don't have to)
+///  inherit the class aurora::DispatchTraits<K>, where K is your key. In general, the @a Traits class must contain the following members:
+/// @code 
+/// struct Traits
+/// {
+///	    // The type that is used to differentiate objects. For RTTI class hierarchies, std::type_index is a good choice 
+///	    // -- but you're free to choose anything, such as an enum or a string. The requirements are that Key can be used 
+///	    // as a key in std::unordered_map, i.e. it must support a std::hash<Key> specialization and operator==.
+///	    typedef K Key;
+///	    
+///	    // A function that returns the corresponding key (such as std::type_index) from a type identifier
+///	    // (such as aurora::Type<T>). Often, key and type identifier are the same.
+///	    static Key keyFromId(Id id);
+///	    
+///	    // Given a function argument base, this static function extracts the key from it. B corresponds to the template parameter
+///	    // specified at SingleDispatcher, that is, it is a reference or pointer.
+///	    static Key keyFromBase(B base);
+///	    
+///	    // trampoline1() takes a function that is passed to SingleDispatcher::bind() and modifies it in order to fit the common
+///	    // R(B) signature. For example, this is the place to insert downcasts.
+///	    // The first template parameter Id is required, as it will be explicitly specified when trampoline1() is called.
+///	     template <typename Id, typename Fn>
+///	     static std::function<R(B)> trampoline1(Fn f);
+///	    
+///	    // Optional function that returns a string representation of @a key for debugging.
+///	    static const char* name(Key k);
+/// };
+/// @endcode
+///
+/// Usage example:
+/// @code
+/// // Example class hierarchy
+/// class Base { public: virtual ~Base() {} };
+/// class Derived1 : public Base {};
+/// class Derived2 : public Base {};
+///
+/// // Free functions for the derived types
+/// void func1(Derived1* d);
+/// void func2(Derived2* d);
+///
+/// // Create dispatcher and register functions
+/// aurora::SingleDispatcher<Base*> dispatcher;
+/// dispatcher.bind(aurora::Type<Derived1>(), &func1);
+/// dispatcher.bind(aurora::Type<Derived2>(), &func2);
+///
+/// // Invoke functions on base class pointer
+/// Base* ptr = new Derived1;
+/// dispatcher.call(ptr); // Invokes void func1(Derived1* d);
+/// delete ptr;
+/// @endcode
+template <class B, typename R = void, class Traits = RttiDispatchTraits<B, R>>
 class SingleDispatcher : private NonCopyable
-{
+{	 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Static assertions
 
-	// Make sure that B is either T* or T&, where T is a polymorphic base class (containing virtual functions).
-	static_assert(
-		std::is_pointer<B>::value && std::is_polymorphic< typename std::remove_pointer<B>::type >::value
-	 || std::is_lvalue_reference<B>::value && std::is_polymorphic< typename std::remove_reference<B>::type >::value,
-		"Template argument B must be a pointer or reference to a polymorphic base class.");
+	// Make sure that B is either T* or T&
+	static_assert(std::is_pointer<B>::value || std::is_lvalue_reference<B>::value,
+		"Template argument B must be a pointer or reference.");
 
 	 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Default constructor
-		/// @param supportDerivedToBase Specifies whether derived-to-base conversions are supported. If no function for a derived
-		///  class is found, the dispatcher will look for functions taking base class parameters and upcast the arguments, if
-		///  possible. You need to register the class hierarchy using the macros in Rtti.hpp. On average, calls with
-		///  derived-to-base conversions are as fast as direct matches, but this feature requires a small memory overhead.
-		explicit					SingleDispatcher(bool supportDerivedToBase = false);
+									SingleDispatcher();
 
-		/// @brief Registers a global function.
-		/// @tparam D Type of the derived class. Must be explicitly specified.
-		/// @param globalFunction Pointer to function to register.
-		/// @details Note that # is a placeholder for either & or *. The type D# has the same attributes as B
-		/// (pointer, reference, const-qualification): For instance, <b>B=const Base&</b> implies <b>D#=const Derived1&</b>.
-		/// @n Example (class hierarchy and dispatcher declaration missing):
-		/// @code 
-		/// // Overloaded global or namespace-level functions
-		/// void func(Derived1&);
-		/// void func(Derived2&);
-		///
-		/// // Register functions
-		/// dispatcher.add<Derived1>(&func);
-		/// dispatcher.add<Derived2>(&func);
-		/// @endcode
-		/// @pre A function taking an argument of dynamic type D is not registered yet.
-		template <class D>
-		void						add(R (*globalFunction)( AURORA_REPLICATE(B,D) ));
+		/// @brief Registers a function bound to a specific key.
+		/// @tparam Id %Type that identifies the class. By default, this is aurora::Type<D>, where D is the derived class.
+		///  Can be deduced from the argument.
+		/// @tparam Fn %Type of the function. Can be deduced from the argument.
+		/// @param identifier Value that identifies the object. The key, which is mapped to the function, is computed from the
+		///  identifier through Traits::keyFromId(identifier).
+		/// @param functionObject Function to register and associate with the given identifier.
+		template <typename Id, typename Fn>
+		void						bind(Id identifier, Fn function);
 
-		/// @brief Registers a member function.
-		/// @tparam D Type of the derived class. Must be explicitly specified.
-		/// @tparam C Class that holds the member function.
-		/// @param memberFunction Pointer to member function to register.
-		/// @param object Reference to the object on which the member function is invoked.
-		/// @details Note that # is a placeholder for either & or *. The type D# has the same attributes as B
-		/// (pointer, reference, const-qualification): For instance, <b>B=const Base&</b> implies <b>D#=const Derived1&</b>.
-		/// @n Example (class hierarchy and dispatcher declaration missing):
-		/// @code 
-		/// // Class with member functions
-		/// struct MyClass
-		/// {
-		///     void memFunc(Derived1&);
-		///     void memFunc(Derived2&);
-		/// } obj;
-		///
-		/// // Register overloaded functions
-		/// dispatcher.add<Derived1>(&MyClass::memFunc, obj);
-		/// dispatcher.add<Derived2>(&MyClass::memFunc, obj);
-		/// @endcode
-		/// @pre A function taking an argument of dynamic type D is not registered yet.
-		template <class D, class C>
-		void						add(R (C::*memberFunction)( AURORA_REPLICATE(B,D) ), C& object);
-
-		/// @brief Registers a function object.
-		/// @tparam D Type of the derived class. Must be explicitly specified.
-		/// @tparam Fn Type of the function object. Can be deduced from the argument.
-		/// @param functionObject Functor to register. 
-		/// @details Incomplete example using a function object (you can also have separate functors for each function):
-		/// @code
-		/// // Class for function objects
-		/// struct Functor
-		/// {
-		/// 	void operator() (Derived1&);
-		/// 	void operator() (Derived2&);
-		/// };
-		///
-		/// // Register functor
-		/// dispatcher.add<Derived1>(Functor());
-		/// dispatcher.add<Derived2>(Functor());
-		/// @endcode
-		/// @pre A function taking an argument of dynamic type D is not registered yet.
-		template <class D, typename Fn>
-		void						add(const Fn& functionObject);
-
-		/// @brief Dispatches the dynamic type of @a arg and invokes the corresponding function.
-		/// @details Note that the argument's dynamic type must match @b exactly with the registered type, unless you enabled
-		///  derived-to-base conversions in the constructor and specified the class hierarchy. In the latter case, the function
-		///  with the best match is chosen for overload resolution.
-		/// @param arg Function argument as a reference or pointer to the base class.
+		/// @brief Dispatches the key of @a arg and invokes the corresponding function.
+		/// @details Traits::keyFromBase(arg) is invoked to determine the key of the passed argument. The function bound to that
+		///  key is then looked up in the map and invoked.
+		/// @param arg Function argument as a reference or pointer.
 		/// @return The return value of the dispatched function, if any.
 		/// @throw FunctionCallException when no corresponding function is found.
 		R							call(B arg) const;
@@ -161,55 +146,16 @@ class SingleDispatcher : private NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		typedef std::type_index									Key;
-		typedef CopiedPtr< detail::UnaryFunctionBase<B, R> >	Value;
-		typedef detail::KeyValuePair<Key, Value>				Pair;
-		typedef std::vector<Pair>								FnMap;
-
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Private member functions
-	private:
-		// Registers the type-id key with its associated function value
-		void							registerFunction(FnMap& fnMap, std::type_index key, Value value) const;
-
-		// Finds the key in the map. Returns end() if not found.
-		typename FnMap::const_iterator	findFunction(std::type_index key, bool useCache = false) const;
-
-		// Make sure the cached map is updated
-		void							ensureCacheUpdate() const;
+		typedef typename Traits::Key					Key;
+		typedef std::function<R(B)>						BaseFunction;
+		typedef std::unordered_map<Key, BaseFunction>	FnMap;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
 		FnMap						mMap;
-		mutable FnMap				mCachedMap;
-		mutable bool				mNeedsCacheUpdate;
-		bool						mDerivedToBase;
 };
-
-/// @class SingleDispatcher
-/// @code
-/// // Example class hierarchy
-/// class Base { public: virtual ~Base() {} };
-/// class Derived1 : public Base {};
-/// class Derived2 : public Base {};
-///
-/// // Free functions for the derived types
-/// void func(Derived1* d);
-/// void func(Derived2* d);
-///
-/// // Create dispatcher and register functions
-/// aurora::SingleDispatcher<Base*> dispatcher;
-/// dispatcher.add<Derived1>(&func);
-/// dispatcher.add<Derived2>(&func);
-///
-/// // Invoke functions on base class pointer
-/// Base* ptr = new Derived1;
-/// dispatcher.Call(ptr); // Invokes void func(Derived1* d);
-/// delete ptr;
-/// @endcode
 
 /// @}
 

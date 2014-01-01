@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -30,6 +30,7 @@
 #define AURORA_MODULE_SMARTPTR_HPP
 
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
+#include <Aurora/SmartPtr/Factories.hpp>
 #include <Aurora/SmartPtr/PtrFunctors.hpp>
 
 #endif // AURORA_MODULE_SMARTPTR_HPP

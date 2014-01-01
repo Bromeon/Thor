@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -40,4 +40,7 @@
 /// @brief Smart pointers with value semantics supporting polymorphic deep copies.
 
 /// @defgroup Tools Tools
-/// @brief Reusable C++ utility features, such as noncopyable base classes, foreach macros or a std::type_info wrapper.
+/// @brief C++ utility and idioms, such as noncopyable base classes, foreach macros, safe bool idiom or SFINAE.
+
+/// @defgroup Range Range
+/// @brief Type-erased ranges, a generic abstraction from iterator interfaces.

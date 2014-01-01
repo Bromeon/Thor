@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -30,7 +30,11 @@
 /// @brief Manual enhancements of Runtime Type Information
 
 #include <Aurora/Dispatch/Detail/RttiImpl.hpp>
+#include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Config.hpp>
+
+#include <typeindex>
+#include <functional>
 
 
 namespace aurora
@@ -67,6 +71,111 @@ namespace aurora
 /// @see AURORA_RTTI_BASE
 /// @hideinitializer
 #define AURORA_RTTI_DERIVED(DerivedClass)	.derived(typeid(DerivedClass))
+
+
+/// @brief Helper base class to implement custom traits for dispatchers
+/// @details This class provides some default type definitions and static member functions. Inherit it
+///  to customize and extend the traits -- for example, you have to define keyFromBase().
+/// @tparam K The key type that identifies the objects to dispatch.
+/// @see SingleDispatcher
+template <typename K>
+struct DispatchTraits
+{
+	/// @brief Key to differentiate objects
+	/// 
+	typedef K Key;
+
+	/// @brief Maps a key to itself (assuming key and type identifier are the same)
+	///
+	static Key keyFromId(Key k)
+	{
+		return k;
+	}
+
+	/// @brief Maps a function to itself (no trampoline needed)
+	/// 
+	template <typename UnusedId, typename Fn>
+	static Fn trampoline1(Fn f)
+	{
+		return f;
+	}
+
+	/// @brief Maps a function to itself (no trampoline needed)
+	/// 
+	template <typename UnusedId1, typename UnusedId2, typename Fn>
+	static Fn trampoline2(Fn f)
+	{
+		return f;
+	}
+
+	/// @brief Returns a string representation of the key, for debugging
+	/// 
+	static const char* name(Key k)
+	{
+		return "unknown";
+	}
+};
+
+/// @brief Identifies a class using RTTI.
+/// @details Default key for SingleDispatcher and DoubleDispatcher. With it, classes are identified using the compiler's
+///  RTTI capabilities (in particular, the @a typeid operator).
+template <class B, typename R>
+struct RttiDispatchTraits
+{
+	static_assert(std::is_polymorphic<typename std::remove_pointer<typename std::remove_reference<B>::type>::type>::value, 
+		"B must be a pointer or reference to a polymorphic base class.");
+
+	/// @brief Key type.
+	/// 
+	typedef std::type_index Key;
+
+	/// @brief Function that takes an object to identify and returns the corresponding std::type_index object.
+	/// 
+	static Key keyFromBase(B m)
+	{
+		return detail::derefTypeid(m);
+	}
+	
+	/// @brief Function that takes static type information and returns a type-erased std::type_index object.
+	/// 
+	template <typename T>
+	static Key keyFromId(Type<T> id)
+	{
+		return typeid(T);
+	}
+
+	/// @brief Wraps a function such that the argument is downcast before being passed
+	/// 
+	template <typename Id, typename Fn>
+	static std::function<R(B)> trampoline1(Fn f)
+	{
+		return [f] (B arg) mutable -> R
+		{
+			typedef AURORA_REPLICATE(B, typename Id::type) Derived;
+			return f(static_cast<Derived>(arg));
+		};
+	}
+
+	/// @brief Wraps a function such that both arguments are downcast before being passed
+	/// 
+	template <typename Id1, typename Id2, typename Fn>
+	static std::function<R(B, B)> trampoline2(Fn f)
+	{
+		return [f] (B arg1, B arg2) mutable -> R
+		{
+			typedef AURORA_REPLICATE(B, typename Id1::type) Derived1;
+			typedef AURORA_REPLICATE(B, typename Id2::type) Derived2;
+			return f(static_cast<Derived1>(arg1), static_cast<Derived2>(arg2));
+		};
+	}
+
+	/// @brief Returns a string representation of the key, for debugging
+	/// 
+	static const char* name(Key k)
+	{
+		return k.name();
+	}
+};
 
 /// @}
 
