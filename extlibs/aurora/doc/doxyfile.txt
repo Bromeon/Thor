@@ -676,7 +676,8 @@ RECURSIVE              = YES
 
 EXCLUDE                = ../include/Aurora/Tools/Detail \
                          ../include/Aurora/SmartPtr/Detail \
-                         ../include/Aurora/Dispatch/Detail
+                         ../include/Aurora/Dispatch/Detail \
+                         ../include/Aurora/Range/Detail
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix file system feature) are excluded 
@@ -1458,7 +1459,8 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = "AURORA_FAKE_DOC(real, fake)=fake" \
                          "AURORA_REPLICATE(B,D) = D#" \
                          "AURORA_STATIC_ASSERT(cond) =" \
-                         AURORA_HAS_CPP11
+                         "AURORA_ENABLE_IF = )//" \
+                         "AURORA_DOXYGEN_SECTION"
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 

@@ -24,16 +24,41 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete Tools module
+/// @brief Iterator category types
 
-#ifndef AURORA_MODULE_TOOLS_HPP
-#define AURORA_MODULE_TOOLS_HPP
+#ifndef AURORA_ITERATORCATEGORIES_HPP
+#define AURORA_ITERATORCATEGORIES_HPP
 
-#include <Aurora/Tools/Exceptions.hpp>
-#include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
-#include <Aurora/Tools/NonCopyable.hpp>
-#include <Aurora/Tools/SafeBool.hpp>
-#include <Aurora/Tools/Swap.hpp>
+#include <iterator>
 
-#endif // AURORA_MODULE_TOOLS_HPP
+
+namespace aurora
+{
+
+/// @addtogroup Range
+/// @{
+
+/// @brief Namespace for iterator traversal categories
+/// 
+namespace Traversal
+{
+
+	/// @brief Forward traversal category
+	/// 
+	typedef std::forward_iterator_tag		Forward;
+
+	/// @brief Bidirectional traversal category
+	/// 
+	typedef std::bidirectional_iterator_tag	Bidirectional;
+
+	/// @brief Random access category
+	/// 
+	typedef std::random_access_iterator_tag	RandomAccess;
+
+} // namespace Traversal
+
+/// @}
+
+} // namespace aurora
+
+#endif // AURORA_ITERATORCATEGORIES_HPP

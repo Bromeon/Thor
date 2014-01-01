@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012 Jan Haller
+// Copyright (c) 2012-2014 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -23,6 +23,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
+/// @file
+/// @brief Utilities for template metaprogramming
+
 #ifndef AURORA_METAPROGRAMMING_HPP
 #define AURORA_METAPROGRAMMING_HPP
 
@@ -42,6 +45,7 @@ namespace aurora
 template <typename T>
 struct Type
 {
+	typedef T type;
 };
 
 /// @brief Simple integer wrapper, can be used for overload resolution.
@@ -49,6 +53,7 @@ struct Type
 template <int N>
 struct Int
 {
+	static const int value = N;
 };
 
 

@@ -24,16 +24,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete Tools module
+/// @brief Complete Range module
 
-#ifndef AURORA_MODULE_TOOLS_HPP
-#define AURORA_MODULE_TOOLS_HPP
+#ifndef AURORA_MODULE_RANGE_HPP
+#define AURORA_MODULE_RANGE_HPP
 
-#include <Aurora/Tools/Exceptions.hpp>
-#include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
-#include <Aurora/Tools/NonCopyable.hpp>
-#include <Aurora/Tools/SafeBool.hpp>
-#include <Aurora/Tools/Swap.hpp>
+#include <Aurora/Range/Adaptors.hpp>
+#include <Aurora/Range/IteratorCategories.hpp>
+#include <Aurora/Range/Range.hpp>
 
 #endif // AURORA_MODULE_TOOLS_HPP
