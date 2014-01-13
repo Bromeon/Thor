@@ -25,6 +25,27 @@
 
 namespace thor
 {
+namespace detail
+{
+	// Move (mutable lvalue reference parameter)
+	template <typename T>
+	T moveOrCopy(T& ref)
+	{
+		return std::move(ref);
+	}
+	
+	// Copy (const lvalue reference parameter)
+	template <typename T>
+	T moveOrCopy(const T& cref)
+	{
+		// Note: Do not combine with T& overload, since std::move(const T&) == const T&&
+		// Because const rvalue references are not accepted by move constructors, we have an unnecessary copy
+		return cref;
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 
 template <class Animated, typename Id>
 Animator<Animated, Id>::Animator()
@@ -32,6 +53,39 @@ Animator<Animated, Id>::Animator()
 , mPlayingAnimation(mAnimationMap.end())
 , mProgress(0.f)
 , mLoop(false)
+{
+}
+
+template <class Animated, typename Id>
+Animator<Animated, Id>::Animator(const Animator& origin)
+// No initialization
+{
+	adopt(origin);
+}
+
+template <class Animated, typename Id>
+Animator<Animated, Id>& Animator<Animated, Id>::operator=(const Animator& origin)
+{
+	adopt(origin);
+	return *this;
+}
+
+template <class Animated, typename Id>
+Animator<Animated, Id>::Animator(Animator&& source)
+// No initialization
+{
+	adopt(source);
+}
+
+template <class Animated, typename Id>
+Animator<Animated, Id>& Animator<Animated, Id>::operator=(Animator&& source)
+{
+	adopt(source);
+	return *this;
+}
+
+template <class Animated, typename Id>
+Animator<Animated, Id>::~Animator()
 {
 }
 
@@ -105,6 +159,28 @@ void Animator<Animated, Id>::playAnimation(AnimationMapIterator animation, bool 
 	mPlayingAnimation = animation;
 	mProgress = 0.f;
 	mLoop = loop;
+}
+
+template <class Animated, typename Id>
+template <typename T>
+void Animator<Animated, Id>::adopt(T& source)
+{
+	// Move or copy source into this, depending on parameter type. T& is either Animator& or const Animator&
+
+	// Get playing ID from source before map is possibly moved
+	bool playing = source.isPlayingAnimation();
+	Id playingId = playing ? source.getPlayingAnimation() : Id();
+
+	// Move/copy other variables
+	mAnimationMap = detail::moveOrCopy(source.mAnimationMap);
+	mProgress = source.mProgress;
+	mLoop = source.mLoop;
+
+	// Reset playing ID in this instance
+	if (playing)
+		mPlayingAnimation = mAnimationMap.find(playingId);
+	else
+		mPlayingAnimation = mAnimationMap.end();
 }
 
 } // namespace thor

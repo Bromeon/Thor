@@ -68,6 +68,26 @@ class Animator
 		/// 
 									Animator();
 
+		/// @brief Copy constructor
+		///
+									Animator(const Animator& origin);
+
+		/// @brief Copy assignment operator
+		/// 
+		Animator&					operator= (const Animator& origin);
+
+		/// @brief Move constructor
+		/// 
+									Animator(Animator&& source);
+		
+		/// @brief Move assignment operator
+		/// 							
+		Animator&					operator= (Animator&& source);
+
+		/// @brief Destructor
+		/// 
+									~Animator();
+
 		/// @brief Registers an animation with a given name.
 		/// @param id Value that identifies the animation (must not be registered yet).
 		/// @param animation Animation to add to the animator. The animation is copied; if you want to insert a reference
@@ -117,6 +137,9 @@ class Animator
 	// Private member functions
 	private:
 		void						playAnimation(AnimationMapIterator animation, bool loop);
+
+		template <typename T>
+		void						adopt(T& source);
 
 			
 	// ---------------------------------------------------------------------------------------------------------------------------
