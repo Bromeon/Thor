@@ -25,27 +25,6 @@
 
 namespace thor
 {
-namespace detail
-{
-	// Move (mutable lvalue reference parameter)
-	template <typename T>
-	T moveOrCopy(T& ref)
-	{
-		return std::move(ref);
-	}
-	
-	// Copy (const lvalue reference parameter)
-	template <typename T>
-	T moveOrCopy(const T& cref)
-	{
-		// Note: Do not combine with T& overload, since std::move(const T&) == const T&&
-		// Because const rvalue references are not accepted by move constructors, we have an unnecessary copy
-		return cref;
-	}
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
 
 template <class Animated, typename Id>
 Animator<Animated, Id>::Animator()
@@ -171,8 +150,8 @@ void Animator<Animated, Id>::adopt(T& source)
 	bool playing = source.isPlayingAnimation();
 	Id playingId = playing ? source.getPlayingAnimation() : Id();
 
-	// Move/copy other variables
-	mAnimationMap = detail::moveOrCopy(source.mAnimationMap);
+	// Move/copy other variables (std::move only has effect when source is mutable)
+	mAnimationMap = std::move(source.mAnimationMap);
 	mProgress = source.mProgress;
 	mLoop = source.mLoop;
 
