@@ -44,8 +44,8 @@ project(thor)
 
 # Global preprocessor and include options
 add_definitions(-DTHOR_EXPORTS)
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/extlibs/aurora/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/extlibs/aurora/include)
 
 # Predefined configuration options
 set(THOR_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
@@ -94,7 +94,7 @@ endif()
 
 
 # Add directory containing FindSFML.cmake to module path
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
+set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
 
 
 # Find SFML
