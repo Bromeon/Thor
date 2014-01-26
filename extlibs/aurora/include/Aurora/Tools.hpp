@@ -31,7 +31,6 @@
 
 #include <Aurora/Tools/Exceptions.hpp>
 #include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Tools/Swap.hpp>

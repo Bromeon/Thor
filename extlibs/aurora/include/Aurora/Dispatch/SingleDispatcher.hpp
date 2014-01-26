@@ -32,7 +32,7 @@
 #include <Aurora/Dispatch/Rtti.hpp>
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 #include <Aurora/Config.hpp>
 
 #include <unordered_map>

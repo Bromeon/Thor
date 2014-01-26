@@ -33,4 +33,4 @@
 #include <Aurora/Range/IteratorCategories.hpp>
 #include <Aurora/Range/Range.hpp>
 
-#endif // AURORA_MODULE_TOOLS_HPP
+#endif // AURORA_MODULE_RANGE_HPP

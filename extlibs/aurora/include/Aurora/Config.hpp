@@ -46,4 +46,16 @@
 	#error At least g++ 4.6 is required.
 #endif
 
+
+// Find out whether variadic templates are supported (VC++, gcc, clang)
+#if defined(_MSC_VER) && _MSC_VER >= 1800
+	#define AURORA_HAS_VARIADIC_TEMPLATES
+#elif defined(__GNUG__) && (defined(__VARIADIC_TEMPLATES) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4 && defined(__GXX_EXPERIMENTAL_CXX0X__)))
+	#define AURORA_HAS_VARIADIC_TEMPLATES
+#elif defined(__clang__)
+	#if __has_feature(cxx_variadic_templates)
+		#define AURORA_HAS_VARIADIC_TEMPLATES
+	#endif
+#endif
+
 #endif // AURORA_CONFIG_HPP

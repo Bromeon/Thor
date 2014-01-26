@@ -26,8 +26,8 @@
 /// @file
 /// @brief Utilities for template metaprogramming
 
-#ifndef AURORA_METAPROGRAMMING_HPP
-#define AURORA_METAPROGRAMMING_HPP
+#ifndef AURORA_TEMPLATES_HPP
+#define AURORA_TEMPLATES_HPP
 
 #include <Aurora/Config.hpp>
 
@@ -37,7 +37,7 @@
 namespace aurora
 {
 
-/// @addtogroup Tools
+/// @addtogroup Meta
 /// @{
 	
 /// @brief Simple type wrapper, can be used for overload resolution.
@@ -130,4 +130,4 @@ namespace detail
 } // namespace detail
 } // namespace aurora
 
-#endif // AURORA_METAPROGRAMMING_HPP
+#endif // AURORA_TEMPLATES_HPP
