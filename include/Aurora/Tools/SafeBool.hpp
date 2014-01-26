@@ -39,7 +39,7 @@ namespace detail
 	struct SafeBoolHolder
 	{
 		// Dummy function
-		void Function() {}
+		void function() {}
 	};
 
 } // namespace detail
@@ -53,11 +53,10 @@ namespace detail
 /// @brief SafeBool type
 /// @hideinitializer
 typedef void (detail::SafeBoolHolder::*SafeBool)();
-//AURORA_FAKE_DOC(typedef void (detail::SafeBoolHolder::*SafeBool)(), typedef bool SafeBool);
 
 /// @brief SafeBool literal, evaluates to true
 /// @hideinitializer
-const SafeBool SafeBoolTrue = &detail::SafeBoolHolder::Function;
+const SafeBool SafeBoolTrue = &detail::SafeBoolHolder::function;
 
 /// @brief SafeBool literal, evaluates to false
 /// @hideinitializer

@@ -31,7 +31,7 @@
 
 #include <Aurora/Range/Detail/RangeImpl.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
 #include <type_traits>
 

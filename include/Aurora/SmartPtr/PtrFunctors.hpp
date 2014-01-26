@@ -29,7 +29,7 @@
 #ifndef AURORA_PTRFUNCTORS_HPP
 #define AURORA_PTRFUNCTORS_HPP
 
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
 
 namespace aurora

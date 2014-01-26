@@ -30,12 +30,14 @@
 #define AURORA_COPIEDPTR_HPP
 
 #include <Aurora/SmartPtr/PtrFunctors.hpp>
+#include <Aurora/SmartPtr/MakeCopied.hpp>
 #include <Aurora/SmartPtr/Detail/PtrOwner.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Config.hpp>
 
 #include <algorithm>
 #include <type_traits>
+#include <utility>
 
 
 namespace aurora
@@ -45,11 +47,16 @@ namespace aurora
 /// @{
 
 /// @brief Copyable smart pointer template
-/// @tparam T Type of the stored object. Can be void.
+/// @tparam T %Type of the stored pointee object. Can be void.
 /// @details This class supports automatic destruction and copying. It has full value semantics, i.e. the stored object is
 ///  destroyed in the smart pointer's destructor and copied in the smart pointer's copy constructor. The concept of custom
 ///  cloners and deleters allows you to specify the way how destructions and copies are performed.
-/// @n@n This smart pointer is always unique, no two CopiedPtr instances share the same object.
+/// @n@n This smart pointer is always unique, no two %CopiedPtr instances share the same object.
+/// @n@n Every operation provides at least the strong exception guarantee: When copies of the pointee object throw an exception,
+///  the smart pointer will remain in a valid (uncommitted) state and no memory will be leaked. Move construction and move assignment
+///  from the same CopiedPtr<T> type additionally offer the nothrow guarantee; they involve neither copies nor moves of the pointee object.
+///  Operations on empty smart pointers (such as default constructor, copies/moves from null pointers) also provide the nothrow
+///  guarantee; they never involve any dynamic allocation.
 template <typename T>
 class CopiedPtr
 {
@@ -110,32 +117,57 @@ class CopiedPtr
 		/// @details If the origin's pointer is @a nullptr, this pointer will also be @a nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		CopiedPtr(const CopiedPtr& origin)
-		: mOwner(origin.mOwner ? origin.mOwner->clone() : nullptr)
-		, mPointer(origin.mOwner ? mOwner->getPointer() : nullptr)
+		: mOwner(origin ? origin.mOwner->clone() : nullptr)
+		, mPointer(origin ? mOwner->getPointer() : nullptr)
 		{
 		}
 
-		/// @brief Construct from different CopiedPtr
+		/// @brief Construct from different %CopiedPtr
 		/// @param origin Original smart pointer, where U* convertible to T*. Can refer to a derived object.
 		/// @details If the origin's pointer is @a nullptr, this pointer will also be @a nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		template <typename U>
 		CopiedPtr(const CopiedPtr<U>& origin)
-		: mOwner(new detail::PtrIndirection<T, U>(origin.mOwner, detail::CopyTag()))
-		, mPointer(mOwner->getPointer())
+		: mOwner(origin ? new detail::PtrIndirection<T, U>(origin.mOwner, detail::CopyTag()) : nullptr)
+		, mPointer(origin ? mOwner->getPointer() : nullptr)
 		{
 		}
 
 		/// @brief Move constructor
 		/// @param source RValue reference to object of which the ownership is taken.
-		template <typename U>
-		CopiedPtr(CopiedPtr<U>&& source)
-		: mOwner(new detail::PtrIndirection<T, U>(source.mOwner, detail::MoveTag()))
+		CopiedPtr(CopiedPtr&& source)
+		: mOwner(source.mOwner)
 		, mPointer(source.mPointer)
 		{
 			source.mOwner = nullptr;
 			source.mPointer = nullptr;
 		}
+
+		/// @brief Move from different %CopiedPtr
+		/// @param source RValue reference to object of which the ownership is taken.
+		/// @details In contrast to the move constructor, this constructor does not offer the nothrow guarantee. Only
+		/// strong exception guarantee is provided (because of an internal allocation; the pointee object is not copied).
+		template <typename U>
+		CopiedPtr(CopiedPtr<U>&& source)
+		: mOwner(source ? new detail::PtrIndirection<T, U>(source.mOwner, detail::MoveTag()) : nullptr)
+		, mPointer(source.mPointer)
+		{
+			source.mOwner = nullptr;
+			source.mPointer = nullptr;
+		}
+
+#ifdef AURORA_HAS_VARIADIC_TEMPLATES
+
+		// [Implementation detail]
+		// Emplacement constructor: Used to implement makeCopied<T>(args)
+		template <typename... Args>
+		CopiedPtr(detail::EmplaceTag, Args&&... args)
+		: mOwner(new detail::CompactOwner<T>(detail::EmplaceTag(), std::forward<Args>(args)...))
+		, mPointer(mOwner->getPointer())
+		{
+		}
+
+#endif // AURORA_HAS_VARIADIC_TEMPLATES
 
 		/// @brief Copy assignment operator
 		/// @param origin Original smart pointer
@@ -146,7 +178,7 @@ class CopiedPtr
 			return *this;
 		}
 
-		/// @brief Assignment operator from different CopiedPtr
+		/// @brief Copy-assign from different CopiedPtr
 		/// @param origin Original smart pointer, where U* convertible to T*. Can refer to a derived object.
 		/// @details Can imply a copy and a destruction, invoking origin's cloner and this deleter.
 		template <typename U>
@@ -158,6 +190,16 @@ class CopiedPtr
 
 		/// @brief Move assignment operator
 		/// @param source RValue reference to object of which the ownership is taken.
+		CopiedPtr& operator= (CopiedPtr&& source)
+		{
+			CopiedPtr(std::move(source)).swap(*this);
+			return *this;
+		}
+
+		/// @brief Move-assign from different CopiedPtr
+		/// @param source RValue reference to object of which the ownership is taken.
+		/// @details In contrast to the move assignment operator, this assignment operator does not offer the nothrow guarantee.
+		/// Only strong exception guarantee is provided (because of an internal allocation; the pointee object is not copied).
 		template <typename U>
 		CopiedPtr& operator= (CopiedPtr<U>&& source)
 		{
@@ -269,19 +311,6 @@ template <typename T>
 void swap(CopiedPtr<T>& lhs, CopiedPtr<T>& rhs)
 {
 	return lhs.swap(rhs);
-}
-
-/// @relates CopiedPtr
-/// @brief Creates a CopiedPtr<T> without the need to explicitly specify T.
-/// @details Use case:
-/// @code
-///  auto ptr = aurora::copied(new MyClass); // is the same as
-///  aurora::CopiedPtr<MyClass> ptr(new MyClass);
-/// @endcode
-template <typename T>
-CopiedPtr<T> copied(T* pointer)
-{
-	return CopiedPtr<T>(pointer);
 }
 
 /// @}

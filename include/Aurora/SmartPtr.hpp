@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete Tools module
+/// @brief Complete SmartPtr module
 
 #ifndef AURORA_MODULE_SMARTPTR_HPP
 #define AURORA_MODULE_SMARTPTR_HPP

@@ -29,7 +29,7 @@
 #ifndef AURORA_HASH_HPP
 #define AURORA_HASH_HPP
 
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
 #include <functional>
 

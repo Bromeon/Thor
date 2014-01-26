@@ -23,27 +23,13 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-// This header exists for documentation purposes only.
+/// @file
+/// @brief Complete Meta module
 
+#ifndef AURORA_MODULE_META_HPP
+#define AURORA_MODULE_META_HPP
 
-/// @mainpage
-///
-/// @section welcome Welcome
-/// Welcome to the documentation of the Aurora Library. Here you'll find a reference for all types, functions, variables and macros
-/// of the public API. 
-///
+#include <Aurora/Meta/Preprocessor.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
-/// @defgroup Dispatch Dispatch
-/// @brief Facilities for single and double dispatching at runtime, as an extension of C++ virtual functions.
-
-/// @defgroup Meta Meta
-/// @brief Utilities for template and preprocessor metaprogramming.
-
-/// @defgroup SmartPtr SmartPtr
-/// @brief Smart pointers with value semantics supporting polymorphic deep copies.
-
-/// @defgroup Tools Tools
-/// @brief C++ utility and idioms, such as noncopyable base classes, foreach macros or safe bool idiom.
-
-/// @defgroup Range Range
-/// @brief Type-erased ranges, a generic abstraction from iterator interfaces.
+#endif // AURORA_MODULE_META_HPP

@@ -23,27 +23,23 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-// This header exists for documentation purposes only.
+// Contains preprocessor metaprograms for code generation of smart pointer makeXY() factories
+
+#ifndef AURORA_FACTORIES_HPP
+#define AURORA_FACTORIES_HPP
+
+#include <Aurora/Meta/Preprocessor.hpp>
 
 
-/// @mainpage
-///
-/// @section welcome Welcome
-/// Welcome to the documentation of the Aurora Library. Here you'll find a reference for all types, functions, variables and macros
-/// of the public API. 
-///
+#define AURORA_DETAIL_TYPENAME(n) typename A ## n
+#define AURORA_DETAIL_PARAMETER(n) A ## n && arg ## n
+#define AURORA_DETAIL_FORWARD_ARG(n) std::forward<A ## n>(arg ## n)
 
-/// @defgroup Dispatch Dispatch
-/// @brief Facilities for single and double dispatching at runtime, as an extension of C++ virtual functions.
+#define AURORA_DETAIL_SMARTPTR_FACTORY(SmartPtr, factoryFunction, n)									\
+	template <typename T AURORA_PP_COMMA_IF(n) AURORA_PP_ENUMERATE_COMMA(n, AURORA_DETAIL_TYPENAME)>	\
+	SmartPtr<T> factoryFunction(AURORA_PP_ENUMERATE_COMMA(n, AURORA_DETAIL_PARAMETER))					\
+	{																									\
+		return SmartPtr<T>(new T( AURORA_PP_ENUMERATE_COMMA(n, AURORA_DETAIL_FORWARD_ARG) ));			\
+	}
 
-/// @defgroup Meta Meta
-/// @brief Utilities for template and preprocessor metaprogramming.
-
-/// @defgroup SmartPtr SmartPtr
-/// @brief Smart pointers with value semantics supporting polymorphic deep copies.
-
-/// @defgroup Tools Tools
-/// @brief C++ utility and idioms, such as noncopyable base classes, foreach macros or safe bool idiom.
-
-/// @defgroup Range Range
-/// @brief Type-erased ranges, a generic abstraction from iterator interfaces.
+#endif // AURORA_FACTORIES_HPP

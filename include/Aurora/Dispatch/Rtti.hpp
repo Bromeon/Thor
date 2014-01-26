@@ -30,7 +30,7 @@
 /// @brief Manual enhancements of Runtime Type Information
 
 #include <Aurora/Dispatch/Detail/RttiImpl.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 #include <Aurora/Config.hpp>
 
 #include <typeindex>
