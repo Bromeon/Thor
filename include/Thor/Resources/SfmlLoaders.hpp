@@ -32,7 +32,7 @@
 #include <Thor/Resources/ResourceKey.hpp>
 #include <Thor/Resources/Detail/ResourceKeyHelpers.hpp>
 
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
 
 namespace thor

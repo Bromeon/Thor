@@ -27,7 +27,7 @@
 #define THOR_RESOURCESLOT_HPP
 
 #include <Aurora/Tools/ForEach.hpp>
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 #include <Thor/Config.hpp>
 
 #include <memory>

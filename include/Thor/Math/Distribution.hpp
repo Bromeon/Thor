@@ -29,7 +29,7 @@
 #ifndef THOR_DISTRIBUTION_HPP
 #define THOR_DISTRIBUTION_HPP
 
-#include <Aurora/Tools/Metaprogramming.hpp>
+#include <Aurora/Meta/Templates.hpp>
 
 #include <functional>
 #include <type_traits>
