@@ -171,7 +171,7 @@ namespace detail
 	AdvancedVertex::AdvancedVertex(V& userVertex, OptTriangleIterator surroundingTriangle)
 	: mUserVertex(const_cast<typename std::remove_const<V>::type*>(&userVertex))
 	, mPosition(getVertexPosition(userVertex))
-	, mSurroundingTriangle(new OptTriangleIterator(surroundingTriangle))
+	, mSurroundingTriangle(aurora::makeCopied<OptTriangleIterator>(surroundingTriangle))
 #ifndef NDEBUG
 	, mUserType(&typeid(V))
 #endif

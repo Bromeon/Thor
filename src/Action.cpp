@@ -43,12 +43,12 @@ Action::Action(sf::Keyboard::Key key, ActionType action)
 	switch (action)
 	{
 		case Hold:
-			mOperation.reset(new detail::RealtimeKeyLeaf(key));
+			mOperation = aurora::makeCopied<detail::RealtimeKeyLeaf>(key);
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
-			mOperation.reset(new detail::EventKeyLeaf(key, action == PressOnce));
+			mOperation = aurora::makeCopied<detail::EventKeyLeaf>(key, action == PressOnce);
 			break;
 	}
 }
@@ -59,12 +59,12 @@ Action::Action(sf::Mouse::Button mouseButton, ActionType action)
 	switch (action)
 	{
 		case Hold:
-			mOperation.reset(new detail::RealtimeMouseLeaf(mouseButton));
+			mOperation = aurora::makeCopied<detail::RealtimeMouseLeaf>(mouseButton);
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
-			mOperation.reset(new detail::EventMouseLeaf(mouseButton, action == PressOnce));
+			mOperation = aurora::makeCopied<detail::EventMouseLeaf>(mouseButton, action == PressOnce);
 			break;
 	}
 }
@@ -75,23 +75,23 @@ Action::Action(JoystickButton joystick, ActionType action)
 	switch (action)
 	{
 		case Hold:
-			mOperation.reset(new detail::RealtimeJoystickButtonLeaf(joystick));
+			mOperation = aurora::makeCopied<detail::RealtimeJoystickButtonLeaf>(joystick);
 			break;
 
 		case PressOnce:
 		case ReleaseOnce:
-			mOperation.reset(new detail::EventJoystickLeaf(joystick, action == PressOnce));
+			mOperation = aurora::makeCopied<detail::EventJoystickLeaf>(joystick, action == PressOnce);
 			break;
 	}
 }
 
 Action::Action(JoystickAxis joystickState)
-: mOperation(new detail::RealtimeJoystickAxisLeaf(joystickState))
+: mOperation(aurora::makeCopied<detail::RealtimeJoystickAxisLeaf>(joystickState))
 {
 }
 
 Action::Action(sf::Event::EventType eventType)
-: mOperation(new detail::MiscEventLeaf(eventType))
+: mOperation(aurora::makeCopied<detail::MiscEventLeaf>(eventType))
 {
 }
 
@@ -107,38 +107,33 @@ bool Action::isActive(const detail::EventBuffer& buffer, detail::ActionResult& o
 
 Action::Action(detail::ActionNode::CopiedPtr operation)
 {
-	mOperation.swap(operation);
+	mOperation = std::move(operation);
 }
 
-// TODO: Avoid copies
+// TODO: Wait until aurora::CopiedPtr implements move derived-to-base more efficiently
 Action operator|| (const Action& lhs, const Action& rhs)
 {
-	detail::ActionNode::CopiedPtr result( new detail::OrNode(lhs.mOperation, rhs.mOperation) );
-	return Action(result);
+	return Action( aurora::makeCopied<detail::OrNode>(lhs.mOperation, rhs.mOperation) );
 }
 
 Action operator&& (const Action& lhs, const Action& rhs)
 {
-	detail::ActionNode::CopiedPtr result( new detail::AndNode(lhs.mOperation, rhs.mOperation) );
-	return Action(result);
+	return Action( aurora::makeCopied<detail::AndNode>(lhs.mOperation, rhs.mOperation) );
 }
 
 Action operator! (const Action& action)
 {
-	detail::ActionNode::CopiedPtr result( new detail::NotNode(action.mOperation) );
-	return Action(result);
+	return Action( aurora::makeCopied<detail::NotNode>(action.mOperation) );
 }
 
 Action eventAction(std::function<bool(const sf::Event&)> filter)
 {
-	detail::ActionNode::CopiedPtr result( new detail::CustomEventLeaf(std::move(filter)) );
-	return Action(result);
+	return Action( aurora::makeCopied<detail::CustomEventLeaf>(std::move(filter)) );
 }
 
 Action realtimeAction(std::function<bool()> filter)
 {
-	detail::ActionNode::CopiedPtr result(new detail::CustomRealtimeLeaf(std::move(filter)));
-	return Action(result);
+	return Action( aurora::makeCopied<detail::CustomRealtimeLeaf>(std::move(filter)) );
 }
 
 } // namespace thor

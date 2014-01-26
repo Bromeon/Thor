@@ -73,7 +73,7 @@ struct ConcaveShape::TriangleGenerator
 	// Assignment from triangle
 	TriangleGenerator& operator= (const Triangle<const sf::Vector2f>& triangle)
 	{
-		aurora::CopiedPtr<sf::ConvexShape> shape(new sf::ConvexShape());
+		auto shape = aurora::makeCopied<sf::ConvexShape>();
 		shape->setPointCount(3);
 		shape->setFillColor(color);
 		
@@ -255,7 +255,7 @@ void ConcaveShape::formOutline() const
 		const float radius = mOutlineThickness / 2.f;
 
 		// Insert circles at the polygon points to round the outline off
-		aurora::CopiedPtr<sf::CircleShape> circle(new sf::CircleShape());
+		auto circle = aurora::makeCopied<sf::CircleShape>();
 		circle->setPosition(firstPos - sf::Vector2f(radius, radius));
 		circle->setRadius(radius);
 		circle->setFillColor(mOutlineColor);
@@ -266,7 +266,7 @@ void ConcaveShape::formOutline() const
 
 		// Add shapes
 		mEdgeShapes.push_back( std::move(circle) );
-		mEdgeShapes.push_back( aurora::copied(new sf::ConvexShape(line)) );
+		mEdgeShapes.push_back( aurora::makeCopied<sf::ConvexShape>(line) );
 	}
 }
 

@@ -120,7 +120,7 @@ namespace detail
 	AdvancedVertex::AdvancedVertex(float x, float y)
 	: mUserVertex(nullptr)
 	, mPosition(x, y)
-	, mSurroundingTriangle(new OptTriangleIterator())
+	, mSurroundingTriangle(aurora::makeCopied<OptTriangleIterator>())
 #ifndef NDEBUG
 	, mUserType(&typeid(void))
 #endif
@@ -170,7 +170,7 @@ namespace detail
 	AdvancedTriangle::AdvancedTriangle(AdvancedVertex& corner0, AdvancedVertex& corner1, AdvancedVertex& corner2)
 	: Triangle<AdvancedVertex>(corner0, corner1, corner2)
 	, mRemainingVertices()
-	, mAdjacentTriangles(new OptTriangleItrArray())
+	, mAdjacentTriangles(aurora::makeCopied<OptTriangleItrArray>())
 	, mFlagged(false)
 	{
 	}
