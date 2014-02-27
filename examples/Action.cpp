@@ -3,6 +3,7 @@
 #include <Thor/Graphics/ToString.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 // Enumeration for user-defined actions
 enum MyAction
@@ -22,7 +23,7 @@ void onRun();
 int main()
 {
 	// Create and initialize window
-	sf::Window window(sf::VideoMode(400, 300), "Thor Action");
+	sf::RenderWindow window(sf::VideoMode(400, 300), "Thor Action");
 	window.setFramerateLimit(20);
 	window.setKeyRepeatEnabled(false);
 
@@ -70,6 +71,8 @@ int main()
 
 		// Update window
 		window.display();
+		// clear window with black color
+		window.clear(sf::Color(0,0,0));
 	}	
 }
 
