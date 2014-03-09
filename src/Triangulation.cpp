@@ -29,6 +29,7 @@
 
 #include <functional>
 #include <numeric>
+#include <limits>
 #include <stack>
 
 
@@ -248,12 +249,24 @@ namespace detail
 		// Compute perpendicular bisectors of the sides
 		sf::Vector2f v = perpendicularVector(p - at(triangle, 0));
 		sf::Vector2f w = perpendicularVector(q - at(triangle, 0));
-	
+
+		// Cross product's Z component
+		float cross = v.x * w.y - v.y * w.x;
+
+		// Special case of a flat triangle (this can occur if 3 vertices are collinear, which is not broken per se)
+		// We don't need an epsilon here, almost-flat triangles will automatically have huge circumcircle
+		if (cross == 0.f)
+		{
+			// We define the circumcircle as extremely large, so that it will always breach the Delaunay condition
+			// The midpoint is not relevant, we simply choose the gravity center of the triangle
+			return Circle((at(triangle, 0) + at(triangle, 1) + at(triangle, 2)) / 3.f, std::numeric_limits<float>::max());
+		}
+
 		// Now we have the lines p + s*v and q + t*w with s and t being real numbers. The intersection is:
 		sf::Vector2f intersection(
 			v.x * (p.y * w.x + q.x * w.y - q.y * w.x) - p.x * v.y * w.x,
 			w.y * (p.y * v.x + q.x * v.y - p.x * v.y) - q.y * v.y * w.x);
-		intersection /= v.x * w.y - v.y * w.x;
+		intersection /= cross;
 
 		// Alternative to calculating intersection (slower):
 		//	sf::Vector3f cross = crossProduct(v,w);
