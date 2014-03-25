@@ -70,6 +70,18 @@ class ActionMap : private aurora::NonCopyable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
+		/// @brief Default constructor
+		/// 
+									ActionMap();
+
+		/// @brief Move constructor
+		/// 
+									ActionMap(ActionMap&& source);
+
+		/// @brief Move assignment operator
+		/// 
+		ActionMap&					operator= (ActionMap&& source);
+
 		/// @brief Clears old events and polls the window for new ones.
 		/// @param window The SFML window from which events are polled.
 		/// @details When you invoke this method, you should not call sf::Window::pollEvent() in the same frame, since update()

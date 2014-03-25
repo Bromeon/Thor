@@ -65,7 +65,15 @@ class ResourceCache : private aurora::NonCopyable
 		/// @details Initially, the object owns no allocated resources. By default, the loading failure strategy
 		///  Resources::ThrowException and the release strategy Resources::ExplicitRelease are used.
 									ResourceCache();
-			
+		
+		/// @brief Move constructor
+		/// 
+									ResourceCache(ResourceCache&& source);
+
+		/// @brief Move assignment operator
+		/// 
+		ResourceCache&				operator= (ResourceCache&& source);
+
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible.
 		/// @details This function does never load a new resource.
 		/// @param key The resource identifier to search for.

@@ -43,7 +43,7 @@ Animator<Animated, Id>::Animator(const Animator& origin)
 }
 
 template <class Animated, typename Id>
-Animator<Animated, Id>& Animator<Animated, Id>::operator=(const Animator& origin)
+Animator<Animated, Id>& Animator<Animated, Id>::operator= (const Animator& origin)
 {
 	adopt(origin);
 	return *this;
@@ -57,7 +57,7 @@ Animator<Animated, Id>::Animator(Animator&& source)
 }
 
 template <class Animated, typename Id>
-Animator<Animated, Id>& Animator<Animated, Id>::operator=(Animator&& source)
+Animator<Animated, Id>& Animator<Animated, Id>::operator= (Animator&& source)
 {
 	adopt(source);
 	return *this;

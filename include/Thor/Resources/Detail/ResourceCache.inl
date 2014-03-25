@@ -35,6 +35,24 @@ ResourceCache<R>::ResourceCache()
 }
 
 template <class R>
+ResourceCache<R>::ResourceCache(ResourceCache&& source)
+: mMap(std::move(source.mMap))
+, mReleaseStrategy(source.mReleaseStrategy)
+, mLoadingFailureStrategy(source.mLoadingFailureStrategy)
+{
+}
+
+template <class R>
+ResourceCache<R>& ResourceCache<R>::operator= (ResourceCache&& source)
+{
+	mMap = std::move(source.mMap);
+	mReleaseStrategy = source.mReleaseStrategy;
+	mLoadingFailureStrategy = source.mLoadingFailureStrategy;
+
+	return *this;
+}
+
+template <class R>
 std::shared_ptr<R> ResourceCache<R>::search(const ResourceKey<R>& key)
 {
 	SlotConstIterator itr = mMap->find(key);

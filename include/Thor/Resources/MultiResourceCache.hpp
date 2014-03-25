@@ -61,8 +61,16 @@ class MultiResourceCache
 	public:
 		/// @copydoc ResourceCache::ResourceCache()
 		///
-									MultiResourceCache() {}
-			
+									MultiResourceCache();
+		
+		/// @brief Move constructor
+		/// 
+									MultiResourceCache(MultiResourceCache&& source);
+
+		/// @brief Move assignment operator
+		/// 
+		MultiResourceCache&			operator= (MultiResourceCache&& source);
+
 		/// @copydoc ResourceCache::search(const ResourceKey<R>&)
 		///
 		template <class R>

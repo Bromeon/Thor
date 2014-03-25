@@ -58,6 +58,28 @@ namespace detail
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+MultiResourceCache::MultiResourceCache()
+: mSpecificCaches()
+, mReleaseStrategy(Resources::ExplicitRelease)
+, mLoadingFailureStrategy(Resources::ThrowException)
+{
+}
+
+MultiResourceCache::MultiResourceCache(MultiResourceCache&& source)
+: mSpecificCaches(std::move(source.mSpecificCaches))
+, mReleaseStrategy(source.mReleaseStrategy)
+, mLoadingFailureStrategy(source.mLoadingFailureStrategy)
+{
+}
+
+MultiResourceCache& MultiResourceCache::operator= (MultiResourceCache&& source)
+{
+	mSpecificCaches = std::move(source.mSpecificCaches);
+	mReleaseStrategy = source.mReleaseStrategy;
+	mLoadingFailureStrategy = source.mLoadingFailureStrategy;
+	
+	return *this;
+}
 
 template <class R>
 std::shared_ptr<R> MultiResourceCache::search(const ResourceKey<R>& key)

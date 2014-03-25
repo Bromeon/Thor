@@ -31,7 +31,6 @@
 
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
 
-#include <SFML/System/NonCopyable.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -58,7 +57,7 @@ namespace detail
 
 	// Class that stores events and provides methods for lookup
 	// Note: Since there are at most a few dozens of events per frame (at a decent framerate not even that), std::vector and linear search is fine
-	class THOR_API EventBuffer : private sf::NonCopyable
+	class THOR_API EventBuffer
 	{
 		public:
 										EventBuffer();

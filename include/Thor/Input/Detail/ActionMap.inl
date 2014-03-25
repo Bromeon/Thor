@@ -27,6 +27,27 @@ namespace thor
 {
 
 template <typename ActionId>
+ActionMap<ActionId>::ActionMap()
+{
+}
+
+template <typename ActionId>
+ActionMap<ActionId>::ActionMap(ActionMap&& source)
+: mActionMap(std::move(source.mActionMap))
+, mEventBuffer(std::move(source.mEventBuffer))
+{
+}
+
+template <typename ActionId>
+ActionMap<ActionId>& ActionMap<ActionId>::operator= (ActionMap&& source)
+{
+	mActionMap = std::move(source.mActionMap);
+	mEventBuffer = std::move(source.mEventBuffer);
+
+	return *this;
+}
+
+template <typename ActionId>
 void ActionMap<ActionId>::update(sf::Window& window)
 {
 	mEventBuffer.clearEvents();
