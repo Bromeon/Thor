@@ -56,7 +56,7 @@ namespace detail
 	bool CompareVertexPtrs::operator() (const AdvancedVertex* lhs, const AdvancedVertex* rhs) const
 	{
 		return std::make_pair(lhs->getPosition().x, lhs->getPosition().y)
-			<  std::make_pair(rhs->getPosition().x, rhs->getPosition().y);
+			< std::make_pair(rhs->getPosition().x, rhs->getPosition().y);
 	}
 
 	bool CompareEdges::operator() (const AdvancedEdge& lhs, const AdvancedEdge& rhs) const

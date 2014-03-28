@@ -54,9 +54,9 @@ set(THOR_BUILD_DOC FALSE CACHE BOOL "Create HTML documentation (requires Doxygen
 
 # Windows: Choose to link CRT libraries statically or dynamically
 if(WIN32)
-    set(THOR_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? This option must match the one used for SFML.")
-    
-    # Modify compiler flags globally
+	set(THOR_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? This option must match the one used for SFML.")
+
+	# Modify compiler flags globally
 	if(THOR_STATIC_STD_LIBS)
 		if(THOR_SHARED_LIBS)
 			message("\n-> THOR_STATIC_STD_LIBS and THOR_SHARED_LIBS are not compatible.")
@@ -64,7 +64,7 @@ if(WIN32)
 		elseif(MSVC)
 			foreach(flag CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
 				if(${flag} MATCHES "/MD")
-				string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
+					string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
 				endif()
 			endforeach()
 		elseif(CMAKE_COMPILER_IS_GNUCXX)
