@@ -56,6 +56,12 @@ set(THOR_BUILD_DOC FALSE CACHE BOOL "Create HTML documentation (requires Doxygen
 if(WIN32)
     set(THOR_STATIC_STD_LIBS FALSE CACHE BOOL "Use statically linked standard/runtime libraries? This option must match the one used for SFML.")
     
+	# Determin whether we're dealing with a TDM compiler or not
+	if(CMAKE_COMPILER_IS_GNUCXX)
+		execute_process(COMMAND "${CMAKE_CXX_COMPILER}" "--version" OUTPUT_VARIABLE GCC_COMPILER_VERSION)
+		string(REGEX MATCHALL ".*(tdm[64]*-[1-9]).*" COMPILER_GCC_TDM "${GCC_COMPILER_VERSION}")
+	endif()
+		
     # Modify compiler flags globally
 	if(THOR_STATIC_STD_LIBS)
 		if(THOR_SHARED_LIBS)
@@ -67,9 +73,11 @@ if(WIN32)
 				string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
 				endif()
 			endforeach()
-		elseif(CMAKE_COMPILER_IS_GNUCXX)
+		elseif(CMAKE_COMPILER_IS_GNUCXX AND NOT COMPILER_GCC_TDM)
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
 		endif()
+	elseif(COMPILER_GCC_TDM)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -shared-libgcc -shared-libstdc++")
 	endif()
 endif()
 
