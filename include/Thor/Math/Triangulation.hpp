@@ -89,7 +89,7 @@ OutputIterator				triangulateConstrained(InputIterator1 verticesBegin, InputIter
 /// @brief Polygon Delaunay Triangulation
 /// @details Computes a Delaunay triangulation of the inside of a polygon.
 /// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
-///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive 
+///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive
 ///  points (and between the last and first point). If the vertices lead to crossing edges, the result is undefined.
 /// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
 ///  where V is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may
@@ -102,7 +102,7 @@ OutputIterator				triangulatePolygon(InputIterator verticesBegin, InputIterator 
 /// @brief Polygon Delaunay Triangulation
 /// @details Computes a Delaunay triangulation of the inside of a polygon.
 /// @param verticesBegin,verticesEnd Iterator range to the points being triangulated. The element type V can be any type as long as
-///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive 
+///  thor::TriangulationTraits<V> is specialized. The order of the vertices is important, as the constrained edges are formed between consecutive
 ///  points (and between the last and first point). If the vertices lead to crossing edges, the result is undefined.
 /// @param trianglesOut Output iterator which is used to store the computed triangles. The elements shall be of type @ref thor::Triangle "thor::Triangle<V>",
 ///  where V is your vertex type. The resulting triangles reference the original vertices in [verticesBegin, verticesEnd[, so the vertices may

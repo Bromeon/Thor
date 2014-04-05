@@ -64,7 +64,7 @@ namespace detail
 /// @addtogroup Animation
 /// @{
 
-/// @brief Changes a sprite's subrect over time. 
+/// @brief Changes a sprite's subrect over time.
 /// @details This class stores multiple frames that represent the sub-rectangle of a texture. The resulting animation consists
 ///  of a sequence of frames that are drawn one after another.
 class THOR_API FrameAnimation
@@ -88,7 +88,7 @@ class THOR_API FrameAnimation
 		template <class Animated>
 		void						operator() (Animated& animated, float progress) const;
 
-	
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
@@ -118,7 +118,7 @@ void FrameAnimation::operator() (Animated& target, float progress) const
 	AURORA_FOREACH(const detail::Frame& frame, mFrames)
 	{
 		progress -= frame.duration;
-		
+
 		if (progress < 0.f)
 		{
 			target.setTextureRect(frame.subrect);

@@ -128,14 +128,14 @@ class THOR_API UniversalEmitter
 		/// @param particleTextureIndex Constant or function returning the initial index of the particle's texture rectangle.
 		void						setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex);
 
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private member functions
 	private:
 		// Returns the number of particles to emit during this frame.
 		unsigned int				computeParticleCount(sf::Time dt);
 
-		
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:

@@ -25,6 +25,7 @@
 
 # Directory Thor/doc
 
+
 find_package(Doxygen REQUIRED)
 
 set(THOR_INPUT_DOXYFILE "${PROJECT_SOURCE_DIR}/doc/Doxyfile.txt")

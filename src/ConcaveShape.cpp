@@ -57,29 +57,29 @@ struct ConcaveShape::TriangleGenerator
 	{
 		return *this;
 	}
-	
+
 	// Fake pre-increment
 	TriangleGenerator& operator++ ()
 	{
 		return *this;
 	}
-	
+
 	// Fake post-increment
 	TriangleGenerator& operator++ (int)
 	{
 		return *this;
 	}
-	
+
 	// Assignment from triangle
 	TriangleGenerator& operator= (const Triangle<const sf::Vector2f>& triangle)
 	{
 		auto shape = aurora::makeCopied<sf::ConvexShape>();
 		shape->setPointCount(3);
 		shape->setFillColor(color);
-		
+
 		for (unsigned int i = 0; i < 3; ++i)
 			shape->setPoint(i, triangle[i]);
-		
+
 		triangles->push_back(std::move(shape));
 		return *this;
 	}
@@ -176,10 +176,10 @@ void ConcaveShape::setOutlineThickness(float outlineThickness)
 {
 	assert(outlineThickness >= 0.f);
 
-	mOutlineThickness = outlineThickness;	
+	mOutlineThickness = outlineThickness;
 	mNeedsEdgeUpdate = true;
 }
-		
+
 float ConcaveShape::getOutlineThickness() const
 {
 	return mOutlineThickness;
@@ -207,10 +207,10 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// One or zero points aren't rendered
 	if (mPoints.size() <= 1)
 		return;
-	
+
 	// Batch logics
 	if (mNeedsEdgeUpdate || mNeedsTriangleUpdate)
-	{		
+	{
 		if (mNeedsTriangleUpdate)
 			decompose();
 
@@ -223,11 +223,11 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Combine transforms
 	states.transform *= getTransform();
-	
+
 	// Draw all points
 	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& shape, mTriangleShapes)
 		target.draw(*shape, states);
-	
+
 	// Draw all edges at the boundary
 	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& edge, mEdgeShapes)
 		target.draw(*edge, states);
@@ -247,7 +247,7 @@ void ConcaveShape::formOutline() const
 	if (mOutlineThickness == 0.f)
 		return;
 
-	// Create graphic edges	
+	// Create graphic edges
 	AURORA_FOREACH(const Edge<const sf::Vector2f>& edge, mEdges)
 	{
 		sf::Vector2f firstPos = edge[0];

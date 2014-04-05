@@ -32,7 +32,7 @@
 
 namespace thor
 {
-	
+
 ForceAffector::ForceAffector(sf::Vector2f acceleration)
 : mAcceleration(acceleration)
 {

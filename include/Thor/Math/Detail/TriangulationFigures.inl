@@ -69,7 +69,7 @@ Triangle<V>::Triangle(V& corner0, V& corner1, V& corner2)
 		detail::getVertexPosition(corner0),
 		detail::getVertexPosition(corner1),
 		detail::getVertexPosition(corner2)));
-	
+
 	mCorners[0] = &corner0;
 	mCorners[1] = &corner1;
 	mCorners[2] = &corner2;

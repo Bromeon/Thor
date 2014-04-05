@@ -81,7 +81,7 @@ namespace detail
 			std::weak_ptr<ResourceMap>		mMap;
 			SlotIterator					mIterator;
 	};
-	
+
 	template <class R>
 	class ResourceSlot
 	{
@@ -97,7 +97,7 @@ namespace detail
 			std::shared_ptr<R> initialize(std::unique_ptr<R> newResource, DeleterFn deleter, bool explicitRelease)
 			{
 				std::shared_ptr<R> result(newResource.release(), deleter);
-				
+
 				// For explicit release policy, keep strong reference to resource and prevent automatic deletion
 				mWeakRef = result;
 				if (explicitRelease)

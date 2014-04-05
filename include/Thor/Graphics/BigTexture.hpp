@@ -52,7 +52,7 @@ namespace thor
 
 /// @addtogroup Graphics
 /// @{
-	
+
 /// @brief Class for textures which are too big for sf::Texture.
 /// @details sf::Texture cannot handle textures of which the size exceeds the hardware-given limit. Instead, you can use this
 ///  class, which has a very similar interface to sf::Texture. Internally, the class splits the texture into smaller parts which

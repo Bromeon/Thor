@@ -66,9 +66,9 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		/// @details All arrows shorter than @a tolerance are represented as zero vectors
 		///  (i.e. by circles).
 		static void					setZeroVectorTolerance(float tolerance);
-		
+
 		/// @brief Returns the zero length tolerance.
-		/// @details The tolerance is the bound, below which a vector is considered a zero vector. 
+		/// @details The tolerance is the bound, below which a vector is considered a zero vector.
 		static float				getZeroVectorTolerance();
 
 
@@ -86,11 +86,11 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		/// @brief Aligns the arrow so that it points to the given direction.
 		///
 		void						setDirection(sf::Vector2f direction);
-		
+
 		/// @brief Aligns the arrow so that it points to the given direction.
 		///
 		void						setDirection(float dirX, float dirY);
-		
+
 		/// @brief Returns the arrow's direction.
 		///
 		sf::Vector2f				getDirection() const;
@@ -98,7 +98,7 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		/// @brief sets the arrow's thickness (3.f by default).
 		///
 		void						setThickness(float thickness);
-		
+
 		/// @brief Returns the arrow's thickness.
 		///
 		float						getThickness() const;
@@ -137,11 +137,11 @@ class THOR_API Arrow : public sf::Drawable, public sf::Transformable
 		sf::Vector2f				mDirection;
 		sf::Color					mColor;
 		Style						mStyle;
-	
+
 		mutable bool				mNeedsShapeUpdate;
 		mutable sf::ConvexShape		mLine;
 		mutable sf::ConvexShape		mTriangle;
-		
+
 		static float				zeroVectorTolerance;
 
 };

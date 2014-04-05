@@ -65,7 +65,7 @@ class ResourceCache : private aurora::NonCopyable
 		/// @details Initially, the object owns no allocated resources. By default, the loading failure strategy
 		///  Resources::ThrowException and the release strategy Resources::ExplicitRelease are used.
 									ResourceCache();
-		
+
 		/// @brief Move constructor
 		/// 
 									ResourceCache(ResourceCache&& source);
@@ -79,7 +79,7 @@ class ResourceCache : private aurora::NonCopyable
 		/// @param key The resource identifier to search for.
 		/// @return The corresponding std::shared_ptr, if found, or @a nullptr otherwise.
 		std::shared_ptr<R>			search(const ResourceKey<R>& key);
-		
+
 		/// @brief Searches for an occurrence of @a key and returns the mapped resource, if possible (const overload).
 		/// @details This function does never load a new resource. 
 		/// @param key The resource identifier to search for.
@@ -132,10 +132,10 @@ class ResourceCache : private aurora::NonCopyable
 	private:
 		// Loads and inserts a resource.
 		std::shared_ptr<R>			addResource(const ResourceKey<R>& key);
-	
+
 		// Unloads and erases a resource.
 		void						removeResource(SlotIterator itr);
-		
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables

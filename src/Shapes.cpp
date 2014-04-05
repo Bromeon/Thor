@@ -46,9 +46,9 @@ namespace
 	}
 
 } // namespace
-	
+
 // ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 namespace Shapes
 {
@@ -94,11 +94,11 @@ namespace Shapes
 		line.setPoint(1,  perpendicular);
 		line.setPoint(2, direction + perpendicular);
 		line.setPoint(3, direction - perpendicular);
-		
+
 		return line;
 	}
 
-	sf::ConvexShape roundedRect(sf::Vector2f size, float cornerRadius, 
+	sf::ConvexShape roundedRect(sf::Vector2f size, float cornerRadius,
 		const sf::Color& fillColor, float outlineThickness, const sf::Color& outlineColor)
 	{
 		assert(outlineThickness >= 0.f);
@@ -114,26 +114,26 @@ namespace Shapes
 
 		const unsigned int nbSegmentsPerCorner = 20;
 		const float difference = 90.f / nbSegmentsPerCorner;
-	
+
 		// right lower rounded corner
 		for (; radialVec.phi < 90.f; radialVec.phi += difference)
 			addPoint(shape, currentCorner + sf::Vector2f(radialVec));
-	
+
 		// left lower rounded corner
 		currentCorner.x = cornerRadius;
 		for (radialVec.phi = 90.f; radialVec.phi < 180.f; radialVec.phi += difference)
 			addPoint(shape, currentCorner + sf::Vector2f(radialVec));
-	
+
 		// left upper rounded corner
 		currentCorner.y = cornerRadius;
 		for (radialVec.phi = 180.f; radialVec.phi < 270.f; radialVec.phi += difference)
 			addPoint(shape, currentCorner + sf::Vector2f(radialVec));
-	
+
 		// right upper rounded corner
 		currentCorner.x = size.x - cornerRadius;
 		for (radialVec.phi = 270.f; radialVec.phi < 360.f; radialVec.phi += difference)
 			addPoint(shape, currentCorner + sf::Vector2f(radialVec));
-				
+
 		return shape;
 	}
 
@@ -145,23 +145,23 @@ namespace Shapes
 
 		// Radial vector of the regular polygon
 		PolarVector2f vector(radius, 0.f);
-	
+
 		sf::ConvexShape shape;
 		shape.setFillColor(fillColor);
 		shape.setOutlineThickness(outlineThickness);
 		shape.setOutlineColor(outlineColor);
-	
+
 		// Add regularly distributed polygon points
 		for (unsigned int points = 0; points < nbPoints; ++points)
 		{
 			vector.phi = 360.f * points / nbPoints;
-		
+
 			addPoint(shape, vector);
 		}
 
 		return shape;
 	}
-	
+
 	sf::ConvexShape star(unsigned int nbStarPoints, float innerRadius, float outerRadius,
 		const sf::Color& fillColor, float outlineThickness, const sf::Color& outlineColor)
 	{
@@ -172,18 +172,18 @@ namespace Shapes
 		// Calculate points of the inner, regular polygon and the outer star points
 		PolarVector2f inner(innerRadius, 0.f);
 		PolarVector2f outer(outerRadius, 0.f);
-	
+
 		sf::ConvexShape shape;
 		shape.setFillColor(fillColor);
 		shape.setOutlineThickness(outlineThickness);
 		shape.setOutlineColor(outlineColor);
-		
+
 		// Step around and alternately add inner and outer points
 		for (unsigned int points = 0; points < nbStarPoints; ++points)
 		{
 			inner.phi = 360.f * points / nbStarPoints;
 			outer.phi = inner.phi + 180.f / nbStarPoints;
-		
+
 			addPoint(shape, inner);
 			addPoint(shape, outer);
 		}

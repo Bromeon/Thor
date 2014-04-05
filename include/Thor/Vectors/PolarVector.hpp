@@ -46,21 +46,21 @@ struct PolarVector2
 {
 	T	r;				///< Radius
 	T	phi;			///< Angle in degrees
-	
+
 	/// @brief Default constructor
-	/// @details Creates a zero vector. The angle @a phi measures 0 degrees. 
+	/// @details Creates a zero vector. The angle @a phi measures 0 degrees.
 	PolarVector2();
-	
+
 	/// @brief Constructs a polar vector with specified radius and angle.
 	/// @param radius The radial component (length of the vector).
 	/// @param angle The angular component in degrees.
 	PolarVector2(T radius, T angle);
-	
+
 	/// @brief Constructs a polar vector from a cartesian SFML vector.
 	/// @param vector Cartesian (x,y) vector being converted to polar coordinates.
 	///  Zero vectors are allowed and result in a polar vector with r=0 and phi=0.
 	PolarVector2(const sf::Vector2<T>& vector);
-	
+
 	/// @brief Converts the polar vector into a cartesian SFML vector.
 	/// @return Equivalent (x,y) vector in cartesian coordinates.
 	operator sf::Vector2<T> () const;

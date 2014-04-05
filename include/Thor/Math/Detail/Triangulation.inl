@@ -86,7 +86,7 @@ namespace detail
 	{
 		public:
 										AdvancedEdge(AdvancedVertex& startPoint, AdvancedVertex& endPoint);
-		
+
 		private:
 			// Sorts the corners by vector-component-sum to allow faster access inside std::set.
 			void						orderCorners();
@@ -94,18 +94,18 @@ namespace detail
 
 	// A triangle that carries advanced information in order to efficiently support the algorithm.
 	class THOR_API AdvancedTriangle : public Triangle<AdvancedVertex>
-	{	
+	{
 		public:
 										AdvancedTriangle(AdvancedVertex& corner0, AdvancedVertex& corner1, AdvancedVertex& corner2);
-		
+
 			void						addVertex(AdvancedVertex& vertexRef);
 
 			void						removeVertex(AdvancedVertex& vertexRef);
 			void						removeVertex(VertexPtrIterator vertexItr);
-		
+
 			VertexPtrIterator			begin();
 			VertexPtrIterator			end();
-		
+
 			// Sets/returns the adjacent triangle on the opposite side of the corner #index.
 			void						setAdjacentTriangle(unsigned int index, const OptTriangleIterator& adjacentTriangle);
 			OptTriangleIterator			getAdjacentTriangle(unsigned int index) const;
@@ -114,7 +114,7 @@ namespace detail
 			void						setFlagged(bool flagged);
 			bool						isFlagged() const;
 
-		private:		
+		private:
 			VertexPtrSet							mRemainingVertices;
 			aurora::CopiedPtr<OptTriangleItrArray>	mAdjacentTriangles;
 			bool									mFlagged;
@@ -165,7 +165,7 @@ namespace detail
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	template <typename V>
 	AdvancedVertex::AdvancedVertex(V& userVertex, OptTriangleIterator surroundingTriangle)
@@ -200,7 +200,7 @@ namespace detail
 	void 				THOR_API setBoundaryPositions(const VertexCtr& allVertices, AdvancedTriangle& boundaryTriangle);
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	// Policy class for small differences in triangulation - here for triangulateConstrained()
 	template <typename InputIterator>
@@ -214,7 +214,7 @@ namespace detail
 
 		InputIterator constrainedEdgesBegin;
 		InputIterator constrainedEdgesEnd;
-	
+
 		static const bool isPolygon = false;
 	};
 
@@ -232,7 +232,7 @@ namespace detail
 		: edgesOut(edgesOut)
 		{
 		}
-	
+
 		OutputIterator edgesOut;
 
 		static const bool isPolygon = true;
@@ -263,11 +263,11 @@ namespace detail
 		for (InputIterator2 itr = constrainedEdgesBegin; itr != constrainedEdgesEnd; ++itr)
 		{
 			UserEdge& edge = *itr;
-		
+
 			importantVertices.insert(&edge[0]);
 			importantVertices.insert(&edge[1]);
 		}
-	
+
 		// Insert important advanced vertices, link to base triangle, fill user->advanced map
 		std::map<UserVertex*, AdvancedVertex*> map;
 		AURORA_FOREACH(UserVertex* userVertex, importantVertices)
@@ -276,7 +276,7 @@ namespace detail
 
 			AdvancedVertex& advancedVertex = allVertices.back();
 			firstTriangle->addVertex(advancedVertex);
-			
+
 			map.insert(std::make_pair(userVertex, &advancedVertex));
 		}
 
@@ -293,7 +293,7 @@ namespace detail
 		for (; verticesBegin != verticesEnd; ++verticesBegin)
 		{
 			UserVertex& userVertex = *verticesBegin;
-	
+
 			if (importantVertices.find(&userVertex) == importantVertices.end())
 			{
 				allVertices.push_back(detail::AdvancedVertex(userVertex, firstTriangle));
@@ -312,15 +312,15 @@ namespace detail
 
 	// Overload for PolygonOutputTrDetails to write in an output iterator
 	template <typename OutputIterator, typename UserVertex>
-	void addEdge(EdgeSet& constrainedEdges, AdvancedVertex* previousVertex, AdvancedVertex& currentVertex, 
+	void addEdge(EdgeSet& constrainedEdges, AdvancedVertex* previousVertex, AdvancedVertex& currentVertex,
 		PolygonOutputTrDetails<OutputIterator, UserVertex> details)
 	{
 		if (previousVertex != nullptr)
-		{	
+		{
 			*details.edgesOut++ = Edge<UserVertex>(
 				previousVertex->getUserVertex<UserVertex>(),
 				currentVertex.getUserVertex<UserVertex>());
-		
+
 			constrainedEdges.insert(AdvancedEdge(*previousVertex, currentVertex));
 		}
 	}
@@ -335,19 +335,19 @@ namespace detail
 			return;
 
 		AdvancedVertex* previousVertex = nullptr;
-	
+
 		for (; verticesBegin != verticesEnd; ++verticesBegin)
-		{	
+		{
 			// Add the vertex to allVertices, link with firstTriangle
 			allVertices.push_back(AdvancedVertex(*verticesBegin, firstTriangle));
 			AdvancedVertex& vertex = allVertices.back();
-			firstTriangle->addVertex(vertex); 
+			firstTriangle->addVertex(vertex);
 
 			// Add edge of adjacent vertices
 			addEdge(constrainedEdges, previousVertex, vertex, details);
 			previousVertex = &vertex;
 		}
-	
+
 		// If at least one vertex is contained, insert edge from last to first vertex, so that the boundary is closed.
 		// First vertex is the one directly inserted after the three boundary vertices.
 		AdvancedVertex& firstVertex = allVertices[3];
@@ -385,14 +385,14 @@ namespace detail
 		for (; begin != end; ++begin)
 		{
 			const AdvancedTriangle& current = *begin;
-		
+
 			// Downcast to original vertex type (during the algorithm, we abandoned full type information)
 			*out++ = Triangle<UserVertex>(
 				current[0].getUserVertex<UserVertex>(),
 				current[1].getUserVertex<UserVertex>(),
 				current[2].getUserVertex<UserVertex>());
 		}
-	
+
 		return out;
 	}
 
@@ -403,21 +403,21 @@ namespace detail
 		VertexCtr		allVertices;
 		TriangleList	triangles;
 		EdgeSet			constrainedEdges;
-	
+
 		// Avoid reallocations (and thus iterator and reference invalidations), add first three boundary (dummy, as they're removed afterwards) vertices
 		createBoundaryPoints(allVertices, triangles);
 		AdvancedTriangle boundaryTriangle = triangles.front();
-	
+
 		// Bring vertices in ideal order for constrained Delaunay triangulation, and add constrained edges
 		collateVertices(triangles.begin(), allVertices, constrainedEdges, verticesBegin, verticesEnd, details);
 
 		// Set the positions of the boundary vertices, according to the spread of the internal vertices
 		setBoundaryPositions(allVertices, boundaryTriangle);
-	
+
 		// Insert each vertex. This invalidates the iterator first (because the old triangle is removed (split)).
-		for (VertexCtr::iterator itr = allVertices.begin() + 3, end = allVertices.end(); itr != end; ++itr) 
+		for (VertexCtr::iterator itr = allVertices.begin() + 3, end = allVertices.end(); itr != end; ++itr)
 			insertPoint(triangles, *itr, boundaryTriangle, constrainedEdges);
-	
+
 		// Remove triangles that are not contained in the final triangulation
 		removeUnusedTriangles(triangles, boundaryTriangle, constrainedEdges, AdditionalDetails::isPolygon);
 
@@ -459,7 +459,7 @@ OutputIterator triangulatePolygon(InputIterator verticesBegin, InputIterator ver
 template <typename InputIterator, typename OutputIterator1, typename OutputIterator2>
 OutputIterator1 triangulatePolygon(InputIterator verticesBegin, InputIterator verticesEnd, OutputIterator1 trianglesOut, OutputIterator2 edgesOut)
 {
-	return detail::triangulateImpl(verticesBegin, verticesEnd, trianglesOut, 
+	return detail::triangulateImpl(verticesBegin, verticesEnd, trianglesOut,
 		detail::PolygonOutputTrDetails<OutputIterator2, typename detail::DereferencedIterator<InputIterator>::value_type>(edgesOut));
 }
 

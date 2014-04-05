@@ -62,31 +62,31 @@ class THOR_API Connection
 		/// @brief Default constructor: Creates an instance which is initially invalid.
 		/// @details Assign another object to make this instance a valid %Connection.
 									Connection();
-							
+
 		/// @brief Checks whether the instance currently references a listener.
 		/// @return true if this instance is currently connected.
 		bool						isConnected() const;
-		
+
 		/// @brief Invalidates this instance.
 		/// @details This does not affect the referenced listener (if any) nor other %Connection instances.
 		///  Invalidating an already invalid instance has no effects.
 		///  @n After the invalidation, you can reuse this instance by assigning another one. But normally, it pays
 		///  off to have as few invalid connections as possible, as this saves you from case differentiations.
 		void						invalidate();
-		
+
 		/// @brief Disconnects the referenced listener from its triggering event.
 		/// @details This action invalidates this and all other Connections to the referenced listener.
 		///  If no connection exists at the moment, this function has no effect.
 		void						disconnect();
 
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Implementation details
 	public:
 		// Create connection from tracker object
 		explicit					Connection(std::weak_ptr<detail::AbstractConnectionImpl> tracker);
 
-		
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
@@ -120,16 +120,16 @@ class THOR_API ScopedConnection : private sf::NonCopyable
 		/// @brief Move assignment operator
 		/// @details Invalidates @a source such that it no longer disconnects the connection upon destruction.
 		ScopedConnection&			operator= (ScopedConnection&& source);
-				
+
 		/// @brief Destructor: Disconnects the event-listener connection.
 		/// @details In case the instance isn't connected, nothing happens.
 									~ScopedConnection();
-				
+
 		/// @brief Checks whether the instance currently references a listener.
 		/// @return true if this instance is currently connected.
 		bool						isConnected() const;
 
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:

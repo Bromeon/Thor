@@ -62,7 +62,7 @@ class MultiResourceCache
 		/// @copydoc ResourceCache::ResourceCache()
 		///
 									MultiResourceCache();
-		
+
 		/// @brief Move constructor
 		/// 
 									MultiResourceCache(MultiResourceCache&& source);

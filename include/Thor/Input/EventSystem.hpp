@@ -56,11 +56,11 @@ class EventSystem : private aurora::NonCopyable
 		/// @brief Default constructor
 		/// @details Sets up an EventSystem where @a Event and @a EventId are the same types.
 									EventSystem();
-			
+
 		/// @brief Fires an event.
 		/// @details Calls all listener functions that are currently associated with @a event.
 		void						triggerEvent(const Event& event);
-	
+
 		/// @brief Connects an event to the specified unary listener.
 		/// @details Duplicates are allowed (thus, the listener is invoked multiple times). Use this function if your callback
 		///  should receive the event that triggered it as a parameter.

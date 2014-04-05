@@ -67,7 +67,7 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		/// @brief Creates an empty shape.
 		/// @details You can use setPointCount() and SetPoint() to build your own concave shape.
 									ConcaveShape();
-							
+
 		/// @brief Implicit constructor that adapts an existing sf::Shape.
 		/// @details The concave shape should look as similar as possible to the original convex shape.
 									ConcaveShape(const sf::Shape& shape);
@@ -76,7 +76,7 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		///
 		void						swap(ConcaveShape& other);
 
-		
+
 		/// @brief Sets the amount of points in the concave polygon.
 		///
 		void						setPointCount(unsigned int count);
@@ -113,15 +113,15 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		/// @brief sets the thickness of the shape's outline (0.f by default).
 		/// @details @a outlineThickness must be greater or equal to zero. If it is zero, no outline is visible.
 		void						setOutlineThickness(float outlineThickness);
-		
+
 		/// @brief Returns the shape's outline thickness.
 		///
 		float						getOutlineThickness() const;
-		
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
-	private:	 		
+	private:
 		// Container typedefs
 		typedef std::vector< aurora::CopiedPtr<sf::Shape> >	ShapeContainer;
 		typedef std::vector< sf::Vector2f >					PointContainer;
@@ -135,10 +135,10 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 	private:
 		// Renders the shape to target.
 		virtual void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		
+
 		// Computes how the shape can be split up into convex triangles.
 		void						decompose() const;
-				
+
 		// Forms the outline out of the given edges.
 		void						formOutline() const;
 

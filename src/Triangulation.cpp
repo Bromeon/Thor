@@ -39,7 +39,7 @@ namespace detail
 {
 
 	// Struct instead of typedef, since the latter cannot be forward-declared
-	struct OptTriangleItrArray 
+	struct OptTriangleItrArray
 	{
 		std::array<OptTriangleIterator, 3>	iterators;
 	};
@@ -78,7 +78,7 @@ namespace detail
 	, target()
 	{
 	}
-	
+
 	OptTriangleIterator::OptTriangleIterator(TriangleIterator target)
 	: valid(true)
 	, target(target)
@@ -94,7 +94,7 @@ namespace detail
 		if (valid)
 			target = origin.target;
 	}
-	
+
 	OptTriangleIterator& OptTriangleIterator::operator= (const OptTriangleIterator& origin)
 	{
 		// Don't assign target if invalid, since the iterator is singular (default-constructed)
@@ -102,7 +102,7 @@ namespace detail
 		valid = origin.valid;
 		if (valid)
 			target = origin.target;
-	
+
 		return *this;
 	}
 
@@ -135,13 +135,13 @@ namespace detail
 	{
 		return mPosition;
 	}
-	
+
 	void AdvancedVertex::setSurroundingTriangle(OptTriangleIterator target)
 	{
 		assert(target.valid);
 		*mSurroundingTriangle = target;
 	}
-	
+
 	OptTriangleIterator AdvancedVertex::getSurroundingTriangle() const
 	{
 		assert(mSurroundingTriangle->valid);
@@ -175,50 +175,50 @@ namespace detail
 	, mFlagged(false)
 	{
 	}
-	
+
 	void AdvancedTriangle::addVertex(AdvancedVertex& vertexRef)
 	{
 		mRemainingVertices.insert(&vertexRef);
 	}
-	
+
 	void AdvancedTriangle::removeVertex(AdvancedVertex& vertexRef)
 	{
 		std::size_t erased = mRemainingVertices.erase(&vertexRef);
 		assert(erased == 1);
 	}
-	
+
 	void AdvancedTriangle::removeVertex(VertexPtrIterator vertexItr)
 	{
 		std::size_t size = mRemainingVertices.size();
 		mRemainingVertices.erase(vertexItr);
 		assert(size == mRemainingVertices.size() + 1);
 	}
-	
+
 	VertexPtrIterator AdvancedTriangle::begin()
 	{
 		return mRemainingVertices.begin();
 	}
-	
+
 	VertexPtrIterator AdvancedTriangle::end()
 	{
 		return mRemainingVertices.end();
 	}
-	
+
 	void AdvancedTriangle::setAdjacentTriangle(unsigned int index, const OptTriangleIterator& adjacentTriangle)
 	{
 		mAdjacentTriangles->iterators[index] = adjacentTriangle;
 	}
-	
+
 	OptTriangleIterator AdvancedTriangle::getAdjacentTriangle(unsigned int index) const
 	{
 		return mAdjacentTriangles->iterators[index];
 	}
-	
+
 	void AdvancedTriangle::setFlagged(bool flagged)
 	{
 		mFlagged = flagged;
 	}
-	
+
 	bool AdvancedTriangle::isFlagged() const
 	{
 		return mFlagged;
@@ -241,11 +241,11 @@ namespace detail
 	Circle computeCircumcircle(const AdvancedTriangle& triangle)
 	{
 		assert(at(triangle, 0) != at(triangle, 1) && at(triangle, 0) != at(triangle, 2));
-		
+
 		// Compute midpoint of two sides
 		sf::Vector2f p = 0.5f * (at(triangle, 0) + at(triangle, 1));
 		sf::Vector2f q = 0.5f * (at(triangle, 0) + at(triangle, 2));
-		
+
 		// Compute perpendicular bisectors of the sides
 		sf::Vector2f v = perpendicularVector(p - at(triangle, 0));
 		sf::Vector2f w = perpendicularVector(q - at(triangle, 0));
@@ -283,10 +283,10 @@ namespace detail
 		sf::Vector2f b = lhs[1].getPosition(); // a--+------b
 		sf::Vector2f c = rhs[0].getPosition(); //    |
 		sf::Vector2f d = rhs[1].getPosition(); //    d
-	
+
 		if (a == c || a == d || b == c || b == d)
 			return false;
-	
+
 		return detail::isClockwiseOriented(a, c, d) != detail::isClockwiseOriented(b, c, d)
 			&& detail::isClockwiseOriented(a, b, c) != detail::isClockwiseOriented(a, b, d);
 	}
@@ -299,7 +299,7 @@ namespace detail
 			if (intersection(edge, constrainedEdge))
 				return true;
 		}
-	
+
 		return false;
 	}
 
@@ -311,7 +311,7 @@ namespace detail
 	}
 
 	// Checks whether vertex is inside the triangle (center,corner1,corner2).                       c2
-	// To be exact, this function only checks if vertex is beyond the two vectors                   /    
+	// To be exact, this function only checks if vertex is beyond the two vectors                   /
 	// corner1-center, corner2-center, but since the original triangle is split                v   /
 	// up into three new triangles, this doesn't matter. The example returns true.        c1-----ce
 	bool isVertexInSection(const AdvancedVertex& vertex, sf::Vector2f center, sf::Vector2f corner1, sf::Vector2f corner2)
@@ -335,7 +335,7 @@ namespace detail
 	{
 		// Let the vertex point to the new triangle
 		(*sourceItr)->setSurroundingTriangle(destTriangle);
-	
+
 		// Move vertex from source to dest
 		destTriangle->addVertex(**sourceItr);
 		sourceTriangle->removeVertex(sourceItr);
@@ -357,7 +357,7 @@ namespace detail
 					return;
 				}
 			}
-				
+
 			assert(false);
 		}
 	}
@@ -368,13 +368,13 @@ namespace detail
 	{
 		unsigned int index1 = (index+1) % 3;
 		unsigned int index2 = (index+2) % 3;
-	
+
 		OptTriangleIterator other = oldTriangle->getAdjacentTriangle(index2);
-	
+
 		newTriangles[index]->setAdjacentTriangle(0, newTriangles[index1]);
 		newTriangles[index]->setAdjacentTriangle(1, newTriangles[index2]);
 		newTriangles[index]->setAdjacentTriangle(2, other);
-	
+
 		updateAdjacentBackReferences(oldTriangle, newTriangles[index], other);
 	}
 
@@ -409,7 +409,7 @@ namespace detail
 	// The output parameter sharedCornerIndices1 contains the subscripts (referring to the triangles) of the first shared corner,
 	// sharedCornerIndices2 to the second shared corner, disjointCornerIndices to the corners that aren't part of the common edge.
 	// The member first refers for each pair to the first triangle, second to the second one.
-	void arrangeCorners(const AdvancedTriangle& first, const AdvancedTriangle& second, 
+	void arrangeCorners(const AdvancedTriangle& first, const AdvancedTriangle& second,
 		UintPair& sharedCornerIndices1, UintPair& sharedCornerIndices2, UintPair& disjointCornerIndices)
 	{
 		// The triangle's corners are numbered in clockwise order. For example, to compare ABC and BAD,          A
@@ -425,7 +425,7 @@ namespace detail
 				// j determines rotation, 2-i is the reversed second sequence
 				match[i] = (at(first, (j+i) % 3) == at(second, 2-i));
 			}
-		
+
 			// If 2 of 3 corners are equal, then we know the corner arrangement.
 			if (std::accumulate(match.begin(), match.end(), 0) == 2)
 			{
@@ -436,12 +436,12 @@ namespace detail
 				{
 					unsigned int firstIndex = (j+i) % 3;
 					unsigned int secondIndex = 2-i;
-				
+
 					// A corner that both adjacent triangles (first and second) have in common
 					if (match[i])
 					{
 						assert(&first[firstIndex] == &second[secondIndex]);
-					
+
 						if (nbSharedCorners++ == 0)
 						{
 							sharedCornerIndices1.first  = firstIndex;
@@ -453,32 +453,32 @@ namespace detail
 							sharedCornerIndices2.second = secondIndex;
 						}
 					}
-				
+
 					// A disjoint corner (contained in either first or second)
 					else
 					{
 						assert(&first[firstIndex] != &second[secondIndex]);
-					
+
 						disjointCornerIndices.first  = firstIndex;
 						disjointCornerIndices.second = secondIndex;
 					}
 				}
-			
+
 				// Ensure that the indices are clockwise oriented for both triangles.                       (sc1.f)|(sc1.s)
 				// first:  sc1 -> sc2 -> dc                                               first ->   (dc.f)        |        (dc.s)   <- second
 				// second: sc2 -> sc1 -> dc                                                                 (sc2.f)|(sc2.s)
 				if (!isClockwiseOriented(
-					at(first, sharedCornerIndices1.first), 
+					at(first, sharedCornerIndices1.first),
 					at(first, sharedCornerIndices2.first),
 					at(first, disjointCornerIndices.first)))
 				{
 					std::swap(sharedCornerIndices1, sharedCornerIndices2);
 				}
-				
+
 				return;
 			}
 		}
-	
+
 		// We get here when the triangles are not adjacent (and thus don't share two corners); this should not happen.
 		assert(false);
 	}
@@ -499,7 +499,7 @@ namespace detail
 				assert(isVertexInSection(**itr, at(*oldSecond, disjointCornerIndices.second), at(*oldFirst, disjointCornerIndices.first)));
 				transferVertex(oldTriangle, itr++, newSecond);
 			}
-		}	
+		}
 	}
 
 	// Moves all vertices in oldTriangle to either newFirst or newSecond, depending on which side of the new
@@ -508,7 +508,7 @@ namespace detail
 		const UintPair& disjointCornerIndices)
 	{
 		transferVertices2Impl(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices, oldFirst);
-		transferVertices2Impl(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices, oldSecond);	
+		transferVertices2Impl(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices, oldSecond);
 	}
 
 	// Copies the adjacent triangle from oldTriangle at oldIndex to newTriangle at newIndex (only one reference).
@@ -519,12 +519,12 @@ namespace detail
 
 		// Update this triangle's references to adjacent triangles.
 		newTriangle->setAdjacentTriangle(newIndex, other);
-	
+
 		// Update adjacent triangles's references to this triangle.
-		updateAdjacentBackReferences(oldTriangle, newTriangle, other);	
+		updateAdjacentBackReferences(oldTriangle, newTriangle, other);
 	}
 
-	// Performs an edge flip, i.e. both triangles are merged and the resulting quadrilateral is split again, but into two different 
+	// Performs an edge flip, i.e. both triangles are merged and the resulting quadrilateral is split again, but into two different
 	// triangles  (choose the other diagonal as cutting edge).
 	// @param oldFirst				Iterator to the old first triangle. This iterator is invalidated during the operation.
 	// @param oldSecond				Like oldFirst, but iterator to the second triangle.
@@ -536,34 +536,34 @@ namespace detail
 		const UintPair& sharedCornerIndices1, const UintPair& sharedCornerIndices2, const UintPair& disjointCornerIndices)
 	{
 		// Create the new triangles which are going to outlive this function
-		TriangleIterator newFirst = insertTriangle(triangles, 
+		TriangleIterator newFirst = insertTriangle(triangles,
 			(*oldFirst)[sharedCornerIndices1.first],			// (sc1)
 			(*oldSecond)[disjointCornerIndices.second],			// (dc.s)
 			(*oldFirst)[disjointCornerIndices.first]);			// (dc.f)
-	
+
 		TriangleIterator newSecond = insertTriangle(triangles,
 			(*oldSecond)[sharedCornerIndices2.second],			// (sc2)
 			(*oldFirst)[disjointCornerIndices.first],			// (dc.f)
 			(*oldSecond)[disjointCornerIndices.second]);		// (dc.s)
-		
+
 		// Move each vertex to the new corresponding triangle
 		transferVertices2(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices);
-	
-		// Adapt referenced adjacents - note that the old indices                     //                       (dc.f)              edge      
+
+		// Adapt referenced adjacents - note that the old indices                     //                       (dc.f)              edge
 		// (non-shared corners) now form the end points of the new edge.              // oldFirst    (sc2.f)          (sc1.f)      flip            (1)|(2)
 		updateAdjacentRelation(oldFirst, sharedCornerIndices1.first, newSecond, 2);	  //             ------------------------       ->       (0)      |      (0)
-		updateAdjacentRelation(oldFirst, sharedCornerIndices2.first, newFirst, 1);    // oldSecond   (sc2.s)          (sc1.s)                      (2)|(1)     
+		updateAdjacentRelation(oldFirst, sharedCornerIndices2.first, newFirst, 1);    // oldSecond   (sc2.s)          (sc1.s)                      (2)|(1)
 		updateAdjacentRelation(oldSecond, sharedCornerIndices1.second, newSecond, 1); //                       (dc.s)
 		updateAdjacentRelation(oldSecond, sharedCornerIndices2.second, newFirst, 2);  //                                                     newSecond|newFirst
-	
+
 		// Of course, the new triangles are adjacent to each other.
 		newFirst->setAdjacentTriangle(0, newSecond);
 		newSecond->setAdjacentTriangle(0, newFirst);
-		
+
 		// Mark old triangles for removal; they're not needed anymore.
 		oldFirst->setFlagged(true);
 		oldSecond->setFlagged(true);
-	
+
 		return TriangleItrPair(newFirst, newSecond);
 	}
 
@@ -609,7 +609,7 @@ namespace detail
 		const EdgeSet& constrainedEdges)
 	{
 		OptTriangleIterator itr = triangleItr->getAdjacentTriangle(adjacentIndex);
-	
+
 		return itr.valid && ensureLocalDelaunay(triangles, triangleItr, itr.target, boundaryTriangle, constrainedEdges);
 	}
 
@@ -617,15 +617,15 @@ namespace detail
 	void changeEdgeSituation(TriangleList& triangles, TriangleIterator first, TriangleIterator second, const AdvancedTriangle& boundaryTriangle,
 		const EdgeSet& constrainedEdges, const UintPair& sharedCornerIndices1, const UintPair& sharedCornerIndices2, const UintPair& disjointCornerIndices)
 	{
-		TriangleItrPair newTriangles = flipEdges(triangles, first, second, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);	
-	
+		TriangleItrPair newTriangles = flipEdges(triangles, first, second, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
+
 		// Ensure that the adjacent triangles locally conform to Delaunay, as well.
 		// If one function call returns true, don't execute the others because iterators are invalidated.
 		// On average, the recursion stops on O(1) time, the adjacent triangles are already Delaunay-conforming.
 		ensureLocalDelaunayAdjacent(triangles, newTriangles.first, 1, boundaryTriangle, constrainedEdges);
 		ensureLocalDelaunayAdjacent(triangles, newTriangles.first, 2, boundaryTriangle, constrainedEdges);
 		ensureLocalDelaunayAdjacent(triangles, newTriangles.second, 1, boundaryTriangle, constrainedEdges);
-		ensureLocalDelaunayAdjacent(triangles, newTriangles.second, 2, boundaryTriangle, constrainedEdges);		
+		ensureLocalDelaunayAdjacent(triangles, newTriangles.second, 2, boundaryTriangle, constrainedEdges);
 	}
 
 	// Checks whether the shared edge of two triangles must be moved (to the other diagonal of the quadrilateral)
@@ -637,7 +637,7 @@ namespace detail
 	bool ensureLocalDelaunay(TriangleList& triangles, TriangleIterator first, TriangleIterator second, const AdvancedTriangle& boundaryTriangle,
 		const EdgeSet& constrainedEdges)
 	{
-		// Note: If the merged quadrilateral is concave, the Delaunay condition will locally already be satisfied.	
+		// Note: If the merged quadrilateral is concave, the Delaunay condition will locally already be satisfied.
 
 		// Flagged triangles are going to be removed, don't take them into account
 		if (first->isFlagged() || second->isFlagged())
@@ -648,37 +648,37 @@ namespace detail
 		UintPair sharedCornerIndices2;
 		UintPair disjointCornerIndices;
 		arrangeCorners(*first, *second, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
-	
+
 		// Check if we must flip edges because of the boundaries (the triangles there don't have to conform Delaunay, but the triangles inside do)
 		bool disjointBoundary = isDisjointBoundary(boundaryTriangle, *first, *second, disjointCornerIndices);
 		bool sharedBoundary = isSharedBoundary(boundaryTriangle, *first, sharedCornerIndices1, sharedCornerIndices2);
-	
+
 		// The following additional checks are not required if constrained edges are always part of a merged quadrilateral (=two adjacent triangles).
 		// But in general, we may have constrained edges that span many triangles, and the local Delaunay condition doesn't capture them.
 		bool sharedBlocking = intersectsEdge(AdvancedEdge((*first)[sharedCornerIndices1.first], (*first)[sharedCornerIndices2.first]), constrainedEdges);
 		bool disjointBlocking = intersectsEdge(AdvancedEdge((*first)[disjointCornerIndices.first], (*second)[disjointCornerIndices.second]), constrainedEdges);
-	
+
 		// These two bools express whether the disjoint edge respectively the shared edge MUST be flipped.
 		bool disjointEdgeEnforced = disjointBoundary || disjointBlocking;
 		bool sharedEdgeEnforced = sharedBoundary || sharedBlocking;
-	
+
 		// If the Delaunay test concerns one of the initial vertices, we pretend that those vertices are never inside the circumcircle.
 		// This is required because we don't want to perform edge flips at the boundary of the very big outer triangle.
 		// The same applies to constrained edges as input of the Constrained Delaunay Triangulation.
 		if (disjointEdgeEnforced && !sharedEdgeEnforced)
 			return false;
-	
+
 		if (sharedEdgeEnforced && !disjointEdgeEnforced)
 		{
 			// If the merged quadrilateral isn't convex, we may of course not flip edges (since the new edge would be located outside both triangles).
 			if (isClockwiseOriented(at(*first, disjointCornerIndices.first), at(*second, disjointCornerIndices.second), at(*first, sharedCornerIndices1.first))
 			 || isClockwiseOriented(at(*second, disjointCornerIndices.second), at(*first, disjointCornerIndices.first), at(*first, sharedCornerIndices2.first)))
 				return false;
-	 
+
 			changeEdgeSituation(triangles, first, second, boundaryTriangle, constrainedEdges, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
 			return true;
 		}
-	
+
 		// If the vertex of the other triangle is inside this triangle's circumcircle, the Delaunay condition is locally breached and we need to flip edges.
 		// Independently, there can be an enforced edge flip (at the boundary, or because of the constraints).
 		// The second && operand is actually not necessary, since the Delaunay condition is symmetric to both triangles. However, rounding errors may occur
@@ -691,7 +691,7 @@ namespace detail
 			changeEdgeSituation(triangles, first, second, boundaryTriangle, constrainedEdges, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
 			return true;
 		}
-	
+
 		// Otherwise, the triangles are Delaunay at the moment and no edge flip is required.
 		return false;
 	}
@@ -701,9 +701,9 @@ namespace detail
 	{
 		TriangleIterator oldTriangleItr = vertex.getSurroundingTriangle().target;
 		AdvancedTriangle& oldTriangle = *oldTriangleItr;
-	
+
 		assert(isClockwiseOriented(at(oldTriangle, 0), at(oldTriangle, 1), at(oldTriangle,2)));
-	
+
 		// Split triangle up into three new sub-triangles, each consisting of two old corners and the new vertex
 		TriangleItrArray newTriangles = {
 			insertTriangle(triangles, oldTriangle[0], oldTriangle[1], vertex),
@@ -717,24 +717,24 @@ namespace detail
 		// Remove current vertex - as soon as it forms a triangle corner, it counts no longer as remaining vertex
 		sf::Vector2f newCornerPosition = vertex.getPosition();
 		oldTriangle.removeVertex(vertex);
-	
+
 		// Move each vertex to its corresponding new surrounding triangle
 		transferVertices3(oldTriangleItr, newTriangles, newCornerPosition);
-	
+
 		// Remove the old big triangle, we have three new ones
 		triangles.erase(oldTriangleItr);
-	
+
 		// For each newly created triangle, we must ensure that the Delaunay condition with its adjacent is kept up.
 		// The variable adjacent (third argument of EnsureLocalDelaunay()) is the adjacent of the old triangle.
 		// Corner number 2 is always the vertex inserted in this function, so the triangle on the opposite is the sought one.
 		for (unsigned int i = 0; i < 3; ++i)
 		{
 			OptTriangleIterator adjacent = newTriangles[i]->getAdjacentTriangle(2);
-		
+
 			if (adjacent.valid)
 				ensureLocalDelaunay(triangles, newTriangles[i], adjacent.target, boundaryTriangle, constrainedEdges);
 		}
-	
+
 		// Remove currently flagged triangles. Don't do this earlier because of iterator invalidations.
 		triangles.remove_if(std::mem_fn(&AdvancedTriangle::isFlagged));
 	}
@@ -753,7 +753,7 @@ namespace detail
 
 		// First triangle in list is the one containing the three boundary vertices
 		triangles.push_back(AdvancedTriangle(allVertices[0], allVertices[1], allVertices[2]));
-	
+
 		for (unsigned int i = 0; i < 3; ++i)
 			allVertices[i].setSurroundingTriangle(triangles.begin());
 	}
@@ -788,12 +788,12 @@ namespace detail
 	{
 		AdvancedEdge adv(startPoint, endPoint);
 		EdgeSet::const_iterator candidate = constrainedEdges.find(adv);
-	
+
 		// Just to make sure the set predicate really works. Otherwise: return candidate != ..end() && .. && ..;
 		assert(candidate == constrainedEdges.end()
 		 || adv[0].getPosition() == (*candidate)[0].getPosition()
 		 && adv[1].getPosition() == (*candidate)[1].getPosition());
-	
+
 		return candidate != constrainedEdges.end();
 	}
 
@@ -813,7 +813,7 @@ namespace detail
 		// Flagged triangles have already been passed, skip them
 		if (current->isFlagged())
 			return;
-		
+
 		current->setFlagged(true);
 
 		OptTriangleIterator adjacent;
@@ -838,11 +838,11 @@ namespace detail
 			// get the top element of the stack (next triangle to traverse) and pop it
 			current = stack.top();
 			stack.pop();
-		
+
 			// Call function that may push new triangles onto the stack
 			removeOuterPolygonTrianglesImpl(current, stack, constrainedEdges);
 		}
-	
+
 		// Remove all triangles marked as unused.
 		// We can't erase() during the stack iteration, because triangles' flags are still polled, so the iterators must be valid.
 		triangles.remove_if(std::mem_fn(&AdvancedTriangle::isFlagged));
@@ -866,7 +866,7 @@ namespace detail
 				else
 					itr = triangles.erase(itr);
 			}
-		
+
 			// Triangle is retained, continue
 			else
 			{

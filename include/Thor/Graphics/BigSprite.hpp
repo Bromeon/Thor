@@ -90,7 +90,7 @@ class THOR_API BigSprite : public sf::Drawable, public sf::Transformable
 		/// @brief Returns the local bounding rect, starting at (0,0).
 		/// 
 		sf::FloatRect				getLocalBounds() const;
-		
+
 		/// @brief Returns the global bounding rect, with the current transform applied.
 		/// 
 		sf::FloatRect				getGlobalBounds() const;

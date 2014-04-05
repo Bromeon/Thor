@@ -55,7 +55,7 @@ void StopWatch::start()
 	{
 		mRunning = true;
 		mClock.restart();
-	}		
+	}
 }
 
 void StopWatch::stop()

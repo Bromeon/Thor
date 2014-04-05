@@ -41,7 +41,7 @@ namespace detail
 		public:
 			// Disconnects a listener from an event
 			virtual void disconnect() = 0;
-		
+
 			// Virtual destructor
 			virtual ~AbstractConnectionImpl()
 			{
@@ -52,7 +52,7 @@ namespace detail
 	template <typename List>
 	class IteratorConnectionImpl : public AbstractConnectionImpl
 	{
-		private:	
+		private:
 			typedef typename List::Iterator Iterator;
 
 		public:
@@ -62,13 +62,13 @@ namespace detail
 			, mIterator(iterator)
 			{
 			}
-		
+
 			virtual void disconnect()
 			{
 				mContainer->remove(mIterator);
 			}
-	
-		private:	
+
+		private:
 			List*		mContainer;
 			Iterator	mIterator;
 	};
@@ -77,7 +77,7 @@ namespace detail
 	template <typename Container>
 	class IdConnectionImpl : public AbstractConnectionImpl
 	{
-		private:	
+		private:
 			typedef typename Container::value_type ValueType;
 
 		public:
@@ -92,12 +92,12 @@ namespace detail
 			{
 				// TODO: Use binary search
 				auto found = std::find_if(mContainer->begin(), mContainer->end(), [this] (ValueType& v) { return v.id == mId; });
-			
+
 				if (found != mContainer->end())
 					mContainer->erase(found);
 			}
 
-		private:	
+		private:
 			Container*			mContainer;
 			unsigned int		mId;
 	};

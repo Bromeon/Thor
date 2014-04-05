@@ -71,11 +71,11 @@ namespace detail
 
 /// @brief Class for particle systems.
 /// @details A particle system stores, updates and draws particles. It also stores emitter and affector functions that control
-///  how particles are generated and modified over time. To represent particles graphically, a particle system requires a texture, 
+///  how particles are generated and modified over time. To represent particles graphically, a particle system requires a texture,
 ///  and optionally one or multiple texture rectangles.
 /// @n@n This class is noncopyable.
 class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, private EmissionInterface
-{		
+{
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
@@ -184,7 +184,7 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		///  dead particles are removed.
 		/// @param dt Frame duration.
 		void						update(sf::Time dt);
-		
+
 		/// @brief Removes all particles that are currently in the system.
 		///
 		void						clearParticles();
@@ -197,11 +197,11 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		/// @param target The render target to which the particles are drawn.
 		/// @param states Current render states (shader, blend mode, ...)
 		virtual void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		
+
 		/// @brief Emits a particle into the system.
 		/// @param particle Particle to emit.
 		virtual void				emitParticle(const Particle& particle);
-			
+
 		// Updates a single particle.
 		void						updateParticle(Particle& particle, sf::Time dt);
 

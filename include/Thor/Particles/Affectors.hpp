@@ -136,7 +136,7 @@ class THOR_API TorqueAffector
 
 
 /// @brief Scales particles over time.
-/// @details 
+/// @details
 class THOR_API ScaleAffector
 {
 	// ---------------------------------------------------------------------------------------------------------------------------

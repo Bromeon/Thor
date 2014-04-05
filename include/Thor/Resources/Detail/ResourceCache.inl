@@ -56,7 +56,7 @@ template <class R>
 std::shared_ptr<R> ResourceCache<R>::search(const ResourceKey<R>& key)
 {
 	SlotConstIterator itr = mMap->find(key);
-	
+
 	// Return found resource or nullptr if not found
 	if (itr == mMap->end())
 		return nullptr;
@@ -89,7 +89,7 @@ bool ResourceCache<R>::release(const ResourceKey<R>& key)
 	// Find corresponding map entry
 	SlotIterator itr = mMap->find(key);
 	assert(itr != mMap->end());
-	
+
 	// Unload and remove resource (don't call removeResource() because the last shared_ptr's deleter erases the iterator)
 	ResourceSlot& slot = itr->second;
 	const bool unused = slot.isUnused();

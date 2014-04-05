@@ -51,7 +51,7 @@ namespace detail
 		private:
 			// Callback function type
 			typedef std::function<void(Parameter)> Function;
-	
+
 		public:
 			// Constructor, initializes function with fn and creates a new unique id
 			Listener(const Function& fn)
@@ -59,20 +59,20 @@ namespace detail
 			, mStrongRef() // will be initialized later by setEnvironment()
 			{
 			}
-		
+
 			// Call function
 			void call(Parameter arg) const
 			{
 				mFunction(arg);
 			}
-		
+
 			// Swap instances
 			void swap(Listener& other)
 			{
 				std::swap(mFunction,	other.mFunction);
 				std::swap(mStrongRef,	other.mStrongRef);
 			}
-		
+
 			// Sets the container and iterator in which this Listener is hold (to be able to create
 			// Connections from *this)
 			template <class ListenerContainer>
@@ -80,13 +80,13 @@ namespace detail
 			{
 				mStrongRef = makeIteratorConnectionImpl(container, iterator);
 			}
-		
+
 			// Creates a Connection that can disconnect this Listener
 			Connection shareConnection() const
 			{
 				return Connection(mStrongRef);
 			}
-	
+
 		private:
 			Function								mFunction;
 			std::shared_ptr<AbstractConnectionImpl>	mStrongRef;
@@ -108,22 +108,22 @@ namespace detail
 		public:
 			// The iterator type (used to disconnect listeners)
 			typedef typename Container::iterator	Iterator;
-		
+
 		public:
 			// Inserts a new listener to the collection and returns the respective Connection.
 			Connection add(const ValueType& listener)
 			{
 				// Actual insertion
 				mListeners.push_back(listener);
-			
+
 				// Let the Listener know about its container and iterator
 				Iterator added = mListeners.end() - 1;
 				added->setEnvironment(*this, added);
-			
+
 				// Create connection from the added Listener
 				return added->shareConnection();
 			}
-		
+
 			// Removes a listener through the given iterator.
 			void remove(Iterator iterator)
 			{
@@ -144,7 +144,7 @@ namespace detail
 				AURORA_FOREACH(const ValueType& listener, mListeners)
 					listener.call(arg);
 			}
-	
+
 		private:
 			Container mListeners;
 	};
@@ -164,7 +164,7 @@ namespace detail
 		private:
 			// The container type used to store the callback functions
 			typedef std::multimap<KeyType, ValueType>			Container;
-		
+
 			// The const iterator type (used internally)
 			typedef typename Container::const_iterator			ConstIterator;
 
@@ -178,14 +178,14 @@ namespace detail
 			{
 				// Actual insertion
 				Iterator added = mListeners.insert( std::make_pair(trigger, listener) );
-			
+
 				// Let the Listener know about its container and iterator
 				added->second.setEnvironment(*this, added);
 
 				// Create connection from the added Listener
 				return added->second.shareConnection();
 			}
-		
+
 			// Removes a listener through the given iterator.
 			void remove(Iterator iterator)
 			{
@@ -197,7 +197,7 @@ namespace detail
 			{
 				mListeners.erase(key);
 			}
-		
+
 			// Removes all listeners from the container
 			void clearAll()
 			{
@@ -208,7 +208,7 @@ namespace detail
 			void call(Trigger event, Parameter arg) const
 			{
 				std::pair<ConstIterator, ConstIterator> range = mListeners.equal_range(event);
-	
+
 				for (ConstIterator itr = range.first; itr != range.second; ++itr)
 					itr->second.call(arg);
 			}

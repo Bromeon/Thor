@@ -36,7 +36,7 @@
 
 namespace thor
 {
-	
+
 BigSprite::BigSprite()
 : sf::Drawable()
 , sf::Transformable()

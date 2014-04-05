@@ -34,7 +34,7 @@ namespace thor
 std::string toString(const sf::Color& color)
 {
 	std::ostringstream stream;
-	stream							 << '(' 
+	stream							 << '('
 		<< static_cast<int>(color.r) << ','
 		<< static_cast<int>(color.g) << ','
 		<< static_cast<int>(color.b) << ','

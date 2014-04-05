@@ -53,8 +53,8 @@ class ResourceKey
 		/// @brief Function type to load a resource.
 		/// 
 		typedef std::function< std::unique_ptr<R>() > Loader;
-		
-		
+
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:

@@ -135,7 +135,7 @@ namespace Resources
 	/// @brief Load sf::SoundBuffer from array of audio samples in memory
 	/// @param samples Pointer to the samples array.
 	/// @param sampleCount Number of samples in the array.
-	/// @param channelCount Number of channels (1 = mono, 2 = stereo, ...).  
+	/// @param channelCount Number of channels (1 = mono, 2 = stereo, ...).
 	/// @param sampleRate Sample rate (number of samples to play per second).
 	/// @return Resource key which is going to invoke <i>loadFromSamples(width, height, color)</i>.
 	template <class R>
@@ -191,7 +191,7 @@ namespace Resources
 	}
 
 } // namespace Resources
-	
+
 /// @}
 
 } // namespace thor

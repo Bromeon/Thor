@@ -71,7 +71,7 @@ class THOR_API ColorGradient
 		sf::Color&					operator[] (float position);
 
 		/// @brief Interpolates a color in the gradient.
-		/// @param position Number in [0, 1] that specifies a position in the gradient. 
+		/// @param position Number in [0, 1] that specifies a position in the gradient.
 		///  When you pass 0 (1), the color at the very beginning (end) is returned.
 		sf::Color					getColor(float position) const;
 

@@ -39,7 +39,7 @@ int main()
 	system.addAffector( thor::AnimationAffector(colorizer) );
 	system.addAffector( thor::AnimationAffector(fader) );
 	system.addAffector( thor::TorqueAffector(100.f) );
-	system.addAffector( thor::ForceAffector(sf::Vector2f(0.f, 100.f))  );
+	system.addAffector( thor::ForceAffector(sf::Vector2f(0.f, 100.f)) );
 
 	// Attributes that influence emitter
 	thor::PolarVector2f velocity(200.f, -90.f);

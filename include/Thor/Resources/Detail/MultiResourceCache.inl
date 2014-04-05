@@ -77,7 +77,7 @@ inline MultiResourceCache& MultiResourceCache::operator= (MultiResourceCache&& s
 	mSpecificCaches = std::move(source.mSpecificCaches);
 	mReleaseStrategy = source.mReleaseStrategy;
 	mLoadingFailureStrategy = source.mLoadingFailureStrategy;
-	
+
 	return *this;
 }
 

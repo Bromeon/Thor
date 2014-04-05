@@ -59,7 +59,7 @@ namespace
 			{
 				seed(seedVal);
 			}
-	
+
 			// Return random number
 			sf::Uint32 operator() ()
 			{

@@ -53,20 +53,20 @@ class Edge
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief %Edge constructor	
+		/// @brief %Edge constructor
 		/// @details The vertices startPoint and endPoint form the two "corners" of the edge. They are only referenced and not copied.
 									Edge(V& corner0, V& corner1);
-				
+
 		/// @brief Accesses a corner of the edge.
 		/// @param cornerIndex The index of the corner. Must be either 0 or 1.
 		/// @return Reference to the vertex at the specified corner.
 		V&							operator[] (unsigned int cornerIndex);
-									
+
 		/// @brief Accesses a corner of the edge (const overload).
 		/// @param cornerIndex The index of the corner. Must be either 0 or 1.
 		/// @return Const-reference to the vertex at the specified corner.
 		const V&					operator[] (unsigned int cornerIndex) const;
-		
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Protected variables
@@ -89,7 +89,7 @@ class Triangle
 		/// @param corner0,corner1,corner2 form the corners of the triangle. They are only referenced and not copied.
 		///  The corners shall always be clockwise-oriented.
 									Triangle(V& corner0, V& corner1, V& corner2);
-			
+
 		/// @brief Accesses a corner of the triangle.
 		/// @param cornerIndex The index of the corner. Must be 0, 1 or 2.
 		/// @return Reference to the vertex at the specified corner.

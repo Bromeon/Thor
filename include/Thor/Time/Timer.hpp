@@ -55,37 +55,37 @@ class THOR_API Timer
 		/// @brief Virtual destructor
 		/// 
 		virtual						~Timer();
-			
+
 		/// @brief Returns the remaining time.
 		/// @details If the timer has expired, sf::Time::Zero is returned.
 		sf::Time					getRemainingTime() const;
-		
+
 		/// @brief Checks if the timer is currently running.
 		/// @details As soon as the timer expires, it stops running.
 		bool						isRunning() const;
-		
+
 		/// @brief Checks if the timer has expired yet.
 		/// @details Timers expire when their remaining time reaches zero.
 		bool						isExpired() const;
-		
+
 		/// @brief Starts or continues the timer.
 		/// @details If it is already running, nothing happens.
 		void						start();
-		
+
 		/// @brief Pauses the timer.
 		/// @details If it is already paused, nothing happens.
 		void						stop();
-		
-		/// @brief Resets the timer's remaining time to the given limit and stops it. 
+
+		/// @brief Resets the timer's remaining time to the given limit and stops it.
 		/// @param timeLimit The new time limit (must be greater than zero).
 		/// @details In contrast to restart(), the timer is not running after the call.
 		virtual void				reset(sf::Time timeLimit);
 
-		/// @brief Resets the timer's remaining time to the given limit and starts it again. 
+		/// @brief Resets the timer's remaining time to the given limit and starts it again.
 		/// @param timeLimit The new time limit (must be greater than zero).
 		/// @details The behavior is equivalent to @ref reset() "reset(timeLimit)" followed by start().
 		virtual void				restart(sf::Time timeLimit);
-		
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables

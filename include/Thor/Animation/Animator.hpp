@@ -60,7 +60,7 @@ class Animator
 		///  @arg @a progress is a number in [0,1] determining the animation state.
 		typedef std::function<void(Animated&, float)>	AnimationFunction;
 
-		
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
@@ -79,9 +79,9 @@ class Animator
 		/// @brief Move constructor
 		/// 
 									Animator(Animator&& source);
-		
+
 		/// @brief Move assignment operator
-		/// 							
+		/// 
 		Animator&					operator= (Animator&& source);
 
 		/// @brief Destructor
@@ -106,7 +106,7 @@ class Animator
 		void						stopAnimation();
 
 		/// @brief Checks whether an animation is currently playing.
-		/// @return true after an animation has been started with playAnimation(), as long as it has not ended. 
+		/// @return true after an animation has been started with playAnimation(), as long as it has not ended.
 		///  If no animation is playing, false is returned.
 		bool						isPlayingAnimation() const;
 
@@ -141,7 +141,7 @@ class Animator
 		template <typename T>
 		void						adopt(T& source);
 
-			
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:

@@ -162,7 +162,7 @@ void ParticleSystem::update(sf::Time dt)
 	{
 		// Apply movement and decrease lifetime
 		updateParticle(*reader, dt);
-		
+
 		// If current particle is not dead
 		if (reader->passedLifetime < reader->totalLifetime)
 		{

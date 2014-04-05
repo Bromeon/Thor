@@ -40,7 +40,7 @@ namespace thor
 /// @addtogroup Animation
 /// @{
 
-/// @brief Changes an object's color smoothly over time. 
+/// @brief Changes an object's color smoothly over time.
 /// @details This class stores a ColorGradient which is applied to animated objects.
 class THOR_API ColorAnimation
 {

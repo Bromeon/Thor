@@ -51,24 +51,24 @@ class THOR_API StopWatch
 		/// @brief Constructor: Sets up a paused stopwatch with time zero.
 		/// @details The stopwatch is initially not running. Call start() to run it.
 									StopWatch();
-							
+
 		/// @brief Returns the totally elapsed time.
 		///
 		sf::Time					getElapsedTime() const;
-		
+
 		/// @brief Checks if the stopwatch is currently running.
 		///
 		bool						isRunning() const;
-		
+
 		/// @brief Starts or continues the stopwatch.
 		/// @details If it is already running, nothing happens.
 		void						start();
-		
+
 		/// @brief Pauses the stopwatch.
 		/// @details If it is already paused, nothing happens.
 		void						stop();
-				
-		/// @brief Resets the stopwatch's elapsed time to zero and stops it. 
+
+		/// @brief Resets the stopwatch's elapsed time to zero and stops it.
 		/// @details In contrast to restart(), the stopwatch is not running after the call.
 		void						reset();
 

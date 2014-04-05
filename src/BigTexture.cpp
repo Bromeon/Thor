@@ -75,26 +75,26 @@ void BigTexture::swap(BigTexture& other)
 
 bool BigTexture::loadFromImage(const sf::Image& source)
 {
-	// Rollback semantics: In case of failure, *this remains unchanged 
+	// Rollback semantics: In case of failure, *this remains unchanged
 	BigTexture tmp;
-	
+
 	const unsigned int maxSize = sf::Texture::getMaximumSize();
 	tmp.mPixelSize = source.getSize();
-	
+
 	// Number of textures needed, in X and Y direction
 	tmp.mTableSize.x = (tmp.mPixelSize.x - 1u) / maxSize + 1u;
 	tmp.mTableSize.y = (tmp.mPixelSize.y - 1u) / maxSize + 1u;
-	
+
 	tmp.mTextures.clear();
 	tmp.mTextures.reserve(tmp.mTableSize.x * tmp.mTableSize.y);
-	
+
 	// Create sf::Textures that form together the big texture
-	for (unsigned int y = 0u; y < tmp.mPixelSize.y; y += maxSize) 
+	for (unsigned int y = 0u; y < tmp.mPixelSize.y; y += maxSize)
 	{
-		for (unsigned int x = 0u; x < tmp.mPixelSize.x; x += maxSize) 
-		{ 
+		for (unsigned int x = 0u; x < tmp.mPixelSize.x; x += maxSize)
+		{
 			// Note: sf::Texture::loadFromImage() reduces the rectangle size if necessary
-			tmp.mTextures.push_back(sf::Texture()); 
+			tmp.mTextures.push_back(sf::Texture());
 			if (!tmp.mTextures.back().loadFromImage(source, sf::IntRect(x, y, maxSize, maxSize)))
 				return false;
 		}

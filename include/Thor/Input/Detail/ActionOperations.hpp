@@ -76,17 +76,17 @@ namespace detail
 			std::vector<sf::Event>		mEvents;
 			bool						mRealtimeEnabled;
 	};
-	
+
 	// Structure to collect the sf::Event instances and number of realtime triggers.
 	struct ActionResult
 	{
 		std::vector<sf::Event>			eventContainer;
 		unsigned int					nbRealtimeTriggers;
 	};
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
-	
+
+
 	// Operation base class for event actions. The operations are organized in a tree structure.
 	class ActionNode
 	{

@@ -102,10 +102,10 @@ namespace detail
 	ActionNode::~ActionNode()
 	{
 	}
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
-	
+
+
 	EventNode::EventNode()
 	: mEvent()
 	{
@@ -122,7 +122,7 @@ namespace detail
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	bool RealtimeNode::isActionActive(const EventBuffer& buffer) const
 	{
@@ -201,7 +201,7 @@ namespace detail
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	RealtimeJoystickButtonLeaf::RealtimeJoystickButtonLeaf(JoystickButton joystick)
 	: RealtimeNode()
@@ -215,7 +215,7 @@ namespace detail
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	RealtimeJoystickAxisLeaf::RealtimeJoystickAxisLeaf(JoystickAxis joystick)
 	: RealtimeNode()
@@ -286,10 +286,10 @@ namespace detail
 	{
 		return mFilter();
 	}
-	
+
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
-	
+
+
 	OrNode::OrNode(ActionNode::CopiedPtr lhs, ActionNode::CopiedPtr rhs)
 	: ActionNode()
 	, mLhs(std::move(lhs))
@@ -345,8 +345,8 @@ namespace detail
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	
-	
+
+
 	NotNode::NotNode(ActionNode::CopiedPtr action)
 	: ActionNode()
 	, mAction(std::move(action))

@@ -78,14 +78,14 @@ void						setLength(sf::Vector2<T>& vector, T newLength);
 template <typename T>
 sf::Vector2<T>				unitVector(const sf::Vector2<T>& vector);
 
-/// @brief Returns the polar angle. 
+/// @brief Returns the polar angle.
 /// @details The vector (1,0) corresponds 0 degrees, (0,1) corresponds 90 degrees.
 /// @return Angle in degrees in the interval [-180,180].
 /// @pre @a vector is no zero vector.
 template <typename T>
 T							polarAngle(const sf::Vector2<T>& vector);
 
-/// @brief Sets the polar angle of the specified vector. 
+/// @brief Sets the polar angle of the specified vector.
 /// @details The vector (1,0) corresponds 0 degrees, (0,1) corresponds 90 degrees.
 template <typename T>
 void						setPolarAngle(sf::Vector2<T>& vector, T newAngle);
