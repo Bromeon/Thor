@@ -59,7 +59,8 @@ namespace aurora
 ///  the dispatched functions shall have arguments of type pointer or reference to const, too.
 /// @tparam R Return type of the dispatched functions.
 /// @tparam Traits Traits class to customize the usage of the dispatcher. To define your own traits, you can (but don't have to)
-///  inherit the class aurora::DispatchTraits<K>, where K is your key. In general, the @a Traits class must contain the following members:
+///  inherit the class @ref aurora::DispatchTraits<K>, where K is your key. It predefines most members for convenience.
+///  In general, the @a Traits class must contain the following members:
 /// @code 
 /// struct Traits
 /// {
@@ -68,8 +69,9 @@ namespace aurora
 ///	    // as a key in std::unordered_map, i.e. it must support a std::hash<Key> specialization and operator==.
 ///	    typedef K Key;
 ///	    
-///	    // A function that returns the corresponding key (such as std::type_index) from a type identifier
-///	    // (such as aurora::Type<T>). Often, key and type identifier are the same.
+///	    // A function that returns the corresponding key (such as std::type_index) from a type identifier (such as aurora::Type<T>).
+///	    // The type identifier is passed to bind() and can contain static type information, while the key is used by the map
+///	    // storing the registered functions. Often, key and type identifier are the same. 
 ///	    static Key keyFromId(Id id);
 ///	    
 ///	    // Given a function argument base, this static function extracts the key from it. B corresponds to the template parameter
@@ -77,12 +79,13 @@ namespace aurora
 ///	    static Key keyFromBase(B base);
 ///	    
 ///	    // trampoline2() takes a function that is passed to DoubleDispatcher::bind() and modifies it in order to fit the common
-///	    // R(B, B) signature. For example, this is the place to insert downcasts.
+///	    // R(B, B) signature. It therefore acts as a wrapper for user-defined functions which can link different signatures together.
+///	    // For example, this is the place to insert downcasts.
 ///	    // The first two template parameters Id1 and Id2 are required, as they will be explicitly specified when trampoline2() is called.
-///	     template <typename Id1, typename Id2, typename Fn>
-///	     static std::function<R(B, B)> trampoline(Fn f);
+///	    template <typename Id1, typename Id2, typename Fn>
+///	    static std::function<R(B, B)> trampoline2(Fn f);
 ///	    
-///	    // Optional function that returns a string representation of @a key for debugging.
+///	    // Optional function that returns a string representation of key for debugging.
 ///	    static const char* name(Key k);
 /// };
 /// @endcode
@@ -131,22 +134,35 @@ class DoubleDispatcher : private NonCopyable
 		explicit					DoubleDispatcher(bool symmetric = true);
 
 		/// @brief Registers a function bound to a specific key.
-		/// @tparam Id1,Id2 %Types that identify the argument types. By default, these are is aurora::Type<D>, where D is a
+		/// @tparam Id1,Id2 %Types that identify the argument types. By default, these are aurora::Type<D>, where D is a
 		///  derived class. Can be deduced from the argument.
 		/// @tparam Fn %Type of the function. Can be deduced from the argument.
 		/// @param identifier1,identifier2 Values that identify the object. The key, which is mapped to the function, is computed
 		///   from each identifier through Traits::keyFromId(identifier).
-		/// @param functionObject Function to register and associate with the given identifier.
+		/// @param function Function to register and associate with the given identifier. Usually, the function has the
+		///  signature R(B, B), but it's possible to deviate from it (e.g. using derived classes), see also the note about
+		///  trampolines in the Traits classes.
 		template <typename Id1, typename Id2, typename Fn>
 		void						bind(Id1 identifier1, Id2 identifier2, Fn function);
 
-		/// @brief Dispatches the key of @a arg and invokes the corresponding function.
+		/// @brief Dispatches the key of @a arg1 and @a arg2 and invokes the corresponding function.
 		/// @details Traits::keyFromBase(arg) is invoked to determine the key of each passed argument. The function bound to the
-		///  combination of both keys is then looked up in the map and invoked.
+		///  combination of both keys is then looked up in the map and invoked. If no match is found and a fallback function has
+		///  been registered using fallback(), then the fallback function will be invoked.
+		///  @n@n When the dispatcher is configured in symmetric mode (see constructor), then the arguments are forwarded to the
+		///  correct parameters in the registered functions, even if the order is different. When necessary, they are swapped.
+		///  In other words, symmetric dispatchers don't care about the order of the arguments at all.
 		/// @param arg1,arg2 Function arguments as references or pointers.
 		/// @return The return value of the dispatched function, if any.
-		/// @throw FunctionCallException when no corresponding function is found.
+		/// @throw FunctionCallException when no corresponding function is found and no fallback has been registered.
 		R							call(B arg1, B arg2) const;
+
+		/// @brief Registers a fallback function.
+		/// @details The passed function will be invoked when call() doesn't find a registered function. It can be used when
+		///  not finding a match does not represent an exceptional situation, but a common case.
+		/// @n@n If you want to perform no action, you can pass @ref aurora::NoOp<R, 2>().
+		/// @param function Function with signature R(B, B).
+		void						fallback(std::function<R(B, B)> function);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -183,6 +199,7 @@ class DoubleDispatcher : private NonCopyable
 	// Private variables
 	private:
 		FnMap						mMap;
+		BaseFunction				mFallback;
 		bool						mSymmetric;
 };
 

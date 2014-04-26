@@ -31,5 +31,6 @@
 
 #include <Aurora/Meta/Preprocessor.hpp>
 #include <Aurora/Meta/Templates.hpp>
+#include <Aurora/Meta/Tuple.hpp>
 
 #endif // AURORA_MODULE_META_HPP

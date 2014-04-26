@@ -29,6 +29,7 @@ namespace aurora
 template <class B, typename R, class Traits>
 DoubleDispatcher<B, R, Traits>::DoubleDispatcher(bool symmetric)
 : mMap()
+, mFallback()
 , mSymmetric(symmetric)
 {
 }
@@ -49,18 +50,29 @@ R DoubleDispatcher<B, R, Traits>::call(B arg1, B arg2) const
 	SingleKey key1 = Traits::keyFromBase(arg1);
 	SingleKey key2 = Traits::keyFromBase(arg2);
 
-	// If no corresponding class (or base class) has been found, throw exception
+	// If no corresponding class (or base class) has been found: Invoke fallback if available, otherwise throw exception
 	Key key = makeKey(key1, key2);
 	auto itr = mMap.find(key);
 	if (itr == mMap.end())
-		throw FunctionCallException(std::string("DoubleDispatcher::call() - function with parameters \"") + Traits::name(key1)
-		+ "\" and \"" + Traits::name(key2) + "\" not registered");
+	{
+		if (mFallback)
+			return mFallback(arg1, arg2);
+		else
+			throw FunctionCallException(std::string("DoubleDispatcher::call() - function with parameters \"") + Traits::name(key1)
+				+ "\" and \"" + Traits::name(key2) + "\" not registered");
+	}
 
 	// Call function (swap-flag equal for stored entry and passed arguments means the order was the same; otherwise swap arguments)
 	if (itr->first.swapped == key.swapped)
 		return itr->second(arg1, arg2);
 	else
 		return itr->second(arg2, arg1);
+}
+
+template <class B, typename R, class Traits>
+void DoubleDispatcher<B, R, Traits>::fallback(std::function<R(B, B)> function)
+{
+	mFallback = std::move(function);
 }
 
 template <class B, typename R, class Traits>

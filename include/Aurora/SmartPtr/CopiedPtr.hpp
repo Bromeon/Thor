@@ -30,7 +30,6 @@
 #define AURORA_COPIEDPTR_HPP
 
 #include <Aurora/SmartPtr/PtrFunctors.hpp>
-#include <Aurora/SmartPtr/MakeCopied.hpp>
 #include <Aurora/SmartPtr/Detail/PtrOwner.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Config.hpp>
@@ -305,6 +304,7 @@ class CopiedPtr
 	friend class CopiedPtr;
 };
 
+
 /// @relates CopiedPtr
 /// @brief Swaps the contents of two CopiedPtr instances.
 template <typename T>
@@ -312,6 +312,43 @@ void swap(CopiedPtr<T>& lhs, CopiedPtr<T>& rhs)
 {
 	return lhs.swap(rhs);
 }
+
+
+// For documentation and modern compilers
+#if defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
+
+/// @relates CopiedPtr
+/// @brief Emplaces an object directly inside the copied pointer.
+/// @param args Variable argument list, the single arguments are forwarded to T's constructor. If your compiler does not
+/// support variadic templates, the number of arguments must be smaller than @ref AURORA_PP_LIMIT.
+/// @details This function has several advantages over the regular CopiedPtr(U*) constructor:
+/// * The new operator is encapsulated, making code exception-safe (in cases where multiple temporary smart pointers are constructed).
+/// * This function is considerably more efficient and requires less memory, because pointee and cloner/deleter can be stored together.
+/// * You avoid mentioning the pointee type twice.
+/// 
+/// Example:
+/// @code
+/// auto ptr = aurora::makeCopied<MyClass>(arg1, arg2); // instead of
+/// aurora::CopiedPtr<MyClass> ptr(new MyClass(arg1, arg2));
+/// @endcode
+template <typename T, typename... Args>
+CopiedPtr<T> makeCopied(Args&&... args)
+{
+	return CopiedPtr<T>(detail::EmplaceTag(), std::forward<Args>(args)...);
+}
+
+// Unoptimized fallback for compilers that don't support variadic templates, emulated by preprocessor metaprogramming
+#else  // defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
+
+#include <Aurora/SmartPtr/Detail/Factories.hpp>
+
+// Define metafunction to generate overloads for aurora::CopiedPtr
+#define AURORA_DETAIL_COPIEDPTR_FACTORY(n) AURORA_DETAIL_SMARTPTR_FACTORY(CopiedPtr, makeCopied, n)
+
+// Generate code
+AURORA_PP_ENUMERATE(AURORA_PP_LIMIT, AURORA_DETAIL_COPIEDPTR_FACTORY)
+
+#endif // defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
 
 /// @}
 

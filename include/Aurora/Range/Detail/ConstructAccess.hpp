@@ -23,45 +23,50 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
+#ifndef AURORA_CONSTRUCTACCESS_HPP
+#define AURORA_CONSTRUCTACCESS_HPP
+
+#include <utility>
+
+
 namespace aurora
 {
-
-template <class B, typename R, typename Traits>
-SingleDispatcher<B, R, Traits>::SingleDispatcher()
-: mMap()
+namespace detail
 {
-}
 
-template <class B, typename R, typename Traits>
-template <typename Id, typename Fn>
-void SingleDispatcher<B, R, Traits>::bind(Id identifier, Fn function)
-{
-	mMap[Traits::keyFromId(identifier)] = Traits::template trampoline1<Id>(function);
-}
+	// TODO: Use variadic templates after some time (all most recent compilers support them)
 
-template <class B, typename R, typename Traits>
-R SingleDispatcher<B, R, Traits>::call(B arg) const
-{
-	Key key = Traits::keyFromBase(arg);
-
-	// If no corresponding class (or base class) has been found, throw exception
-	auto itr = mMap.find(key);
-	if (itr == mMap.end())
+	// Has access to internals of a class through friend
+	// Can be used to invoke private constructors
+	struct ConstructAccess
 	{
-		if (mFallback)
-			return mFallback(arg);
-		else
-			throw FunctionCallException(std::string("SingleDispatcher::call() - function with parameter \"") + Traits::name(key) + "\" not registered");
+		template <typename Class, typename A1>
+		static Class construct(A1&& arg1)
+		{
+			return Class(std::forward<A1>(arg1));
+		}
+
+		template <typename Class, typename A1, typename A2>
+		static Class construct(A1&& arg1, A2&& arg2)
+		{
+			return Class(std::forward<A1>(arg1), std::forward<A2>(arg2));
+		}
+	};
+
+	// Helper function for more beautiful syntax
+	template <typename Class, typename A1>
+	Class constructPrivate(A1&& arg1)
+	{
+		return ConstructAccess::construct<Class>(std::forward<A1>(arg1));
 	}
 
-	// Otherwise, call dispatched function
-	return itr->second(arg);
-}
+	template <typename Class, typename A1, typename A2>
+	Class constructPrivate(A1&& arg1, A2&& arg2)
+	{
+		return ConstructAccess::construct<Class>(std::forward<A1>(arg1), std::forward<A2>(arg2));
+	}
 
-template <class B, typename R, class Traits>
-void SingleDispatcher<B, R, Traits>::fallback(std::function<R(B)> function)
-{
-	mFallback = std::move(function);
-}
-
+} // namespace detail
 } // namespace aurora
+
+#endif // AURORA_CONSTRUCTACCESS_HPP

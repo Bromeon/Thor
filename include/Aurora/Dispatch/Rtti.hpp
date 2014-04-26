@@ -177,7 +177,46 @@ struct RttiDispatchTraits
 	}
 };
 
+/// @brief Functor doing nothing
+/// @tparam R Return type
+/// @tparam N Arity (number of arguments)
+/// @details Can be used as a fallback function for the dynamic dispatchers. The functor returns a
+///  default-constructed object of type R, or nothing if R is void.
+template <typename R, unsigned int N>
+struct NoOp
+{
+};
+
 /// @}
+
+template <typename R>
+struct NoOp<R, 0>
+{
+	R operator() () const
+	{
+		return R();
+	}
+};
+
+template <typename R>
+struct NoOp<R, 1>
+{
+	template <typename T1>
+	R operator() (const T1&) const
+	{
+		return R();
+	}
+};
+
+template <typename R>
+struct NoOp<R, 2>
+{
+	template <typename T1, typename T2>
+	R operator() (const T1&, const T2&) const
+	{
+		return R();
+	}
+};
 
 } // namespace aurora
 
