@@ -88,7 +88,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	set(THOR_CLANG_STDLIB "" CACHE STRING "Chose standard library (libstdc++ or libc++) or leave empty for default")
 	
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-switch -Wno-logical-op-parentheses")
 	if(NOT THOR_CLANG_STDLIB STREQUAL "")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=${THOR_CLANG_STDLIB}")
 	endif()
