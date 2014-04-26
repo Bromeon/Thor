@@ -24,10 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Iterator category types
+/// @brief Iterator traversal category types
 
-#ifndef AURORA_ITERATORCATEGORIES_HPP
-#define AURORA_ITERATORCATEGORIES_HPP
+#ifndef AURORA_TRAVERSAL_HPP
+#define AURORA_TRAVERSAL_HPP
 
 #include <iterator>
 
@@ -61,4 +61,4 @@ namespace Traversal
 
 } // namespace aurora
 
-#endif // AURORA_ITERATORCATEGORIES_HPP
+#endif // AURORA_TRAVERSAL_HPP

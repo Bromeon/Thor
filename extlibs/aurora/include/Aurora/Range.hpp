@@ -29,8 +29,9 @@
 #ifndef AURORA_MODULE_RANGE_HPP
 #define AURORA_MODULE_RANGE_HPP
 
-#include <Aurora/Range/Adaptors.hpp>
-#include <Aurora/Range/IteratorCategories.hpp>
+#include <Aurora/Range/Factories.hpp>
 #include <Aurora/Range/Range.hpp>
+#include <Aurora/Range/RangeIterator.hpp>
+#include <Aurora/Range/Traversal.hpp>
 
 #endif // AURORA_MODULE_RANGE_HPP

@@ -29,11 +29,11 @@
 #ifndef AURORA_RANGE_HPP
 #define AURORA_RANGE_HPP
 
-#include <Aurora/Range/Detail/RangeImpl.hpp>
-#include <Aurora/SmartPtr/CopiedPtr.hpp>
+#include <Aurora/Range/RangeIterator.hpp>
+#include <Aurora/Range/Detail/AbstractRange.hpp>
+#include <Aurora/Range/Detail/AbstractIterator.hpp>
+#include <Aurora/Range/Detail/ConstructAccess.hpp>
 #include <Aurora/Meta/Templates.hpp>
-
-#include <type_traits>
 
 
 namespace aurora
@@ -43,36 +43,58 @@ namespace aurora
 /// @{
 
 /// @brief Type-erased range
-/// @details Ranges are generalizations of iterators. Basic ranges can be imagined as (begin,end) iterator pairs, however
-///  they allow much more. Like at iterators, ranges work on traversal categories which determine how a sequence can be traversed.
-/// @n@n This class implements a <i>type-erased</i> range. This means that the underlying iterator types are abstracted.
-/// Only the iterator's value type (also called element type) is relevant. 
+/// @details Ranges are generalizations of iterators. They act as a view (mutable or constant) to containers, they do not own
+///  any elements themselves. Basic ranges can be imagined as (begin,end) iterator pairs, however they allow much more. 
+///  Like iterators, ranges work on traversal categories which determine how a sequence can be traversed.
+/// @n@n This class implements a <i>type-erased</i> range. This means that the underlying iterator types are abstracted and
+///  only the iterator's value type is relevant. This abstraction allows you to treat ranges based on different containers, but
+///  with same value types, in a uniform way (for example <i>std::vector<int></i> and <i>std::list<int></i>). It is even possible to concatenate
+///  such differently typed ranges.
+/// @n@n aurora::Range has value semantics; i.e. it can be copied, moved, assigned, passed to and returned from functions. Everything happens as
+///  you would expect: after copying, both the origin and the copy refer to the same sequence of elements. The actual access to elements referenced
+///  by a range happens through range iterators that can be acquired with begin() and end(). The construction of ranges is performed using one of
+///  the global functions, most often makeRange().
+/// @n@n Const-correctness is correctly propagated through ranges and range iterators. When the value type of this range is const-qualified, it
+///  will not be possible to modify elements through this range; in other words, this is then a read-only range. Keep also in mind that a constant
+///  range (const %Range<T, C>) is not the same as a range to constant elements (%Range<const T, C>): while the former doesn't allow to re-assign
+///  the range, i.e. let it point to another sequence, the latter doesn't allow modifications of the referenced elements. This concept is exactly
+///  the same as you know it from const iterators, const references and const pointers.
 /// @tparam T Element type. Can be const-qualified to prevent changes of the elements.
 /// @tparam C Iterator category. Must be one of the categories in namespace aurora::Traversal.
 template <typename T, typename C>
-class Range : public detail::RangeBase<T, C, C>
+class Range
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public types
 	public:
-		/// @brief Element type (template parameter T without const qualifier)
+		/// @brief Value type, can be const-qualified
 		/// 
-		typedef typename std::remove_const<T>::type ElementType;
+		typedef T										ValueType;
+
+		/// @brief %Range iterator to mutable elements
+		/// 
+		typedef RangeIterator<T, C>						Iterator;
+
+		/// @brief %Range iterator to constant elements
+		/// 
+		typedef RangeIterator<const T, C>				ConstIterator;
+
+		/// @brief Iterator traversal category
+		/// 
+		typedef C										TraversalCategory;
+
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Private types
+	private:
+		typedef typename std::remove_const<T>::type						MutableType;
+		typedef typename detail::AbstractRange<MutableType>::Ptr		AbstractRangePtr;
+		typedef typename detail::AbstractIterator<MutableType>::Ptr		AbstractIteratorPtr;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
-		/// @brief Construct from iterator interval [begin, end[
-		/// @details The iterator category must not be weaker than the range traversal category of @a this.
-		template <typename Itr>
-		explicit Range(Itr begin, Itr end)
-		: mRange(new detail::IteratorRange<ElementType, C, C, Itr>(begin, end))
-		{
-			typedef typename std::iterator_traits<Itr>::iterator_category Category;
-			static_assert( std::is_convertible<Category, C>::value, "Category of passed iterators too low." );
-		}
-
 		/// @brief Copy constructor
 		/// 
 		Range(const Range& origin)
@@ -94,7 +116,7 @@ class Range : public detail::RangeBase<T, C, C>
 		: mRange(std::move(origin.mRange))
 		{
 			static_assert( std::is_convertible<T2, T>::value, "Range element types incompatible." );
-			static_assert( std::is_convertible<C2, C>::value, "Iterator categories incompatible." );
+			static_assert( std::is_convertible<C2, C>::value, "Traversal categories incompatible." );
 		}
 
 		/// @brief Copy assignment operator
@@ -119,7 +141,7 @@ class Range : public detail::RangeBase<T, C, C>
 		Range& operator= (Range<T2, C2> origin)
 		{
 			static_assert( std::is_convertible<T2, T>::value, "Range element types incompatible." );
-			static_assert( std::is_convertible<C2, C>::value, "Iterator categories incompatible." );
+			static_assert( std::is_convertible<C2, C>::value, "Traversal categories incompatible." );
 
 			mRange = std::move(origin.mRange);
 			return *this;
@@ -132,48 +154,35 @@ class Range : public detail::RangeBase<T, C, C>
 			aurora::swap(mRange, other.mRange);
 		}
 
-
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Implementation details
-	public:
-		// Construct from backend base class
-		template <class RangeImpl>
-		explicit Range(Type<detail::RangeAccess>, RangeImpl* newImpl)
-		: mRange(newImpl)
+		/// @brief Returns an iterator to the begin of the range
+		/// 
+		Iterator begin()
 		{
+			return detail::constructPrivate<Iterator>(*mRange, mRange->begin());
+		}
+
+		/// @brief Returns an iterator to the end of the range
+		/// 
+		Iterator end()
+		{
+			return detail::constructPrivate<Iterator>(*mRange, nullptr);
 		}
 
 
-// Documentation, since Doxygen has problems with specialized base class templates
-#ifdef AURORA_DOXYGEN_SECTION
-
-		/// @brief Returns the first element in the range.
-		/// @details Requirements: Forward category.
-		T& front() const;
-
-		/// @brief Removes the first element in the range.
-		/// @details Requirements: Forward category.
-		void popFront();
-
-		/// @brief Returns the last element in the range.
-		/// @details Requirements: Bidirectional category.
-		T& back() const;
-
-		/// @brief Removes the last element in the range.
-		/// @details Requirements: Bidirectional category.
-		void popBack();
-
-		/// @brief Checks if the range is empty.
-		/// @details Requirements: Forward category.
-		bool empty() const;
-
-#endif // AURORA_DOXYGEN_SECTION
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Private member functions
+	private:
+		// Construct from smart pointer to implementation
+		explicit Range(AbstractRangePtr impl)
+		: mRange(std::move(impl))
+		{
+		}
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		CopiedPtr<detail::AbstractRange<ElementType, C>>	mRange;
+		AbstractRangePtr			mRange;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -181,7 +190,7 @@ class Range : public detail::RangeBase<T, C, C>
 	template <typename T2, typename C2>
 	friend class Range;
 
-	friend struct detail::RangeAccess;
+	friend struct detail::ConstructAccess;
 };
 
 /// @relates Range

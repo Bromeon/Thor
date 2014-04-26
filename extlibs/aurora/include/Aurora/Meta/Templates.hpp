@@ -60,9 +60,9 @@ struct Int
 /// @brief SFINAE Enable If Macro for parameter lists
 /// @details Usage:
 /// @code
-///  template <typename T>
-///  void Function(T value
-///      AURORA_ENABLE_IF(std::is_integral<T>::value));
+/// template <typename T>
+/// void Function(T value
+///     AURORA_ENABLE_IF(std::is_integral<T>::value));
 /// @endcode
 #define AURORA_ENABLE_IF(...)  , typename std::enable_if<__VA_ARGS__>::type* = nullptr
 
@@ -70,15 +70,27 @@ struct Int
 /// @brief Macro to ensure complete type
 /// @details Usage:
 /// @code
-///  template <typename T>
-///  void CheckedDelete(T* pointer)
-///  {
-///      AURORA_REQUIRE_COMPLETE_TYPE(T);
-///      delete pointer;
-///  }
+/// template <typename T>
+/// void CheckedDelete(T* pointer)
+/// {
+///     AURORA_REQUIRE_COMPLETE_TYPE(T);
+///     delete pointer;
+/// }
 /// @endcode
 /// @hideinitializer
 #define AURORA_REQUIRE_COMPLETE_TYPE(Type) typedef char auroraRequireCompleteType[(sizeof(Type))]
+
+
+/// @brief Function declaration with inferred return type
+/// @details Based on the C++11 trailing return types feature. Since a lot of functions that benefit from trailing return
+///  types must repeat the return type by means of decltype, this macro has been written to avoid the code duplication.
+///  @n Example:
+/// @code
+/// template <typename A, typename B>
+/// auto sum(A a, B b) -> AURORA_AUTO_RETURN(a + b)
+/// @endcode
+#define AURORA_AUTO_RETURN(...) decltype(__VA_ARGS__) { return (__VA_ARGS__); }
+
 
 /// @}
 
