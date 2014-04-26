@@ -86,7 +86,13 @@ endif()
 if(CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -stdlib=libc++")
+	set(THOR_CLANG_STDLIB "" CACHE STRING "Chose standard library (libstdc++ or libc++) or leave empty for default")
+	
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+	if(NOT THOR_CLANG_STDLIB STREQUAL "")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=${THOR_CLANG_STDLIB}")
+	endif()
+	
 	add_definitions(-DTHOR_USE_STD_RANDOMENGINE) # Workaround for libc++ bug
 endif()
 
