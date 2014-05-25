@@ -467,10 +467,15 @@ namespace detail
 				// Ensure that the indices are clockwise oriented for both triangles.                       (sc1.f)|(sc1.s)
 				// first:  sc1 -> sc2 -> dc                                               first ->   (dc.f)        |        (dc.s)   <- second
 				// second: sc2 -> sc1 -> dc                                                                 (sc2.f)|(sc2.s)
+				// Two checks required because one of the old triangles may have been flat
 				if (!isClockwiseOriented(
 					at(first, sharedCornerIndices1.first),
 					at(first, sharedCornerIndices2.first),
-					at(first, disjointCornerIndices.first)))
+					at(first, disjointCornerIndices.first))
+				 || !isClockwiseOriented(
+					at(second, sharedCornerIndices2.second),
+					at(second, sharedCornerIndices1.second),
+					at(second, disjointCornerIndices.second)))
 				{
 					std::swap(sharedCornerIndices1, sharedCornerIndices2);
 				}
