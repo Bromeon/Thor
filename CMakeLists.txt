@@ -159,12 +159,12 @@ endif()
 install(DIRECTORY include
 		DESTINATION .)
 
-install(FILES license.txt
-		RENAME license-thor.txt
+install(FILES License.txt
+		RENAME LicenseThor.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
 
-install(FILES extlibs/aurora/license.txt
-		RENAME license-aurora.txt
+install(FILES extlibs/aurora/License.txt
+		RENAME LicenseAurora.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
 		
 install(DIRECTORY extlibs/aurora/include
