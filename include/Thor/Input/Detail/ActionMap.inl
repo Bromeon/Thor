@@ -100,7 +100,7 @@ void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system, sf::Window* wi
 	AURORA_FOREACH(const auto& actionPair, mActionMap)
 	{
 		// Check if current action is active, collect additional information in result
-		detail::ActionResult result = {};
+		detail::ActionResult result;
 		if (!actionPair.second.isActive(mEventBuffer, result))
 			continue;
 

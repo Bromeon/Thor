@@ -78,10 +78,12 @@ namespace detail
 	};
 
 	// Structure to collect the sf::Event instances and number of realtime triggers.
-	struct ActionResult
+	struct THOR_API ActionResult
 	{
-		std::vector<sf::Event>			eventContainer;
-		unsigned int					nbRealtimeTriggers;
+									ActionResult();
+
+		std::vector<sf::Event>		eventContainer;
+		unsigned int				nbRealtimeTriggers;
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------------
