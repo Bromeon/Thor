@@ -104,16 +104,19 @@ void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system, sf::Window* wi
 		if (!actionPair.second.isActive(mEventBuffer, result))
 			continue;
 
-		// If this assertion fails, multiple event actions combined with && have been active at the same time, therefore
-		// some of them are discarded. Don't do this, use at most one event action that can be active at the same time.
-		assert(result.eventContainer.size() <= 1);
+		// Note: result.eventContainer may store more than one event in two cases, of which only the first is handled:
+		// 1. The action triggered multiple times in this frame, because the underlying events did
+		//    -> fine, invoke callback multiple times
+		// 2. One action contains multiple events even in a single triggering
+		//    -> ill-formed (logical operators should contain only one event-based action that can be simultaneously active)
 
-		// If there is an event stored in all involved actions, forward it to context and invoke callback
-		if (!result.eventContainer.empty())
-			system.triggerEvent( ActionContext<ActionId>(window, &result.eventContainer.front(), actionPair.first) );
+		// Invoke callback once for every sf::Event
+		AURORA_FOREACH(const sf::Event& event, result.eventContainer)
+			system.triggerEvent( ActionContext<ActionId>(window, &event, actionPair.first) );
 
-		// Otherwise, if at least one realtime constellation triggers this action, invoke callback for it
-		else if (result.nbRealtimeTriggers > 0)
+		// If at least one realtime constellation triggers this action and we have not already invoked callbacks because of
+		// an event, then do it now. This assumes that realtime conditions can be active at most once per frame, unlike events.
+		if (result.nbRealtimeTriggers > 0 && result.eventContainer.empty())
 			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionPair.first) );
 	}
 }
