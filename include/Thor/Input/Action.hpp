@@ -140,14 +140,37 @@ class THOR_API Action
 
 /// @relates Action
 /// @brief OR operator of two actions: The resulting action is in effect if at least one of @a lhs and @a rhs is active.
+/// @details This operator can be used when multiple input types are assigned to an action. For example, an action that can be triggered
+///  using either the keyboard or joystick. Another typical example is to combine both modifier keys, such as left and right shift:
+/// @code
+/// thor::Action shift = thor::Action(sf::Keyboard::LShift) || thor::Action(sf::Keyboard::RShift);
+/// thor::Action x(sf::Keyboard::X, thor::Action::PressOnce);
+/// thor::Action shiftX = shift && x;
+/// @endcode
 Action THOR_API				operator|| (const Action& lhs, const Action& rhs);
 
 /// @relates Action
 /// @brief AND operator of two actions: The resulting action is in effect if both @a lhs and @a rhs are active.
+/// @details This operator is typically used to implement key combinations such as Shift+X. It does not make sense if both operands
+///  are event actions, because each of them is only active at one time point, hardly together. Instead, implement modifiers as realtime
+///  actions and the actual keys as event actions:
+/// @code
+/// thor::Action shift = thor::Action(sf::Keyboard::LShift) || thor::Action(sf::Keyboard::RShift);
+/// thor::Action x(sf::Keyboard::X, thor::Action::PressOnce);
+/// thor::Action shiftX = shift && x;
+/// @endcode
 Action THOR_API				operator&& (const Action& lhs, const Action& rhs);
 
 /// @relates Action
 /// @brief NOT operator of an action: The resulting action is in effect if @a action is not active.
+/// @details This operator is rarely needed. It can be used to discriminate two actions, for example if X and Shift+X have different
+///  assignments and you don't want Shift+X to trigger also the action assigned to X.
+/// @code
+/// thor::Action shift = thor::Action(sf::Keyboard::LShift) || thor::Action(sf::Keyboard::RShift);
+/// thor::Action x(sf::Keyboard::X, thor::Action::PressOnce);
+/// thor::Action shiftX = shift && x;
+/// thor::Action onlyX = !shift && x;
+/// @endcode
 Action THOR_API				operator! (const Action& action);
 
 /// @relates Action
