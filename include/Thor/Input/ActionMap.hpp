@@ -140,7 +140,9 @@ class ActionMap : private aurora::NonCopyable
 		/// @param system Callback system of type EventSystem< ActionContext<ActionId>, ActionId >
 		/// @param window Window pointer which is stored in the ActionContext passed to the callbacks. Can be nullptr.
 		/// @details For every action that is currently active, the action ID is passed to @a system, where all listener
-		///  functions associated with the ID are invoked.
+		///  functions associated with the ID are invoked. For a given action registered in the action map, the callback system
+		///  is invoked at most once, even if the action has been combined with logical operators and multiple sub-actions are
+		///  active. That is, an action Shift&&X won't lead to an invocation for both Shift and X. This is the expected behavior.
 		/// @code
 		/// // Listener function for "run" actions
 		/// void callback(thor::ActionContext<std::string> context);
@@ -159,6 +161,7 @@ class ActionMap : private aurora::NonCopyable
 		/// @warning While this function is being called, any modifications to @a system result in undefined behavior. That is,
 		///  do not remove or insert callbacks during the invocation of another callback. If you need to modify the system, delay
 		///  the modifications until invokeCallbacks() returns.
+		/// @see thor::ActionContext
 		void						invokeCallbacks(CallbackSystem& system, sf::Window* window) const;
 
 

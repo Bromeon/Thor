@@ -104,12 +104,16 @@ void ActionMap<ActionId>::invokeCallbacks(CallbackSystem& system, sf::Window* wi
 		if (!actionPair.second.isActive(mEventBuffer, result))
 			continue;
 
-		// Invoke callback once for every sf::Event
-		AURORA_FOREACH(const sf::Event& event, result.eventContainer)
-			system.triggerEvent( ActionContext<ActionId>(window, &event, actionPair.first) );
+		// If this assertion fails, multiple event actions combined with && have been active at the same time, therefore
+		// some of them are discarded. Don't do this, use at most one event action that can be active at the same time.
+		assert(result.eventContainer.size() <= 1);
 
-		// If at least one realtime constellation triggers this action, invoke callback for it
-		if (result.nbRealtimeTriggers > 0)
+		// If there is an event stored in all involved actions, forward it to context and invoke callback
+		if (!result.eventContainer.empty())
+			system.triggerEvent( ActionContext<ActionId>(window, &result.eventContainer.front(), actionPair.first) );
+
+		// Otherwise, if at least one realtime constellation triggers this action, invoke callback for it
+		else if (result.nbRealtimeTriggers > 0)
 			system.triggerEvent( ActionContext<ActionId>(window, nullptr, actionPair.first) );
 	}
 }
