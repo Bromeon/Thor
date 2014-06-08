@@ -119,7 +119,7 @@ void Arrow::adaptLine() const
 {
 	// Use circle to represent zero vector (every vector shorter than zeroVectorTolerance
 	// is considered a zero vector)
-	if (mLength < zeroVectorTolerance)
+	if (mLength <= zeroVectorTolerance)
 	{
 		mLine = Shapes::toConvexShape(sf::CircleShape(mThickness));
 		mLine.setFillColor(mColor);
@@ -127,7 +127,7 @@ void Arrow::adaptLine() const
 	}
 	
 	// If the line length is shorter than the triangle height, don't draw the line
-	else if (mLength < getTriangleHeight())
+	else if (mLength <= getTriangleHeight())
 	{
 		mLine = sf::ConvexShape();
 	}
@@ -144,7 +144,7 @@ void Arrow::adaptLine() const
 void Arrow::adaptTriangle() const
 {
 	// Don't draw triangle when arrow is too short or when arrow is actually a line
-	if (mLength < zeroVectorTolerance || mStyle == Line)
+	if (mLength <= zeroVectorTolerance || mStyle == Line)
 	{
 		mTriangle = sf::ConvexShape();
 	}
