@@ -97,11 +97,11 @@ sf::Time THOR_API			getTotalLifetime(const Particle& particle);
 sf::Time THOR_API			getRemainingLifetime(const Particle& particle);
 
 /// @relates Particle
-/// @brief Returns <b>elapsed lifetime / total lifetime</b>.
+/// @brief Returns <b>elapsed lifetime / total lifetime</b> in seconds.
 float THOR_API				getElapsedRatio(const Particle& particle);
 
 /// @relates Particle
-/// @brief Returns <b>remaining lifetime / total lifetime</b>.
+/// @brief Returns <b>remaining lifetime / total lifetime</b> in seconds.
 float THOR_API				getRemainingRatio(const Particle& particle);
 
 /// @}
