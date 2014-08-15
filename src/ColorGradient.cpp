@@ -46,7 +46,7 @@ sf::Color& ColorGradient::operator[] (float position)
 	return mColors[position];
 }
 
-sf::Color ColorGradient::getColor(float position) const
+sf::Color ColorGradient::sampleColor(float position) const
 {
 	// Make sure the positions 0 and 1 are set
 	assert(mColors.count(0.f) && mColors.count(1.f));

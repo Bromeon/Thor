@@ -73,7 +73,7 @@ class THOR_API ColorAnimation
 template <class Animated>
 void ColorAnimation::operator() (Animated& target, float progress) const
 {
-	setColor(target, mGradient.getColor(progress));
+	setColor(target, mGradient.sampleColor(progress));
 }
 
 } // namespace thor
