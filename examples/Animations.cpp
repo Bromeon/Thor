@@ -1,5 +1,5 @@
 
-#include <Thor/Animation.hpp>
+#include <Thor/Animations.hpp>
 #include <SFML/Graphics.hpp>
 
 // Adds a range of frames, assuming they are aligned as rectangles in the texture.

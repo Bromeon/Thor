@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Animation/ColorAnimation.hpp>
+#include <Thor/Animations/ColorAnimation.hpp>
 
 
 namespace thor

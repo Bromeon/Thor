@@ -32,7 +32,7 @@
 namespace thor
 {
 
-/// @addtogroup Animation
+/// @addtogroup Animations
 /// @{
 
 /// @brief Class to reference another animation.
@@ -87,5 +87,5 @@ RefAnimation<Animation> refAnimation(Animation& referenced);
 
 } // namespace thor
 
-#include <Thor/Animation/Detail/RefAnimation.inl>
+#include <Thor/Animations/Detail/RefAnimation.inl>
 #endif // THOR_REFANIMATION_HPP

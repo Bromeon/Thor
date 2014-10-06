@@ -42,7 +42,7 @@
 namespace thor
 {
 
-/// @addtogroup Animation
+/// @addtogroup Animations
 /// @{
 
 /// @brief Class that stores the progress of an object's animation.
@@ -155,5 +155,5 @@ class Animator
 
 } // namespace thor
 
-#include <Thor/Animation/Detail/Animator.inl>
+#include <Thor/Animations/Detail/Animator.inl>
 #endif // THOR_ANIMATOR_HPP

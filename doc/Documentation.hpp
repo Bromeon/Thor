@@ -44,29 +44,29 @@
 /// I can think about an integration to the API. Also don't hesitate to inform me about semantic or formal mistakes you spot in the
 /// documentation, the tutorials or the examples.
 
-/// @defgroup Animation Animation
-/// @brief Classes able to animate sf::Sprite objects in different ways.
+/// @defgroup Animations Animations
+/// @brief Classes able to animate graphical objects in different ways.
 
 /// @defgroup Graphics Graphics
 /// @brief Miscellaneous graphics-related functionality, such as specialized sprites or color helpers.
 
 /// @defgroup Input Input
-/// @brief Facilities for user input, such as object-oriented event callbacks.
+/// @brief Features related to user input, such as object-oriented event callbacks.
 
 /// @defgroup Math Math
 /// @brief Mathematical functionality, such as random number generator or trigonometric wrappers.
 
 /// @defgroup Particles Particles
-/// @brief Contains a particle system based on sf::Texture. The module also provides several affector and emitter classes.
+/// @brief Contains a particle system based on textures. The module also provides several affector and emitter classes.
 
 /// @defgroup Resources Resources
-/// @brief Provides a resource manager for various resource types as well as the possibility to access them safely.
+/// @brief Provides a resource manager for various resource types (textures, fonts, sound buffers, ...).
 
 /// @defgroup Shapes Shapes
-/// @brief Extensions for sf::Shape like concave shapes or predefined figures.
+/// @brief Extensions for sf::Shape, like concave shapes or predefined figures.
 
 /// @defgroup Time Time
 /// @brief Supplies classes to measure time. These are convenient wrappers around sf::Clock.
 
 /// @defgroup Vectors Vectors
-/// @brief A lot of operations based on sf::Vector2 and sf::Vector3. For specific overview, see VectorAlgebra2D.hpp and VectorAlgebra3D.hpp
+/// @brief A lot of operations based on sf::Vector2 and sf::Vector3. For specific overview, see VectorAlgebra2D.hpp and VectorAlgebra3D.hpp.

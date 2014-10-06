@@ -1,6 +1,6 @@
 
 #include <Thor/Particles.hpp>
-#include <Thor/Animation.hpp>
+#include <Thor/Animations.hpp>
 #include <Thor/Vectors/PolarVector.hpp>
 #include <Thor/Math/Distributions.hpp>
 #include <SFML/Graphics.hpp>

@@ -61,7 +61,7 @@ namespace detail
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-/// @addtogroup Animation
+/// @addtogroup Animations
 /// @{
 
 /// @brief Changes a sprite's subrect over time.

@@ -24,39 +24,37 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::FadeAnimation
+/// @brief Class thor::ColorAnimation
 
-#ifndef THOR_FADEANIMATION_HPP
-#define THOR_FADEANIMATION_HPP
+#ifndef THOR_COLORANIMATION_HPP
+#define THOR_COLORANIMATION_HPP
 
 #include <Thor/Config.hpp>
+#include <Thor/Graphics/ColorGradient.hpp>
 #include <Thor/Graphics/UniformAccess.hpp>
 
 
 namespace thor
 {
 
-/// @addtogroup Animation
+/// @addtogroup Animations
 /// @{
 
-/// @brief Lets an object fade in or out.
-/// @details Changes the alpha value of animated objects at the beginning and/or end of the animation.
-class THOR_API FadeAnimation
+/// @brief Changes an object's color smoothly over time.
+/// @details This class stores a ColorGradient which is applied to animated objects.
+class THOR_API ColorAnimation
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:
 		/// @brief Constructor
-		/// @param inRatio The part of time during which the object is faded @b in. Must be in the interval [0, 1].
-		/// @param outRatio The part of time during which the object is faded @b out. Must be in the interval [0, 1-inRatio].
-		/// @details Example: Let's say you want an object to fade in during the first quarter of its animation, and to fade out
-		///  during the second half of its animation. Therefore, inRatio = 0.25 and outRatio = 0.5.
-									FadeAnimation(float inRatio, float outRatio);
+		/// @param gradient The color gradient affecting the objects. Can also be a single sf::Color.
+		explicit					ColorAnimation(const ColorGradient& gradient);
 
 		/// @brief Animates the object.
-		/// @param animated Object to fade in and/or out.
+		/// @param animated Object to colorize according to the color gradient.
 		/// @param progress Value in [0,1] determining the progress of the animation.
-		/// @tparam Animated Type of animated object. The function thor::setAlpha() is invoked for it.
+		/// @tparam Animated Type of animated object. The function thor::setColor() is invoked for it.
 		template <class Animated>
 		void						operator() (Animated& animated, float progress) const;
 
@@ -64,8 +62,7 @@ class THOR_API FadeAnimation
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		float						mInRatio;
-		float						mOutRatio;
+		ColorGradient				mGradient;
 };
 
 /// @}
@@ -74,14 +71,11 @@ class THOR_API FadeAnimation
 
 
 template <class Animated>
-void FadeAnimation::operator() (Animated& target, float progress) const
+void ColorAnimation::operator() (Animated& target, float progress) const
 {
-	if (progress < mInRatio)
-		setAlpha(target, static_cast<sf::Uint8>(256 * progress / mInRatio));
-	else if (progress > 1.f - mOutRatio)
-		setAlpha(target, static_cast<sf::Uint8>(256 * (1.f-progress) / mOutRatio));
+	setColor(target, mGradient.sampleColor(progress));
 }
 
 } // namespace thor
 
-#endif // THOR_FADEANIMATION_HPP
+#endif // THOR_COLORANIMATION_HPP

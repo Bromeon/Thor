@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Animation/FadeAnimation.hpp>
+#include <Thor/Animations/FadeAnimation.hpp>
 
 #include <cassert>
 

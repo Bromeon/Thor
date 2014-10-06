@@ -23,7 +23,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include <Thor/Animation/FrameAnimation.hpp>
+#include <Thor/Animations/FrameAnimation.hpp>
 
 
 namespace thor

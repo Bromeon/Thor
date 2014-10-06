@@ -24,15 +24,15 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Complete header for the Animation module
+/// @brief Complete header for the Animations module
 
-#ifndef THOR_MODULE_ANIMATION_HPP
-#define THOR_MODULE_ANIMATION_HPP
+#ifndef THOR_MODULE_ANIMATIONS_HPP
+#define THOR_MODULE_ANIMATIONS_HPP
 
-#include <Thor/Animation/Animator.hpp>
-#include <Thor/Animation/ColorAnimation.hpp>
-#include <Thor/Animation/FadeAnimation.hpp>
-#include <Thor/Animation/FrameAnimation.hpp>
-#include <Thor/Animation/RefAnimation.hpp>
+#include <Thor/Animations/Animator.hpp>
+#include <Thor/Animations/ColorAnimation.hpp>
+#include <Thor/Animations/FadeAnimation.hpp>
+#include <Thor/Animations/FrameAnimation.hpp>
+#include <Thor/Animations/RefAnimation.hpp>
 
-#endif // THOR_MODULE_ANIMATION_HPP
+#endif // THOR_MODULE_ANIMATIONS_HPP

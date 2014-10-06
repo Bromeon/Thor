@@ -167,7 +167,7 @@ class THOR_API ScaleAffector
 
 
 /// @brief %Affector that animates particles using a function.
-/// @details This affector can be used to apply animations of Thor's Animation module to particles. Such animations are described
+/// @details This affector can be used to apply animations of Thor's Animations module to particles. Such animations are described
 ///  by a function with signature <b>void(Particle& animated, float progress)</b>.
 class THOR_API AnimationAffector
 {
