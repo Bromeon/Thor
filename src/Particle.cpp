@@ -67,4 +67,9 @@ float getRemainingRatio(const Particle& particle)
 	return getRemainingLifetime(particle) / getTotalLifetime(particle);
 }
 
+void abandonParticle(Particle& particle)
+{
+	particle.passedLifetime = particle.totalLifetime;
+}
+
 } // namespace thor

@@ -81,6 +81,7 @@ class THOR_API Particle
 	friend class ParticleSystem;
 	friend sf::Time THOR_API getElapsedLifetime(const Particle& particle);
 	friend sf::Time THOR_API getTotalLifetime(const Particle& particle);
+	friend void THOR_API abandonParticle(Particle& particle);
 	/// @endcond
 };
 
@@ -103,6 +104,13 @@ float THOR_API				getElapsedRatio(const Particle& particle);
 /// @relates Particle
 /// @brief Returns <b>remaining lifetime / total lifetime</b>.
 float THOR_API				getRemainingRatio(const Particle& particle);
+
+/// @relates Particle
+/// @brief Marks a particle for removal.
+/// @details This function can be used when the lifetime of particles is not bound to time, but another condition.
+///  For example, in a physics simulation, particles may disappear as soon as they hit an object. Calling this function
+///  will set the particle's elapsed time to the total lifetime, and the next update of the particle system will remove it.
+void THOR_API				abandonParticle(Particle& particle);
 
 /// @}
 
