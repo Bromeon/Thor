@@ -24,7 +24,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Shapes/Shapes.hpp>
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 
 #include <SFML/Graphics/ConvexShape.hpp>
 

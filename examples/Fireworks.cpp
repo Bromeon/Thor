@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 #include <Thor/Particles/EmissionInterface.hpp>
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
 #include <array>
@@ -91,7 +91,7 @@ class FireworkEmitter
 class FireworkAffector
 {
 	public:
-		void operator() (thor::Particle& particle, sf::Time dt) 
+		void operator() (thor::Particle& particle, sf::Time dt)
 		{
 			// Apply gravity, where particles with greater scale are affected stronger (quadratic influence)
 			particle.velocity += dt.asSeconds() * sf::Vector2f(0.f, gravity) * particle.scale.x * particle.scale.y;

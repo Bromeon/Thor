@@ -26,8 +26,8 @@
 /// @file
 /// @brief Class template thor::PolarVector2
 
-#ifndef THOR_POLARVECTOR_HPP
-#define THOR_POLARVECTOR_HPP
+#ifndef THOR_POLARVECTOR2_HPP
+#define THOR_POLARVECTOR2_HPP
 
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Math/Trigonometry.hpp>
@@ -86,5 +86,5 @@ T polarAngle(const PolarVector2<T>& vector);
 
 } // namespace thor
 
-#include <Thor/Vectors/Detail/PolarVector.inl>
-#endif // THOR_POLARVECTOR_HPP
+#include <Thor/Vectors/Detail/PolarVector2.inl>
+#endif // THOR_POLARVECTOR2_HPP

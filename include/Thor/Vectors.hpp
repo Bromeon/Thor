@@ -31,6 +31,6 @@
 
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 #include <Thor/Vectors/VectorAlgebra3D.hpp>
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 
 #endif // THOR_MODULE_VECTORS_HPP

@@ -26,7 +26,7 @@
 #include <Thor/Shapes/ConcaveShape.hpp>
 #include <Thor/Shapes/Shapes.hpp>
 #include <Thor/Math/Triangulation.hpp>
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 
 #include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/SmartPtr/CopiedPtr.hpp>

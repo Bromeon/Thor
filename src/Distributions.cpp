@@ -26,7 +26,7 @@
 #include <Thor/Math/Distributions.hpp>
 #include <Thor/Math/Random.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 
 #include <cassert>
 
