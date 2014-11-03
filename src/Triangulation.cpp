@@ -235,7 +235,7 @@ namespace detail
 
 	bool isClockwiseOriented(sf::Vector2f v0, sf::Vector2f v1, sf::Vector2f v2)
 	{
-		return crossProduct(v1 - v0, v2 - v0).z <= 0;
+		return crossProduct(v1 - v0, v2 - v0) <= 0;
 	}
 
 	Circle computeCircumcircle(const AdvancedTriangle& triangle)
@@ -318,8 +318,8 @@ namespace detail
 	{
 		assert(isClockwiseOriented(corner1, corner2, center));
 
-		return crossProduct(corner1 - center, vertex.getPosition() - center).z <  0.f
-			&& crossProduct(corner2 - center, vertex.getPosition() - center).z >= 0.f;
+		return crossProduct(corner1 - center, vertex.getPosition() - center) < 0.f
+			&& crossProduct(corner2 - center, vertex.getPosition() - center) >= 0.f;
 	}
 
 	// The same as above, but with only 2 sections. Returns true when the vertex
@@ -327,7 +327,7 @@ namespace detail
 	// The example on the right would return true.                                           c1------c2
 	bool isVertexInSection(const AdvancedVertex& vertex, sf::Vector2f corner1, sf::Vector2f corner2)
 	{
-		return crossProduct(corner2 - corner1, vertex.getPosition() - corner1).z >= 0.f;
+		return crossProduct(corner2 - corner1, vertex.getPosition() - corner1) >= 0.f;
 	}
 
 	// Moves the vertex pointed by sourceItr in sourceTriangle

@@ -107,7 +107,7 @@ template <typename T>
 T signedAngle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
 {
 	assert(lhs != sf::Vector2<T>() && rhs != sf::Vector2<T>());
-	return TrigonometricTraits<T>::arcTan2(crossProduct(lhs, rhs).z, dotProduct(lhs, rhs));
+	return TrigonometricTraits<T>::arcTan2(crossProduct(lhs, rhs), dotProduct(lhs, rhs));
 }
 
 template <typename T>
@@ -117,12 +117,9 @@ T dotProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
 }
 
 template <typename T>
-sf::Vector3<T> crossProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
+T crossProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs)
 {
-	return sf::Vector3<T>( 
-		0,
-		0,
-		lhs.x * rhs.y - lhs.y * rhs.x);
+	return lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
 template <typename T>

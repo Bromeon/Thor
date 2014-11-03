@@ -46,7 +46,6 @@
 #include <Thor/Math/Trigonometry.hpp>
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/System/Vector3.hpp>
 
 #include <cassert>
 
@@ -121,11 +120,11 @@ T							signedAngle(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 template <typename T>
 T							dotProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
-/// @brief Computes the cross product of two 2D vectors.
-/// @details The behavior is equivalent to the crossproduct of two 3D vectors with
-/// the Z component being zero. The result's X and Y components are always 0.
+/// @brief Computes the cross product of two 2D vectors (Z component only).
+/// @details Treats the operands as 3D vectors, computes their cross product and returns the result's Z component
+///  (X and Y components are always zero).
 template <typename T>
-sf::Vector3<T>				crossProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
+T							crossProduct(const sf::Vector2<T>& lhs, const sf::Vector2<T>& rhs);
 
 /// @brief Returns the component-wise product of @a lhs and @a rhs.
 /// @details Computes <i>(lhs.x*rhs.x, lhs.y*rhs.y)</i>. Component-wise multiplications are mainly used for scales.
