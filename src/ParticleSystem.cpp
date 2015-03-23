@@ -120,22 +120,6 @@ unsigned int ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
 	return mTextureRects.size() - 1;
 }
 
-void ParticleSystem::swap(ParticleSystem& other)
-{
-	// Use ADL
-	using std::swap;
-
-	swap(mParticles,			other.mParticles);
-	swap(mAffectors,			other.mAffectors);
-	swap(mEmitters,				other.mEmitters);
-	swap(mTexture,				other.mTexture);
-	swap(mTextureRects,			other.mTextureRects);
-	swap(mVertices,				other.mVertices);
-	swap(mNeedsVertexUpdate,	other.mNeedsVertexUpdate);
-	swap(mQuads,				other.mQuads);
-	swap(mNeedsQuadUpdate,		other.mNeedsQuadUpdate);
-}
-
 Connection ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
 {
 	return addAffector(std::move(affector), sf::Time::Zero);

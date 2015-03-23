@@ -83,14 +83,6 @@ class ResourceKey
 			return mId;
 		}
 
-		/// @brief Swaps two instances.
-		/// 
-		void						swap(ResourceKey& other)
-		{
-			mLoader.swap(other.mLoader);
-			mId.swap(other.mId);
-		}
-
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
@@ -105,14 +97,6 @@ template <class R>
 bool operator< (const ResourceKey<R>& lhs, const ResourceKey<R>& rhs)
 {
 	return lhs.getInfo() < rhs.getInfo();
-}
-
-/// @relates ResourceKey
-/// @brief Swaps two ResourceKey<R> objects.
-template <class R>
-void swap(ResourceKey<R>& lhs, ResourceKey<R>& rhs)
-{
-	lhs.swap(rhs);
 }
 
 /// @}

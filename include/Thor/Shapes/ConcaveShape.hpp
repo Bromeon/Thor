@@ -33,7 +33,6 @@
 #include <Thor/Config.hpp>
 
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
-#include <Aurora/Tools/Swap.hpp>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
@@ -71,11 +70,6 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		/// @brief Implicit constructor that adapts an existing sf::Shape.
 		/// @details The concave shape should look as similar as possible to the original convex shape.
 									ConcaveShape(const sf::Shape& shape);
-
-		/// @brief Exchanges the content of two instances in O(1).
-		///
-		void						swap(ConcaveShape& other);
-
 
 		/// @brief Sets the amount of points in the concave polygon.
 		///
@@ -157,10 +151,6 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		mutable bool				mNeedsTriangleUpdate;
 		mutable bool				mNeedsEdgeUpdate;
 };
-
-/// @relates ConcaveShape
-/// @brief Exchanges the contents of two concave shapes.
-AURORA_GLOBAL_SWAP(ConcaveShape)
 
 /// @}
 

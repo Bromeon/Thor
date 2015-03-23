@@ -133,13 +133,6 @@ class Distribution
 		{
 			return mFactory();
 		}
-			
-		/// @brief Exchanges the contents of *this with other.
-		/// 
-		void						swap(Distribution<T>& other)
-		{
-			mFactory.swap(other.mFactory);
-		}
 
 	
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -147,14 +140,6 @@ class Distribution
 	private:
 		FactoryFn					mFactory;	
 };
-
-/// @relates Distribution
-/// @brief Swaps two Distribution<T> instances.
-template <typename T>
-void swap(Distribution<T>& lhs, Distribution<T>& rhs)
-{
-	lhs.swap(rhs);
-}
 
 /// @}
 

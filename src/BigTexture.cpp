@@ -65,14 +65,6 @@ BigTexture::BigTexture()
 {
 }
 
-void BigTexture::swap(BigTexture& other)
-{
-	std::swap(mTextures,  other.mTextures);
-	std::swap(mTableSize, other.mTableSize);
-	std::swap(mPixelSize, other.mPixelSize);
-	std::swap(mSmooth,    other.mSmooth);
-}
-
 bool BigTexture::loadFromImage(const sf::Image& source)
 {
 	// Rollback semantics: In case of failure, *this remains unchanged
@@ -145,6 +137,14 @@ void BigTexture::setSmooth(bool smooth)
 bool BigTexture::isSmooth() const
 {
 	return mSmooth;
+}
+
+void BigTexture::swap(BigTexture& other)
+{
+	std::swap(mTextures,  other.mTextures);
+	std::swap(mTableSize, other.mTableSize);
+	std::swap(mPixelSize, other.mPixelSize);
+	std::swap(mSmooth,    other.mSmooth);
 }
 
 sf::Vector2f BigTexture::fillSprites(const sf::Color& color, std::vector<sf::Sprite>& out) const

@@ -185,23 +185,6 @@ float ConcaveShape::getOutlineThickness() const
 	return mOutlineThickness;
 }
 
-void ConcaveShape::swap(ConcaveShape& other)
-{
-	using std::swap;
-
-	swap(static_cast<sf::Transformable&>(*this), static_cast<sf::Transformable&>(other));
-
-	swap(mPoints,              other.mPoints);
-	swap(mFillColor,           other.mFillColor);
-	swap(mOutlineColor,		   other.mOutlineColor);
-	swap(mOutlineThickness,    other.mOutlineThickness);
-	swap(mEdges,               other.mEdges);
-	swap(mTriangleShapes,      other.mTriangleShapes);
-	swap(mEdgeShapes,          other.mEdgeShapes);
-	swap(mNeedsTriangleUpdate, other.mNeedsTriangleUpdate);
-	swap(mNeedsEdgeUpdate,     other.mNeedsEdgeUpdate);
-}
-
 void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// One or zero points aren't rendered
