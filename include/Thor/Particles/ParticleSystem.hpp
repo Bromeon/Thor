@@ -123,6 +123,14 @@ class THOR_API ParticleSystem : public sf::Drawable, private sf::NonCopyable, pr
 		/// @details Requires a call to setTexture() and possibly addTextureRect() before the particle system can be used.
 									ParticleSystem();
 
+		/// @brief Move constructor
+		/// 
+									ParticleSystem(ParticleSystem&& source);
+
+		/// @brief Move assignment operator
+		/// 
+		ParticleSystem&				operator= (ParticleSystem&& source);
+
 		/// @brief Swaps the contents of two instances in constant time.
 		///
 		void						swap(ParticleSystem& other);

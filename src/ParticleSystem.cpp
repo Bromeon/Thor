@@ -78,6 +78,34 @@ ParticleSystem::ParticleSystem()
 {
 }
 
+ParticleSystem::ParticleSystem(ParticleSystem&& source)
+: mParticles(std::move(source.mParticles))
+, mAffectors(std::move(source.mAffectors))
+, mEmitters(std::move(source.mEmitters))
+, mTexture(std::move(source.mTexture))
+, mTextureRects(std::move(source.mTextureRects))
+, mVertices(std::move(source.mVertices))
+, mNeedsVertexUpdate(std::move(source.mNeedsVertexUpdate))
+, mQuads(std::move(source.mQuads))
+, mNeedsQuadUpdate(std::move(source.mNeedsQuadUpdate))
+{
+}
+
+ParticleSystem& ParticleSystem::operator= (ParticleSystem&& source)
+{
+	mParticles = std::move(source.mParticles);
+	mAffectors = std::move(source.mAffectors);
+	mEmitters = std::move(source.mEmitters);
+	mTexture = std::move(source.mTexture);
+	mTextureRects = std::move(source.mTextureRects);
+	mVertices = std::move(source.mVertices);
+	mNeedsVertexUpdate = std::move(source.mNeedsVertexUpdate);
+	mQuads = std::move(source.mQuads);
+	mNeedsQuadUpdate = std::move(source.mNeedsQuadUpdate);
+
+	return *this;
+}
+
 void ParticleSystem::setTexture(const sf::Texture& texture)
 {
 	mTexture = &texture;
