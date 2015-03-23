@@ -72,42 +72,42 @@ void UniversalEmitter::setEmissionRate(float particlesPerSecond)
 
 void UniversalEmitter::setParticleLifetime(Distribution<sf::Time> particleLifetime)
 {
-	mParticleLifetime.swap(particleLifetime);
+	mParticleLifetime = std::move(particleLifetime);
 }
 
 void UniversalEmitter::setParticlePosition(Distribution<sf::Vector2f> particlePosition)
 {
-	mParticlePosition.swap(particlePosition);
+	mParticlePosition = std::move(particlePosition);
 }
 
 void UniversalEmitter::setParticleVelocity(Distribution<sf::Vector2f> particleVelocity)
 {
-	mParticleVelocity.swap(particleVelocity);
+	mParticleVelocity = std::move(particleVelocity);
 }
 
 void UniversalEmitter::setParticleRotation(Distribution<float> particleRotation)
 {
-	mParticleRotation.swap(particleRotation);
+	mParticleRotation = std::move(particleRotation);
 }
 
 void UniversalEmitter::setParticleRotationSpeed(Distribution<float> particleRotationSpeed)
 {
-	mParticleRotationSpeed.swap(particleRotationSpeed);
+	mParticleRotationSpeed = std::move(particleRotationSpeed);
 }
 
 void UniversalEmitter::setParticleScale(Distribution<sf::Vector2f> particleScale)
 {
-	mParticleScale.swap(particleScale);
+	mParticleScale = std::move(particleScale);
 }
 
 void UniversalEmitter::setParticleColor(Distribution<sf::Color> particleColor)
 {
-	mParticleColor.swap(particleColor);
+	mParticleColor = std::move(particleColor);
 }
 
 void UniversalEmitter::setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex)
 {
-	mParticleTextureIndex.swap(particleTextureIndex);
+	mParticleTextureIndex = std::move(particleTextureIndex);
 }
 
 unsigned int UniversalEmitter::computeParticleCount(sf::Time dt)

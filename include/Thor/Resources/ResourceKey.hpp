@@ -64,11 +64,9 @@ class ResourceKey
 		/// @param id Identifier which is equal to another identifier if and only if the key refers to the same resource. Can also
 		///  contain debug information in case of loading failures.
 									ResourceKey(std::function< std::unique_ptr<R>() > loader, std::string id)
-		: mLoader()
-		, mId()
+		: mLoader(std::move(loader))
+		, mId(std::move(id))
 		{
-			mLoader.swap(loader);
-			mId.swap(id);
 		}
 
 		/// @brief Loads a resource.

@@ -58,10 +58,9 @@ namespace detail
 
 		public:
 			ResourceDeleter(std::weak_ptr<ResourceMap> map, SlotIterator iterator)
-			: mMap()
+			: mMap(std::move(map))
 			, mIterator(iterator)
 			{
-				mMap.swap(map);
 			}
 
 			// Actual resource deletion - This operator is only invoked when the last shared_ptr to
