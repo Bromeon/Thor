@@ -24,10 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class template thor::ResourceKey
+/// @brief Class template thor::ResourceLoader
 
-#ifndef THOR_RESOURCEKEY_HPP
-#define THOR_RESOURCEKEY_HPP
+#ifndef THOR_RESOURCELOADER_HPP
+#define THOR_RESOURCELOADER_HPP
 
 #include <Thor/Config.hpp>
 
@@ -45,7 +45,7 @@ namespace thor
 /// @brief Class storing loading information for resources
 /// 
 template <class R>
-class ResourceKey
+class ResourceLoader
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public types
@@ -63,7 +63,7 @@ class ResourceKey
 		///  and nullptr in case of loading failure. The function shall not throw any exceptions.
 		/// @param id Identifier which is equal to another identifier if and only if the key refers to the same resource. Can also
 		///  contain debug information in case of loading failures.
-									ResourceKey(std::function< std::unique_ptr<R>() > loader, std::string id)
+									ResourceLoader(std::function< std::unique_ptr<R>() > loader, std::string id)
 		: mLoader(std::move(loader))
 		, mId(std::move(id))
 		{
@@ -76,7 +76,7 @@ class ResourceKey
 			return mLoader();
 		}
 
-		/// @brief Returns a string describing the resource key.
+		/// @brief Returns a string describing the resource loader.
 		/// 
 		std::string					getInfo() const
 		{
@@ -91,16 +91,8 @@ class ResourceKey
 		std::string					mId;
 };
 
-/// @relates ResourceKey
-/// @brief Compares resource keys, used for sorting inside ResourceCache.
-template <class R>
-bool operator< (const ResourceKey<R>& lhs, const ResourceKey<R>& rhs)
-{
-	return lhs.getInfo() < rhs.getInfo();
-}
-
 /// @}
 
 } // namespace thor
 
-#endif // THOR_RESOURCEKEY_HPP
+#endif // THOR_RESOURCELOADER_HPP

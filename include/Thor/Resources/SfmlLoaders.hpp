@@ -24,13 +24,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Functions to create resource keys for SFML
+/// @brief Functions to create resource loaders for SFML
 
 #ifndef THOR_SFMLLOADERS_HPP
 #define THOR_SFMLLOADERS_HPP
 
-#include <Thor/Resources/ResourceKey.hpp>
-#include <Thor/Resources/Detail/ResourceKeyHelpers.hpp>
+#include <Thor/Resources/ResourceLoader.hpp>
+#include <Thor/Resources/Detail/ResourceLoaderHelpers.hpp>
 
 #include <Aurora/Meta/Templates.hpp>
 
@@ -50,11 +50,11 @@ namespace Resources
 
 	/// @brief Load the resource from a file on hard disk.
 	/// @param filename The name of the file from which you want to load the resource.
-	/// @return Resource key which is going to invoke <i>loadFromFile(filename)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromFile(filename)</i>.
 	template <class R>
-	ResourceKey<R> fromFile(const std::string& filename)
+	ResourceLoader<R> fromFile(const std::string& filename)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) { return resource.loadFromFile(filename); },
 			detail::Tagger("File") << filename);
 	}
@@ -62,11 +62,11 @@ namespace Resources
 	/// @brief Load the resource from a file on hard disk.
 	/// @param filename The name of the file from which you want to load the resource.
 	/// @param arg1 An additional argument (for example sf::IntRect at sf::Texture or std::string / sf::Shader::Type at sf::Shader).
-	/// @return Resource key which is going to invoke <i>loadFromFile(filename, arg1)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromFile(filename, arg1)</i>.
 	template <class R, typename T>
-	ResourceKey<R> fromFile(const std::string& filename, T arg1)
+	ResourceLoader<R> fromFile(const std::string& filename, T arg1)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) { return resource.loadFromFile(filename, arg1); },
 			detail::Tagger("File") << filename << arg1);
 	}
@@ -74,11 +74,11 @@ namespace Resources
 	/// @brief Load the resource from a file in memory.
 	/// @param arg1 Usually <i>const void*</i> for a pointer in memory; alternatively <i>std::string</i> for shader.
 	/// @param arg2 Usually <i>std::size_t</i> for the data length in bytes; alternatively <i>std::string</i> or <i>sf::Shader::Type</i> for shader.
-	/// @return Resource key which is going to invoke <i>loadFromMemory(arg1, arg2)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromMemory(arg1, arg2)</i>.
 	template <class R, typename T, typename U>
-	ResourceKey<R> fromMemory(T arg1, U arg2)
+	ResourceLoader<R> fromMemory(T arg1, U arg2)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) { return resource.loadFromMemory(arg1, arg2); },
 			detail::Tagger("Memory") << arg1 << arg2);
 	}
@@ -87,22 +87,22 @@ namespace Resources
 	/// @param arg1 Usually <i>const void*</i> for a pointer in memory; alternatively <i>std::string</i> for shader.
 	/// @param arg2 Usually <i>std::size_t</i> for the data length in bytes; alternatively <i>std::string</i> or <i>sf::Shader::Type</i> for shader.
 	/// @param arg3 An additional argument (for example sf::IntRect at sf::Texture).
-	/// @return Resource key which is going to invoke <i>loadFromMemory(arg1, arg2, arg3)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromMemory(arg1, arg2, arg3)</i>.
 	template <class R, typename T, typename U, typename V>
-	ResourceKey<R> fromMemory(T arg1, U arg2, V arg3)
+	ResourceLoader<R> fromMemory(T arg1, U arg2, V arg3)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) { return resource.loadFromMemory(arg1, arg2, arg3); },
 			detail::Tagger("Memory") << arg1 << arg2 << arg3);
 	}
 
 	/// @brief Load the resource from an input stream.
 	/// @param stream Source stream to read from.
-	/// @return Resource key which is going to invoke <i>loadFromStream(stream)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromStream(stream)</i>.
 	template <class R>
-	ResourceKey<R> fromStream(sf::InputStream& stream)
+	ResourceLoader<R> fromStream(sf::InputStream& stream)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[&] (R& resource) { return resource.loadFromStream(stream); },
 			detail::Tagger("Stream") << &stream);
 	}
@@ -110,11 +110,11 @@ namespace Resources
 	/// @brief Load the resource (usually sf::Shader) from two streams.
 	/// @param vertexShaderStream Source stream to read the vertex shader from.
 	/// @param fragmentShaderStream Source stream to read the fragment shader from.
-	/// @return Resource key which is going to invoke <i>loadFromStream(vertexShaderStream, fragmentShaderStream)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromStream(vertexShaderStream, fragmentShaderStream)</i>.
 	template <class R>
-	ResourceKey<R> fromStream(sf::InputStream& vertexShaderStream, sf::InputStream& fragmentShaderStream)
+	ResourceLoader<R> fromStream(sf::InputStream& vertexShaderStream, sf::InputStream& fragmentShaderStream)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[&] (R& resource) { return resource.loadFromStream(vertexShaderStream, fragmentShaderStream); },
 			detail::Tagger("Stream") << &vertexShaderStream << &fragmentShaderStream);
 	}
@@ -122,12 +122,12 @@ namespace Resources
 	/// @brief Load the resource from a stream with additional information.
 	/// @param stream Source stream to read from.
 	/// @param arg1 An additional argument (for example sf::IntRect at sf::Texture or std::string / sf::Shader::Type at sf::Shader).
-	/// @return Resource key which is going to invoke <i>loadFromStream(stream, arg1)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromStream(stream, arg1)</i>.
 	template <class R, typename T>
-	ResourceKey<R> fromStream(sf::InputStream& stream, T arg1
+	ResourceLoader<R> fromStream(sf::InputStream& stream, T arg1
 		AURORA_ENABLE_IF(!std::is_base_of<sf::InputStream, T>::value))
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[&stream, arg1] (R& resource) { return resource.loadFromStream(stream, arg1); },
 			detail::Tagger("Stream") << &stream << arg1);
 	}
@@ -137,11 +137,11 @@ namespace Resources
 	/// @param sampleCount Number of samples in the array.
 	/// @param channelCount Number of channels (1 = mono, 2 = stereo, ...).
 	/// @param sampleRate Sample rate (number of samples to play per second).
-	/// @return Resource key which is going to invoke <i>loadFromSamples(width, height, color)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromSamples(width, height, color)</i>.
 	template <class R>
-	ResourceKey<R> fromSamples(const sf::Int16* samples, std::size_t sampleCount, unsigned int channelCount, unsigned int sampleRate)
+	ResourceLoader<R> fromSamples(const sf::Int16* samples, std::size_t sampleCount, unsigned int channelCount, unsigned int sampleRate)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) { return resource.loadFromSamples(samples, sampleCount, channelCount, sampleRate); },
 			detail::Tagger("Samples") << samples << sampleCount << channelCount << sampleRate);
 	}
@@ -149,11 +149,11 @@ namespace Resources
 	/// @brief Load resource (usually sf::Image) from array of pixels
 	/// @param width,height The size of the image.
 	/// @param pixels Pointer to the pixels in memory.
-	/// @return Resource key which is going to invoke <i>create(width, height, pixels)</i>.
+	/// @return Resource loader which is going to invoke <i>create(width, height, pixels)</i>.
 	template <class R>
-	ResourceKey<R> fromPixels(unsigned int width, unsigned int height, const sf::Uint8* pixels)
+	ResourceLoader<R> fromPixels(unsigned int width, unsigned int height, const sf::Uint8* pixels)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) -> bool
 			{
 				resource.create(width, height, pixels);
@@ -165,11 +165,11 @@ namespace Resources
 	/// @brief Load resource (usually sf::Image) from size and fill color
 	/// @param width,height The size of the image.
 	/// @param color The color used to fill the image.
-	/// @return Resource key which is going to invoke <i>create(width, height, color)</i>.
+	/// @return Resource loader which is going to invoke <i>create(width, height, color)</i>.
 	template <class R>
-	ResourceKey<R> fromColor(unsigned int width, unsigned int height, const sf::Color& color)
+	ResourceLoader<R> fromColor(unsigned int width, unsigned int height, const sf::Color& color)
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[=] (R& resource) -> bool
 			{
 				resource.create(width, height, color);
@@ -181,11 +181,11 @@ namespace Resources
 	/// @brief Load the resource (usually sf::Texture) from a sf::Image.
 	/// @param image Image to load into the texture.
 	/// @param area Area of the image to load.
-	/// @return Resource key which is going to invoke <i>loadFromImage(image, area)</i>.
+	/// @return Resource loader which is going to invoke <i>loadFromImage(image, area)</i>.
 	template <class R>
-	ResourceKey<R> fromImage(const sf::Image& image, const sf::IntRect area = sf::IntRect())
+	ResourceLoader<R> fromImage(const sf::Image& image, const sf::IntRect area = sf::IntRect())
 	{
-		return detail::makeResourceKey<R>(
+		return detail::makeResourceLoader<R>(
 			[&image, area] (R& resource) { return resource.loadFromImage(image, area); },
 			detail::Tagger("Image") << &image << area);
 	}

@@ -47,7 +47,7 @@ ResourceHolder<R, I, O>& ResourceHolder<R, I, O>::operator= (ResourceHolder&& so
 }
 
 template <typename R, typename I, class O>
-typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(const I& id, const ResourceKey<R>& how)
+typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(const I& id, const ResourceLoader<R>& how)
 {
 	auto found = mMap.find(id);
 	if (found == mMap.end())
@@ -82,7 +82,7 @@ typename ResourceHolder<R, I, O>::ConstResource ResourceHolder<R, I, O>::operato
 }
 
 template <typename R, typename I, class O>
-typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I& id, const ResourceKey<R>& how)
+typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I& id, const ResourceLoader<R>& how)
 {
 	assert(mMap.find(id) == mMap.end());
 

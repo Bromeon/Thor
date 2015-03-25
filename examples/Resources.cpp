@@ -32,19 +32,13 @@ int main()
 	sf::Image image;
 	image.create(529, 100, sf::Color(130, 70, 0));
 
-	// Create keys to load resources
-	thor::ResourceKey<sf::Texture>      textureKey1 = thor::Resources::fromImage<sf::Texture>(image);
-	thor::ResourceKey<sf::Texture>      textureKey2 = thor::Resources::fromFile<sf::Texture>("Media/image.jpg");
-	thor::ResourceKey<sf::SoundBuffer>  soundKey    = thor::Resources::fromFile<sf::SoundBuffer>("Media/click.wav");
-	thor::ResourceKey<sf::Font>         fontKey     = thor::Resources::fromFile<sf::Font>("Media/sansation.ttf");
-
-	// Actually load resources, store them in resource pointers and react to loading errors
+	// Load resources, store them in resource pointers and react to loading errors
 	try
 	{
-		textures.acquire(Textures::BrownRectangle, textureKey1);
-		textures.acquire(Textures::SfmlLogo, textureKey2);
-		sounds.acquire(Sounds::Click, soundKey);
-		fonts.acquire("MainFont", fontKey);
+		textures.acquire(Textures::BrownRectangle, thor::Resources::fromImage<sf::Texture>(image));
+		textures.acquire(Textures::SfmlLogo, thor::Resources::fromFile<sf::Texture>("Media/image.jpg"));
+		sounds.acquire(Sounds::Click, thor::Resources::fromFile<sf::SoundBuffer>("Media/click.wav"));
+		fonts.acquire("MainFont", thor::Resources::fromFile<sf::Font>("Media/sansation.ttf"));
 	}
 	catch (thor::ResourceLoadingException& e)
 	{

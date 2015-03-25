@@ -29,7 +29,7 @@
 #ifndef THOR_RESOURCEHOLDER_HPP
 #define THOR_RESOURCEHOLDER_HPP
 
-#include <Thor/Resources/ResourceKey.hpp>
+#include <Thor/Resources/ResourceLoader.hpp>
 #include <Thor/Resources/OwnershipModels.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
@@ -100,10 +100,10 @@ class ResourceHolder : private aurora::NonCopyable
 		/// @brief Loads a new resource, identified as @a id.
 		/// @details If @a id is already known, no resource is loaded.
 		/// @param id Value identifying the resource.
-		/// @param how Resource key containing loading information. Determines how the resource is loaded.
+		/// @param how Resource loader containing loading information. Determines how the resource is loaded.
 		/// @return Resource associated with @a id; either just loaded or already stored in the holder.
 		/// @throw ResourceLoadingException if the loading of the resource fails.
-		Resource					acquire(const I& id, const ResourceKey<R>& how);
+		Resource					acquire(const I& id, const ResourceLoader<R>& how);
 
 		/// @brief Unloads the resource currently identified as @a id.
 		/// @details Requires that a resource with the identifier @a id is currently stored in this holder.
@@ -127,7 +127,7 @@ class ResourceHolder : private aurora::NonCopyable
 	// Private member functions
 	private:
 		// Load resource (must be new)
-		Resource					load(const I& id, const ResourceKey<R>& how);
+		Resource					load(const I& id, const ResourceLoader<R>& how);
 	
 
 	// ---------------------------------------------------------------------------------------------------------------------------

@@ -23,10 +23,10 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef THOR_RESOURCEKEYHELPERS_HPP
-#define THOR_RESOURCEKEYHELPERS_HPP
+#ifndef THOR_RESOURCELOADERHELPERS_HPP
+#define THOR_RESOURCELOADERHELPERS_HPP
 
-#include <Thor/Resources/ResourceKey.hpp>
+#include <Thor/Resources/ResourceLoader.hpp>
 #include <Thor/Graphics/ToString.hpp>
 #include <Thor/Config.hpp>
 
@@ -102,11 +102,11 @@ namespace detail
 		bool				begin;
 	};
 
-	// Creates a resource key by transforming the function
+	// Creates a resource loader by transforming the function
 	//      bool               boolLoader(R&)
 	// to:  std::unique_ptr<R> loader()
 	template <class R, typename Fn>
-	ResourceKey<R> makeResourceKey(Fn boolLoader, std::string key)
+	ResourceLoader<R> makeResourceLoader(Fn boolLoader, std::string key)
 	{
 		auto loader = [=] () -> std::unique_ptr<R>
 		{
@@ -117,10 +117,10 @@ namespace detail
 				return nullptr;
 		};
 
-		return ResourceKey<R>(loader, key);
+		return ResourceLoader<R>(loader, key);
 	}
 
 } // namespace detail
 } // namespace thor
 
-#endif // THOR_RESOURCEKEYHELPERS_HPP
+#endif // THOR_RESOURCELOADERHELPERS_HPP
