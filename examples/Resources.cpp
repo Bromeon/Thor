@@ -4,12 +4,31 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
+namespace Textures
+{
+	enum Type
+	{
+		SfmlLogo,
+		BrownRectangle,
+	};
+}
+
+namespace Sounds
+{
+	enum Type
+	{
+		Click,
+	};
+}
+
 int main()
 {
-	// Create resource cache for both sf::Texture and sf::SoundBuffer
-	thor::MultiResourceCache cache;
+	// Use enum to differentiate between textures/sounds, use string to differentiate between fonts
+	thor::ResourceHolder<sf::Texture,     Textures::Type> textures;
+	thor::ResourceHolder<sf::SoundBuffer, Sounds::Type>   sounds;
+	thor::ResourceHolder<sf::Font,        std::string>    fonts;
 
-	// Create sf::Image to load texture from
+	// Create sf::Image to load one texture from
 	sf::Image image;
 	image.create(529, 100, sf::Color(130, 70, 0));
 
@@ -19,18 +38,13 @@ int main()
 	thor::ResourceKey<sf::SoundBuffer>  soundKey    = thor::Resources::fromFile<sf::SoundBuffer>("Media/click.wav");
 	thor::ResourceKey<sf::Font>         fontKey     = thor::Resources::fromFile<sf::Font>("Media/sansation.ttf");
 
-	// Create resource pointers to access the resources
-	std::shared_ptr<sf::Texture>        texture1, texture2;
-	std::shared_ptr<sf::SoundBuffer>    soundBuffer;
-	std::shared_ptr<sf::Font>           font;
-
 	// Actually load resources, store them in resource pointers and react to loading errors
 	try
 	{
-		texture1    = cache.acquire(textureKey1);
-		texture2    = cache.acquire(textureKey2);
-		soundBuffer = cache.acquire(soundKey);
-		font        = cache.acquire(fontKey);
+		textures.acquire(Textures::BrownRectangle, textureKey1);
+		textures.acquire(Textures::SfmlLogo, textureKey2);
+		sounds.acquire(Sounds::Click, soundKey);
+		fonts.acquire("MainFont", fontKey);
 	}
 	catch (thor::ResourceLoadingException& e)
 	{
@@ -39,13 +53,13 @@ int main()
 	}
 
 	// Create instances that use the resources
-	sf::Sprite sprite1(*texture1);
-	sf::Sprite sprite2(*texture2);
-	sf::Sound sound(*soundBuffer);
-	sf::Text instructions("Press return to play sound, escape to quit", *font, 14u);
+	sf::Sprite sprite1(textures[Textures::BrownRectangle]);
+	sf::Sprite sprite2(textures[Textures::SfmlLogo]);
+	sf::Sound sound(sounds[Sounds::Click]);
+	sf::Text instructions("Press return to play sound, escape to quit", fonts["MainFont"], 14u);
 
 	// Move second sprite so that the sprites don't overlap
-	sprite2.move( 0.f, static_cast<float>(texture1->getSize().y) );
+	sprite2.move(0.f, sprite1.getGlobalBounds().height);
 
 	// Create render window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Thor Resources");
