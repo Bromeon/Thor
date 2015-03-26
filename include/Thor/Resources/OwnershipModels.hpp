@@ -28,6 +28,8 @@
 
 #include <Thor/Config.hpp>
 
+#include <Aurora/Meta/Templates.hpp>
+
 #include <memory>
 #include <cassert>
 
@@ -68,6 +70,41 @@ namespace Resources
 namespace detail
 {
 
+	template <typename Map>
+	struct ElementRef
+	{
+		Map* map;
+		typename Map::iterator itr;
+	};
+
+	template <typename Map>
+	ElementRef<Map> MakeElementRef(Map& map, typename Map::iterator itr)
+	{
+		return {&map, itr};
+	}
+
+	template <typename R, typename Map>
+	struct TrackingDeleter
+	{
+		void operator() (R* pointer)
+		{
+			// If map element exists, erase it
+			if (!tracker.expired())
+			{
+				// Verify resource ID is still there
+				assert(element.map->find(element.itr->first) != element.map->end());
+				element.map->erase(element.itr);
+			}
+
+			// Perform actual deallocation
+			AURORA_REQUIRE_COMPLETE_TYPE(R);
+			delete pointer;
+		}
+
+		ElementRef<Map> element;
+		std::weak_ptr<char> tracker;
+	};
+
 	// Class to dispatch between ownership model, using partial template specialization
 	template <typename Model, typename R>
 	struct OwnershipModel;
@@ -86,6 +123,12 @@ namespace detail
 			return *initialOrStorage;
 		}
 
+		template <typename Map>
+		static std::unique_ptr<R> MakeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&&)
+		{
+			return std::move(resource);
+		}
+
 		static std::unique_ptr<R> MakeStored(std::unique_ptr<R>&& loaded)
 		{
 			return std::move(loaded);
@@ -98,23 +141,60 @@ namespace detail
 	{
 		typedef std::shared_ptr<R>			Returned;
 		typedef std::shared_ptr<const R>	ConstReturned;
-		typedef std::shared_ptr<R>			Loaded;
-		typedef std::weak_ptr<R>			Stored;
 
-		static std::shared_ptr<R> MakeReturned(const std::shared_ptr<R>& loaded)
+		// First object being constructed directly from resource.
+		// Prepares tracking semantics
+		struct Loaded
 		{
+			std::shared_ptr<char> tracked;
+			std::shared_ptr<R> resource;
+		};
+
+		// Map's value type, stores weak pointer to resource and eraser to remove itself from map
+		// Can potentially be optimized by avoiding indirect call through std::function
+		struct Stored
+		{
+			std::shared_ptr<char> tracked;
+			std::weak_ptr<R> resource;
+		};
+
+		static std::shared_ptr<R> MakeReturned(const Loaded& loaded)
+		{
+			return loaded.resource;
+		}
+
+		static std::shared_ptr<R> MakeReturned(const Stored& stored)
+		{
+			assert(!stored.resource.expired());
+			return std::shared_ptr<R>(stored.resource); // shouldn't throw after assert
+		}
+
+		template <typename Map>
+		static Loaded MakeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&& element)
+		{
+			// Tracked object: shared pointer referenced by multiple weak pointers.
+			// If object holding tracked dies, all weak_ptr objects become expired.
+			auto tracked = std::make_shared<char>();
+
+			// Deleter for shared_ptr. Users will hold shared_ptrs with this deleter, so
+			// the last one will erase the element from the map.
+			TrackingDeleter<R, Map> deleter;
+			deleter.tracker = tracked;
+			deleter.element = element;
+
+			// Create initial object that holds the resource as well as a strong tracked shared_ptr
+			Loaded loaded;
+			loaded.tracked = std::move(tracked);
+			loaded.resource = std::shared_ptr<R>(resource.release(), deleter);
 			return loaded;
 		}
 
-		static std::shared_ptr<R> MakeReturned(const std::weak_ptr<R>& stored)
+		static Stored MakeStored(Loaded&& loaded)
 		{
-			assert(!stored.expired());
-			return std::shared_ptr<R>(stored); // shouldn't throw after assert
-		}
-
-		static std::weak_ptr<R> MakeStored(std::shared_ptr<R>&& loaded)
-		{
-			return std::weak_ptr<R>(loaded);
+			Stored stored;
+			stored.tracked = std::move(loaded.tracked);
+			stored.resource = std::weak_ptr<R>(loaded.resource);
+			return stored;
 		}
 	};
 

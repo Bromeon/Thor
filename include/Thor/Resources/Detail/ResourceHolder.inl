@@ -86,15 +86,27 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I
 {
 	assert(mMap.find(id) == mMap.end());
 
-	// Null pointer: Failed to load
-	std::unique_ptr<R> loaded = how.load();
-	if (!loaded)
+	// Loading process is rather complicated because it has to respect different ownership semantics.
+	// That's why the resource is moved several times. The data flow is as follows:
+	// original (temporary) ----> loaded (temporary) .---> returned (handed out to user)
+	//                                                `--> stored (stored in resource holder's map)
+	std::unique_ptr<R> original = how.load();
+	if (!original)
 		throw ResourceLoadingException("Failed to load resource \"" + how.getInfo() + "\"");
 
-	// This order because in case of shared ownership, shared_ptr must be kept alive across weak_ptr
-	typename Om::Loaded resource(std::move(loaded));
-	typename Om::Returned returned = Om::MakeReturned(resource);
-	mMap.emplace(id, Om::MakeStored(std::move(resource)));
+	// Insert initially empty element, to learn about its iterator
+	auto inserted = mMap.emplace(id, Om::Stored()).first;
+
+	// For ownership policies that try to be smart and remove resources from the holder when unused, 
+	// we need to pass them information about the container and the iterator referring to the element
+	auto elementRef = detail::MakeElementRef(mMap, inserted);
+
+	// Create temporary 'loaded' object and from it, 'returned' object given to user
+	typename Om::Loaded loaded = Om::MakeLoaded(std::move(original), std::move(elementRef));
+	typename Om::Returned returned = Om::MakeReturned(loaded);
+
+	// Actually store resource (together with tracking element) in map
+	inserted->second = Om::MakeStored(std::move(loaded));
 
 	return returned;
 }
