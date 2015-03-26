@@ -29,6 +29,7 @@
 #ifndef THOR_RESOURCEHOLDER_HPP
 #define THOR_RESOURCEHOLDER_HPP
 
+#include <Thor/Resources/KnownIdStrategy.hpp>
 #include <Thor/Resources/OwnershipModels.hpp>
 #include <Thor/Resources/ResourceExceptions.hpp>
 #include <Thor/Resources/ResourceLoader.hpp>
@@ -99,12 +100,13 @@ class ResourceHolder : private aurora::NonCopyable
 		ResourceHolder&				operator= (ResourceHolder&& source);
 
 		/// @brief Loads a new resource, identified as @a id.
-		/// @details If @a id is already known, no resource is loaded.
 		/// @param id Value identifying the resource.
 		/// @param how Resource loader containing loading information. Determines how the resource is loaded.
+		/// @param known Determines what happens if @a id is already known. By default, an exception is thrown.
 		/// @return Resource associated with @a id; either just loaded or already stored in the holder.
 		/// @throw ResourceLoadingException if the loading of the resource fails.
-		Resource					acquire(const I& id, const ResourceLoader<R>& how);
+		/// @throw ResourceAccessException if a resource associated with @a id is already known and @a known is AssumeNew.
+		Resource					acquire(const I& id, const ResourceLoader<R>& how, Resources::KnownIdStrategy known = Resources::AssumeNew);
 
 		/// @brief Unloads the resource currently identified as @a id.
 		/// @details The resource is removed from this resource holder. Depending on the ownership policy,

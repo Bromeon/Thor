@@ -47,13 +47,27 @@ ResourceHolder<R, I, O>& ResourceHolder<R, I, O>::operator= (ResourceHolder&& so
 }
 
 template <typename R, typename I, class O>
-typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(const I& id, const ResourceLoader<R>& how)
+typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(const I& id, const ResourceLoader<R>& how, Resources::KnownIdStrategy known)
 {
+	// ID is new: we always load the resource
 	auto found = mMap.find(id);
 	if (found == mMap.end())
 		return load(id, how);
-	else
-		return Om::MakeReturned(found->second);
+
+	// ID is known: behavior depends on strategy
+	switch (known)
+	{
+		default: // TODO: Assume 'default' unreachable
+		case Resources::AssumeNew:
+			throw ResourceAccessException("Failed to load resource, ID already stored in ResourceHolder");
+
+		case Resources::Reload:
+			release(id);
+			return load(id, how);
+
+		case Resources::Reuse:
+			return Om::MakeReturned(found->second);
+	}
 }
 
 template <typename R, typename I, class O>
@@ -87,7 +101,7 @@ typename ResourceHolder<R, I, O>::ConstResource ResourceHolder<R, I, O>::operato
 }
 
 template <typename R, typename I, class O>
-typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I& id, const ResourceLoader<R>& how)
+typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I& id, const ResourceLoader<R>& what)
 {
 	assert(mMap.find(id) == mMap.end());
 
@@ -95,9 +109,9 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I
 	// That's why the resource is moved several times. The data flow is as follows:
 	// original (temporary) ----> loaded (temporary) .---> returned (handed out to user)
 	//                                                `--> stored (stored in resource holder's map)
-	std::unique_ptr<R> original = how.load();
+	std::unique_ptr<R> original = what.load();
 	if (!original)
-		throw ResourceLoadingException("Failed to load resource \"" + how.getInfo() + "\"");
+		throw ResourceLoadingException("Failed to load resource \"" + what.getInfo() + "\"");
 
 	// Insert initially empty element, to learn about its iterator
 	auto inserted = mMap.emplace(id, Om::Stored()).first;

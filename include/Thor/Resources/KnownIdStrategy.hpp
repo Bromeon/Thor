@@ -23,17 +23,33 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-/// @file
-/// @brief Complete header for the Resources module
+#ifndef THOR_KNOWNIDSTRATEGY_HPP
+#define THOR_KNOWNIDSTRATEGY_HPP
 
-#ifndef THOR_MODULE_RESOURCES_HPP
-#define THOR_MODULE_RESOURCES_HPP
 
-#include <Thor/Resources/OwnershipModels.hpp>
-#include <Thor/Resources/KnownIdStrategy.hpp>
-#include <Thor/Resources/ResourceHolder.hpp>
-#include <Thor/Resources/ResourceLoader.hpp>
-#include <Thor/Resources/ResourceExceptions.hpp>
-#include <Thor/Resources/SfmlLoaders.hpp>
+namespace thor
+{
 
-#endif // THOR_MODULE_RESOURCES_HPP
+/// @addtogroup Resources
+/// @{
+
+namespace Resources
+{
+
+	/// @brief Strategy to deal with already known resource IDs
+	/// @details Determines what happens if the user calls ResourceHolder::acquire() with an ID that is already
+	///  associated with a different resource.
+	enum KnownIdStrategy
+	{
+		AssumeNew,	///< Loads a new resource if the ID is unknown. Otherwise, a ResourceAccessException is thrown.
+		Reuse,		///< Loads a new resource if the ID is unknown. Otherwise, the resource associated with the ID is reused.
+		Reload,		///< Always loads a new resource. If the ID is already known, the corresponding resource is released.
+	};
+
+} // namespace Resources
+
+/// @}
+
+} // namespace thor
+
+#endif // THOR_KNOWNIDSTRATEGY_HPP
