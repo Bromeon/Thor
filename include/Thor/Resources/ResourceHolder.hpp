@@ -29,8 +29,9 @@
 #ifndef THOR_RESOURCEHOLDER_HPP
 #define THOR_RESOURCEHOLDER_HPP
 
-#include <Thor/Resources/ResourceLoader.hpp>
 #include <Thor/Resources/OwnershipModels.hpp>
+#include <Thor/Resources/ResourceExceptions.hpp>
+#include <Thor/Resources/ResourceLoader.hpp>
 
 #include <Aurora/Tools/NonCopyable.hpp>
 
@@ -106,20 +107,25 @@ class ResourceHolder : private aurora::NonCopyable
 		Resource					acquire(const I& id, const ResourceLoader<R>& how);
 
 		/// @brief Unloads the resource currently identified as @a id.
-		/// @details Requires that a resource with the identifier @a id is currently stored in this holder.
+		/// @details The resource is removed from this resource holder. Depending on the ownership policy,
+		///  it may either be released immediately or live until it is no longer referenced. In any case,
+		///  you cannot access it any longer through this instance.
 		/// @param id Value identifying the resource.
+		/// @throw ResourceAccessException If @a id doesn't refer to a currently stored resource.
 		void						release(const I& id);
 
 		/// @brief Accesses a resource using the identifier @a id.
 		/// @details Requires that a resource with the identifier @a id is currently stored in this holder.
 		/// @param id Value identifying the resource.
-		/// @return Reference to that resource.
+		/// @return Handle to that resource.
+		/// @throw ResourceAccessException If @a id doesn't refer to a currently stored resource.
 		Resource					operator[] (const I& id);
 
 		/// @brief Accesses a resource using the identifier @a id (const overload).
 		/// @details Requires that a resource with the identifier @a id is currently stored in this holder.
 		/// @param id Value identifying the resource.
-		/// @return Reference to that resource.
+		/// @return Handle to that resource, which does not allow modification of the resource.
+		/// @throw ResourceAccessException If @a id doesn't refer to a currently stored resource.
 		ConstResource				operator[] (const I& id) const;
 
 	

@@ -24,10 +24,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class thor::ResourceLoadingException
+/// @brief Classes thor::ResourceLoadingException, thor::ResourceAccessException
 
-#ifndef THOR_RESOURCELOADINGEXCEPTION_HPP
-#define THOR_RESOURCELOADINGEXCEPTION_HPP
+#ifndef THOR_RESOURCEEXCEPTIONS_HPP
+#define THOR_RESOURCEEXCEPTIONS_HPP
 
 #include <Aurora/Tools/Exceptions.hpp>
 
@@ -39,7 +39,7 @@ namespace thor
 /// @{
 
 /// @brief %Exception class for failed resource allocation.
-/// @details Is thrown by thor::ResourceHolder in case of resources that cannot be loaded.
+/// @details Is thrown when an error occurs while loading a resource.
 class ResourceLoadingException : public aurora::Exception
 {
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -53,8 +53,24 @@ class ResourceLoadingException : public aurora::Exception
 		}
 };
 
+/// @brief %Exception class for invalid resource access.
+/// @details Is thrown when the user tries to access an invalid resource. Usually, this means that a requested resource has been
+///  already released or not yet loaded.
+class ResourceAccessException : public aurora::Exception
+{
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Public member functions
+	public:
+		/// @brief Constructor
+		/// @param message The exception message (how the error occurred).
+		explicit ResourceAccessException(const std::string& message)
+		: aurora::Exception(message)
+		{
+		}
+};
+
 /// @}
 
 } // namespace thor
 
-#endif // THOR_RESOURCESTRATEGIES_HPP
+#endif // THOR_RESOURCEEXCEPTIONS_HPP

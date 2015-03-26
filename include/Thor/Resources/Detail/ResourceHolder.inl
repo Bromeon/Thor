@@ -59,15 +59,19 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(cons
 template <typename R, typename I, class O>
 void ResourceHolder<R, I, O>::release(const I& id)
 {
-	assert(mMap.find(id) != mMap.end());
-	mMap.erase(id);
+	auto found = mMap.find(id);
+	if (found == mMap.end())
+		throw ResourceAccessException("Failed to release resource, ID not currently stored in ResourceHolder");
+
+	mMap.erase(found);
 }
 
 template <typename R, typename I, class O>
 typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::operator[] (const I& id)
 {
 	auto found = mMap.find(id);
-	assert(found != mMap.end());
+	if (found == mMap.end())
+		throw ResourceAccessException("Failed to access resource, ID not currently stored in ResourceHolder");
 
 	return Om::MakeReturned(found->second);
 }
@@ -76,7 +80,8 @@ template <typename R, typename I, class O>
 typename ResourceHolder<R, I, O>::ConstResource ResourceHolder<R, I, O>::operator[] (const I& id) const
 {
 	auto found = mMap.find(id);
-	assert(found != mMap.end());
+	if (found == mMap.end())
+		throw ResourceAccessException("Failed to access resource, ID not currently stored in ResourceHolder");
 
 	return Om::MakeReturned(found->second);
 }

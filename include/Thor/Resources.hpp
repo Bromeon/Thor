@@ -32,7 +32,7 @@
 #include <Thor/Resources/OwnershipModels.hpp>
 #include <Thor/Resources/ResourceHolder.hpp>
 #include <Thor/Resources/ResourceLoader.hpp>
-#include <Thor/Resources/ResourceLoadingException.hpp>
+#include <Thor/Resources/ResourceExceptions.hpp>
 #include <Thor/Resources/SfmlLoaders.hpp>
 
 #endif // THOR_MODULE_RESOURCES_HPP
