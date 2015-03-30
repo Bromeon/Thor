@@ -114,7 +114,7 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I
 		throw ResourceLoadingException("Failed to load resource \"" + what.getInfo() + "\"");
 
 	// Insert initially empty element, to learn about its iterator
-	auto inserted = mMap.emplace(id, Om::Stored()).first;
+	auto inserted = mMap.insert(std::make_pair(id, typename Om::Stored())).first;
 
 	// For ownership policies that try to be smart and remove resources from the holder when unused, 
 	// we need to pass them information about the container and the iterator referring to the element
