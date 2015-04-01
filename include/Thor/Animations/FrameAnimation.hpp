@@ -49,11 +49,23 @@ namespace detail
 		Frame(float duration, const sf::IntRect& subrect)
 		: duration(duration)
 		, subrect(subrect)
+		, origin()
+		, applyOrigin(false)
+		{
+		}
+				
+		Frame(float duration, const sf::IntRect& subrect, sf::Vector2f origin)
+		: duration(duration)
+		, subrect(subrect)
+		, origin(origin)
+		, applyOrigin(true)
 		{
 		}
 
 		mutable float			duration;
 		sf::IntRect				subrect;
+		sf::Vector2f			origin;
+		bool					applyOrigin;
 	};
 
 } // namespace detail
@@ -81,13 +93,19 @@ class THOR_API FrameAnimation
 		/// @param subrect %Rectangle of the sf::Texture that is used for the new frame.
 		void						addFrame(float relativeDuration, const sf::IntRect& subrect);
 
+		/// @brief Adds a frame to the animation, changes sub-rect and sprite origin.
+		/// @param relativeDuration Duration of the frame relative to the other durations.
+		/// @param subrect %Rectangle of the sf::Texture that is used for the new frame.
+		/// @param origin Position of the coordinate system origin. Is useful when frames have rectangles of different sizes.
+		void						addFrame(float relativeDuration, const sf::IntRect& subrect, sf::Vector2f origin);
+
 		/// @brief Animates the object.
 		/// @param animated Object to animate.
 		/// @param progress Value in [0,1] determining the progress of the animation.
-		/// @tparam Animated Class with member function <i>void setTextureRect(sf::IntRect)</i>, for example sf::Sprite.
+		/// @tparam Animated Class with member functions <i>void setTextureRect(sf::IntRect)</i> and
+		///  <i>void setOrigin(sf::Vector2f)</i>, for example sf::Sprite.
 		template <class Animated>
 		void						operator() (Animated& animated, float progress) const;
-
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -122,6 +140,9 @@ void FrameAnimation::operator() (Animated& target, float progress) const
 		if (progress < 0.f)
 		{
 			target.setTextureRect(frame.subrect);
+			if (frame.applyOrigin)
+				target.setOrigin(frame.origin);
+
 			break;
 		}
 	}

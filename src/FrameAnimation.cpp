@@ -41,6 +41,12 @@ void FrameAnimation::addFrame(float relativeDuration, const sf::IntRect& subrect
 	mNormalized = false;
 }
 
+void FrameAnimation::addFrame(float relativeDuration, const sf::IntRect& subrect, sf::Vector2f origin)
+{
+	mFrames.push_back(detail::Frame(relativeDuration, subrect, origin));
+	mNormalized = false;
+}
+
 void FrameAnimation::ensureNormalized() const
 {
 	if (mNormalized)
