@@ -117,10 +117,10 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		virtual void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 		// Computes how the shape can be split up into convex triangles.
-		void						decompose() const;
+		void						ensureDecomposed() const;
 
 		// Forms the outline out of the given edges.
-		void						formOutline() const;
+		void						ensureOutlineUpdated() const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -133,8 +133,8 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 
 		mutable sf::VertexArray		mTriangleVertices;
 		mutable sf::ConvexShape		mOutlineShape;
-		mutable bool				mNeedsTriangleUpdate;
-		mutable bool				mNeedsEdgeUpdate;
+		mutable bool				mNeedsDecomposition;
+		mutable bool				mNeedsOutlineUpdate;
 };
 
 /// @}

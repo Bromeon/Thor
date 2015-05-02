@@ -35,6 +35,8 @@
 #include <cmath>
 
 
+// TODO: Possible optimization: Don't recompute everything if a single attribute such as fill color changes.
+
 namespace thor
 {
 
@@ -91,8 +93,8 @@ ConcaveShape::ConcaveShape()
 , mOutlineThickness(0.f)
 , mTriangleVertices(sf::Triangles)
 , mOutlineShape()
-, mNeedsTriangleUpdate(false)
-, mNeedsEdgeUpdate(false)
+, mNeedsDecomposition(false)
+, mNeedsOutlineUpdate(false)
 {
 }
 
@@ -105,8 +107,8 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 , mOutlineThickness(shape.getOutlineThickness())
 , mTriangleVertices(sf::Triangles)
 , mOutlineShape()
-, mNeedsTriangleUpdate(true)
-, mNeedsEdgeUpdate(true)
+, mNeedsDecomposition(true)
+, mNeedsOutlineUpdate(true)
 {
 	const unsigned int size = shape.getPointCount();
 
@@ -119,6 +121,9 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 void ConcaveShape::setPointCount(unsigned int count)
 {
 	mPoints.resize(count);
+
+	mNeedsDecomposition = true;
+	mNeedsOutlineUpdate = true;
 }
 
 unsigned int ConcaveShape::getPointCount() const
@@ -130,8 +135,8 @@ void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
 {
 	mPoints[index] = position;
 
-	mNeedsTriangleUpdate = true;
-	mNeedsEdgeUpdate = true;
+	mNeedsDecomposition = true;
+	mNeedsOutlineUpdate = true;
 }
 
 sf::Vector2f ConcaveShape::getPoint(unsigned int index) const
@@ -142,7 +147,7 @@ sf::Vector2f ConcaveShape::getPoint(unsigned int index) const
 void ConcaveShape::setFillColor(const sf::Color& fillColor)
 {
 	mFillColor = fillColor;
-	mNeedsTriangleUpdate = true;
+	mNeedsDecomposition = true;
 }
 
 sf::Color ConcaveShape::getFillColor() const
@@ -153,7 +158,7 @@ sf::Color ConcaveShape::getFillColor() const
 void ConcaveShape::setOutlineColor(const sf::Color& outlineColor)
 {
 	mOutlineColor = outlineColor;
-	mNeedsEdgeUpdate = true;
+	mNeedsOutlineUpdate = true;
 }
 
 sf::Color ConcaveShape::getOutlineColor() const
@@ -166,7 +171,7 @@ void ConcaveShape::setOutlineThickness(float outlineThickness)
 	assert(outlineThickness >= 0.f);
 
 	mOutlineThickness = outlineThickness;
-	mNeedsEdgeUpdate = true;
+	mNeedsOutlineUpdate = true;
 }
 
 float ConcaveShape::getOutlineThickness() const
@@ -180,18 +185,9 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (mPoints.size() <= 1)
 		return;
 
-	// Batch logics
-	if (mNeedsEdgeUpdate || mNeedsTriangleUpdate)
-	{
-		if (mNeedsTriangleUpdate)
-			decompose();
-
-		if (mNeedsEdgeUpdate)
-			formOutline();
-
-		mNeedsEdgeUpdate = false;
-		mNeedsTriangleUpdate = false;
-	}
+	// Update cache if needed
+	ensureDecomposed();
+	ensureOutlineUpdated();
 
 	// Combine transforms
 	states.transform *= getTransform();
@@ -201,16 +197,20 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(mOutlineShape, states);
 }
 
-void ConcaveShape::decompose() const
+void ConcaveShape::ensureDecomposed() const
 {
+	if (!mNeedsDecomposition)
+		return;
+
 	// Split the concave polygon into convex triangles
 	triangulatePolygon(mPoints.begin(), mPoints.end(), TriangleGenerator(mTriangleVertices, mFillColor));
+	mNeedsDecomposition = false;
 }
 
-void ConcaveShape::formOutline() const
+void ConcaveShape::ensureOutlineUpdated() const
 {
 	// If no outline is visible, don't create one
-	if (mOutlineThickness == 0.f)
+	if (!mNeedsOutlineUpdate || mOutlineThickness == 0.f)
 		return;
 
 	// Reuse a SFML convex shape for the concave outline; fill it with transparent color
@@ -221,6 +221,8 @@ void ConcaveShape::formOutline() const
 
 	for (unsigned int i = 0; i < mPoints.size(); ++i)
 		mOutlineShape.setPoint(i, mPoints[i]);
+
+	mNeedsOutlineUpdate = false;
 }
 
 } // namespace thor
