@@ -34,9 +34,10 @@
 
 #include <Aurora/SmartPtr/CopiedPtr.hpp>
 
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 #include <vector>
 
@@ -146,7 +147,8 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		float						mOutlineThickness;
 
 		mutable EdgeContainer		mEdges;
-		mutable ShapeContainer		mTriangleShapes;
+		mutable sf::VertexArray		mTriangleVertices;
+		mutable sf::VertexArray		mEdgeVertices;
 		mutable ShapeContainer		mEdgeShapes;
 		mutable bool				mNeedsTriangleUpdate;
 		mutable bool				mNeedsEdgeUpdate;

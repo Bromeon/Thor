@@ -45,11 +45,11 @@ namespace thor
 
 struct ConcaveShape::TriangleGenerator
 {
-	TriangleGenerator(ShapeContainer& triangles, const sf::Color& color)
-	: triangles(&triangles)
+	TriangleGenerator(sf::VertexArray& triangleVertices, const sf::Color& color)
+	: triangleVertices(&triangleVertices)
 	, color(color)
 	{
-		triangles.clear();
+		triangleVertices.clear();
 	}
 
 	// Fake dereferencing
@@ -73,19 +73,28 @@ struct ConcaveShape::TriangleGenerator
 	// Assignment from triangle
 	TriangleGenerator& operator= (const Triangle<const sf::Vector2f>& triangle)
 	{
-		auto shape = aurora::makeCopied<sf::ConvexShape>();
-		shape->setPointCount(3);
-		shape->setFillColor(color);
+		//auto shape = aurora::makeCopied<sf::ConvexShape>();
+		//shape->setPointCount(3);
+		//shape->setFillColor(color);
+		//
+		//for (unsigned int i = 0; i < 3; ++i)
+		//	shape->setPoint(i, triangle[i]);
+		//
+		//triangleVertices->push_back(std::move(shape));
 
-		for (unsigned int i = 0; i < 3; ++i)
-			shape->setPoint(i, triangle[i]);
+		triangleVertices->append(sf::Vertex(triangle[0], color));
+		triangleVertices->append(sf::Vertex(triangle[1], color));
+		triangleVertices->append(sf::Vertex(triangle[2], color));
 
-		triangles->push_back(std::move(shape));
+
+		//triangleVertices->push_back(std::move(shape));
+
+
 		return *this;
 	}
 
-	ShapeContainer*	triangles;
-	sf::Color		color;
+	sf::VertexArray*	triangleVertices;
+	sf::Color			color;
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +108,7 @@ ConcaveShape::ConcaveShape()
 , mOutlineColor()
 , mOutlineThickness(0.f)
 , mEdges()
-, mTriangleShapes()
+, mTriangleVertices(sf::Triangles)
 , mEdgeShapes()
 , mNeedsTriangleUpdate(false)
 , mNeedsEdgeUpdate(false)
@@ -114,7 +123,7 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 , mOutlineColor(shape.getOutlineColor())
 , mOutlineThickness(shape.getOutlineThickness())
 , mEdges()
-, mTriangleShapes()
+, mTriangleVertices(sf::Triangles)
 , mEdgeShapes()
 , mNeedsTriangleUpdate(true)
 , mNeedsEdgeUpdate(true)
@@ -207,9 +216,8 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Combine transforms
 	states.transform *= getTransform();
 
-	// Draw all points
-	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& shape, mTriangleShapes)
-		target.draw(*shape, states);
+	// Draw all triangles
+	target.draw(mTriangleVertices, states);
 
 	// Draw all edges at the boundary
 	AURORA_FOREACH(aurora::CopiedPtr<sf::Shape>& edge, mEdgeShapes)
@@ -221,7 +229,7 @@ void ConcaveShape::decompose() const
 	mEdges.clear();
 
 	// Split the concave polygon into convex triangles that can be represented by sf::ConvexShape
-	triangulatePolygon(mPoints.begin(), mPoints.end(), TriangleGenerator(mTriangleShapes, mFillColor), std::back_inserter(mEdges));
+	triangulatePolygon(mPoints.begin(), mPoints.end(), TriangleGenerator(mTriangleVertices, mFillColor), std::back_inserter(mEdges));
 }
 
 void ConcaveShape::formOutline() const
