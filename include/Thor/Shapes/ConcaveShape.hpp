@@ -29,25 +29,15 @@
 #ifndef THOR_CONCAVESHAPE_HPP
 #define THOR_CONCAVESHAPE_HPP
 
-#include <Thor/Math/TriangulationFigures.hpp>
 #include <Thor/Config.hpp>
 
-#include <Aurora/SmartPtr/CopiedPtr.hpp>
-
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
 #include <vector>
-
-
-namespace sf
-{
-
-	class Shape;
-
-} // namespace sf
 
 
 namespace thor
@@ -117,11 +107,6 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
 	private:
-		// Container typedefs
-		typedef std::vector< aurora::CopiedPtr<sf::Shape> >	ShapeContainer;
-		typedef std::vector< sf::Vector2f >					PointContainer;
-		typedef std::vector< Edge<const sf::Vector2f> >		EdgeContainer;
-
 		struct TriangleGenerator;
 
 
@@ -141,15 +126,13 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		PointContainer				mPoints;
+		std::vector<sf::Vector2f>	mPoints;
 		sf::Color					mFillColor;
 		sf::Color					mOutlineColor;
 		float						mOutlineThickness;
 
-		mutable EdgeContainer		mEdges;
 		mutable sf::VertexArray		mTriangleVertices;
-		mutable sf::VertexArray		mEdgeVertices;
-		mutable ShapeContainer		mEdgeShapes;
+		mutable sf::ConvexShape		mOutlineShape;
 		mutable bool				mNeedsTriangleUpdate;
 		mutable bool				mNeedsEdgeUpdate;
 };
