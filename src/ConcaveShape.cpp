@@ -210,7 +210,8 @@ void ConcaveShape::ensureDecomposed() const
 void ConcaveShape::ensureOutlineUpdated() const
 {
 	// If no outline is visible, don't create one
-	if (!mNeedsOutlineUpdate || mOutlineThickness == 0.f)
+	// The optimization for mOutlineThickness == 0.f can't be used, as the outline is needed for bounds computation
+	if (!mNeedsOutlineUpdate)
 		return;
 
 	// Reuse a SFML convex shape for the concave outline; fill it with transparent color
@@ -223,6 +224,17 @@ void ConcaveShape::ensureOutlineUpdated() const
 		mOutlineShape.setPoint(i, mPoints[i]);
 
 	mNeedsOutlineUpdate = false;
+}
+
+sf::FloatRect ConcaveShape::getLocalBounds() const
+{
+	ensureOutlineUpdated();
+	return mOutlineShape.getLocalBounds();
+}
+
+sf::FloatRect ConcaveShape::getGlobalBounds() const
+{
+	return getTransform().transformRect(getLocalBounds());
 }
 
 } // namespace thor

@@ -103,6 +103,16 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 		///
 		float						getOutlineThickness() const;
 
+		/// @brief Return untransformed bounding rectangle.
+		///
+		sf::FloatRect				getLocalBounds() const;
+
+		/// @brief Return transformed bounding rectangle.
+		/// @details This function does not necessarily yield the minimal bounding rect that spans all vertices. It transforms
+		///  the local bounding rect, and then computes the bounding rect of that transformed bounding rect -- so for example, a
+		///  rotated shape might not have the bounding rect that you expect. This behavior is consistent with SFML.
+		sf::FloatRect				getGlobalBounds() const;
+
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
