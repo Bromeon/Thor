@@ -115,7 +115,7 @@ class THOR_API TorqueAffector
 		///  this value each second.
 		explicit					TorqueAffector(float angularAcceleration);
 
-		/// @copydoc ForceAffector::affect
+		/// @copydoc ForceAffector::operator()()
 		///
 		void						operator() (Particle& particle, sf::Time dt);
 
@@ -146,7 +146,7 @@ class THOR_API ScaleAffector
 		/// @param scaleFactor Factor by which particles are scaled every second.
 		explicit					ScaleAffector(sf::Vector2f scaleFactor);
 
-		/// @copydoc ForceAffector::affect
+		/// @copydoc ForceAffector::operator()()
 		///
 		void						operator() (Particle& particle, sf::Time dt);
 
@@ -180,7 +180,7 @@ class THOR_API AnimationAffector
 		///  corresponds to getElapsedRatio(particle), the delta time of operator() is ignored.
 		explicit					AnimationAffector(std::function<void(Particle&, float)> particleAnimation);
 
-		/// @copydoc ForceAffector::affect
+		/// @copydoc ForceAffector::operator()()
 		///
 		void						operator() (Particle& particle, sf::Time dt);
 

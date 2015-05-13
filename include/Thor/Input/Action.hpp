@@ -93,7 +93,7 @@ class THOR_API Action
 		///  (both axis and threshold are stored in @a joystickAxis). The source of the action is sf::Joystick::getAxisPosition()
 		///  and not JoystickMoved events. This implies that the action will also be active if the axis remains unchanged in a
 		///  position above the threshold.
-		explicit					Action(JoystickAxis joystickState);
+		explicit					Action(JoystickAxis joystickAxis);
 
 		/// @brief Construct SFML event action
 		/// @details Creates an action that is in effect when a SFML event of the type @a eventType is fired.

@@ -85,8 +85,8 @@ Action::Action(JoystickButton joystick, ActionType action)
 	}
 }
 
-Action::Action(JoystickAxis joystickState)
-: mOperation(aurora::makeCopied<detail::RealtimeJoystickAxisLeaf>(joystickState))
+Action::Action(JoystickAxis joystickAxis)
+: mOperation(aurora::makeCopied<detail::RealtimeJoystickAxisLeaf>(joystickAxis))
 {
 }
 
