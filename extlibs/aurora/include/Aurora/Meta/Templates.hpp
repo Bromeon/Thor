@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -36,6 +36,80 @@
 
 namespace aurora
 {
+namespace detail
+{
+
+	// Get type by index in list
+	template <std::size_t N, typename T0, typename T1, typename T2>
+	struct NthType;
+
+	template <typename T0, typename T1, typename T2>
+	struct NthType<0, T0, T1, T2>
+	{
+		typedef T0 Type;
+	};
+
+	template <typename T0, typename T1, typename T2>
+	struct NthType<1, T0, T1, T2>
+	{
+		typedef T1 Type;
+	};
+
+	template <typename T0, typename T1, typename T2>
+	struct NthType<2, T0, T1, T2>
+	{
+		typedef T2 Type;
+	};
+
+
+	// Helper for FunctionSignature metafunction
+	template <typename R, std::size_t N, typename P0, typename P1, typename P2>
+	struct FunctionSignatureBase
+	{
+		typedef R ResultType;
+		static const std::size_t arity = N;
+
+		template <std::size_t M>
+		struct Param
+		{
+			typedef typename NthType<M, P0, P1, P2>::Type Type;
+		};
+	};
+
+
+	// Type denoting "nothing"
+	// We don't use void because it can't be used in some contexts (parameter lists)
+	struct EmptyType {};
+
+
+	// Provides member typedefs for function return and parameter types:
+	// FunctionSignature<S>::ResultType      return type
+	// FunctionSignature<S>::Param<N>::Type  N-th parameter type (use ::template Param in dependent context)
+	template <typename S>
+	struct FunctionSignature;
+
+	template <typename R>
+	struct FunctionSignature<R()> : FunctionSignatureBase<R, 0, EmptyType, EmptyType, EmptyType>
+	{
+	};
+
+	template <typename R, typename P0>
+	struct FunctionSignature<R(P0)> : FunctionSignatureBase<R, 1, P0, EmptyType, EmptyType>
+	{
+	};
+
+	template <typename R, typename P0, typename P1>
+	struct FunctionSignature<R(P0, P1)> : FunctionSignatureBase<R, 2, P0, P1, EmptyType>
+	{
+	};
+
+	template <typename R, typename P0, typename P1, typename P2>
+	struct FunctionSignature<R(P0, P1, P2)> : FunctionSignatureBase<R, 3, P0, P1, P2>
+	{
+	};
+
+} // namespace detail
+
 
 /// @addtogroup Meta
 /// @{
@@ -54,6 +128,39 @@ template <int N>
 struct Int
 {
 	static const int value = N;
+};
+
+/// @brief Find out the return type of a function.
+/// @details Contains a member typedef @a Type. Example:
+/// @code
+/// FunctionResult<void(int, double)>::Type // is void
+/// @endcode
+template <typename Signature>
+struct FunctionResult
+{
+	typedef typename detail::FunctionSignature<Signature>::ResultType Type;
+};
+
+/// @brief Find out the N-th parameter type of a function.
+/// @details Contains a member typedef @a Type. The type is unspecified if there exists no such parameter. Example:
+/// @code
+/// FunctionParam<void(int, double), 1>::Type // is double
+/// @endcode
+template <typename Signature, std::size_t N>
+struct FunctionParam
+{
+	typedef typename detail::FunctionSignature<Signature>::template Param<N>::Type Type;
+};
+
+/// @brief Find out the number of parameters of a function.
+/// @details Contains a member constant @a value. Example:
+/// @code
+/// FunctionArity<void(int, double)>::value // is 2
+/// @endcode
+template <typename Signature>
+struct FunctionArity
+{
+	static const std::size_t value = detail::FunctionSignature<Signature>::arity;
 };
 
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -37,6 +37,15 @@
 
 // Mislead doxygen to keep documentation clean from internals
 #define AURORA_FAKE_DOC(real, fake) real
+
+
+// Tell the compiler that a code path is unreachable, to disable warnings and enable optimizations
+// Most common case: default label in switch statements
+#if defined(_MSC_VER)
+	#define AURORA_UNREACHABLE __assume(false)
+#elif defined(__GNUC__) || defined(__clang__)
+	#define AURORA_UNREACHABLE __builtin_unreachable()
+#endif
 
 
 // Output useful error message if MSVC, Clang or g++ compilers do not support C++11

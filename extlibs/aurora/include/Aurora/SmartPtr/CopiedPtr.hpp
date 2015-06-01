@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,7 +29,7 @@
 #ifndef AURORA_COPIEDPTR_HPP
 #define AURORA_COPIEDPTR_HPP
 
-#include <Aurora/SmartPtr/PtrFunctors.hpp>
+#include <Aurora/SmartPtr/ClonersAndDeleters.hpp>
 #include <Aurora/SmartPtr/Detail/PtrOwner.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Config.hpp>

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 #ifndef AURORA_MODULE_DISPATCH_HPP
 #define AURORA_MODULE_DISPATCH_HPP
 
+#include <Aurora/Dispatch/DispatchTraits.hpp>
 #include <Aurora/Dispatch/DoubleDispatcher.hpp>
-#include <Aurora/Dispatch/Rtti.hpp>
 #include <Aurora/Dispatch/SingleDispatcher.hpp>
 
 #endif // AURORA_MODULE_DISPATCH_HPP
