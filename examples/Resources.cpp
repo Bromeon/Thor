@@ -8,7 +8,7 @@ namespace Textures
 {
 	enum Type
 	{
-		SfmlLogo,
+		ThorLogo,
 		BrownRectangle,
 	};
 }
@@ -30,13 +30,13 @@ int main()
 
 	// Create sf::Image to load one texture from
 	sf::Image image;
-	image.create(529, 100, sf::Color(130, 70, 0));
+	image.create(872, 100, sf::Color(130, 70, 0));
 
 	// Load resources, store them in resource pointers and react to loading errors
 	try
 	{
 		textures.acquire(Textures::BrownRectangle, thor::Resources::fromImage<sf::Texture>(image));
-		textures.acquire(Textures::SfmlLogo, thor::Resources::fromFile<sf::Texture>("Media/image.jpg"));
+		textures.acquire(Textures::ThorLogo, thor::Resources::fromFile<sf::Texture>("Media/thor.png"));
 		sounds.acquire(Sounds::Click, thor::Resources::fromFile<sf::SoundBuffer>("Media/click.wav"));
 		fonts.acquire("MainFont", thor::Resources::fromFile<sf::Font>("Media/sansation.ttf"));
 	}
@@ -48,7 +48,7 @@ int main()
 
 	// Create instances that use the resources
 	sf::Sprite sprite1(textures[Textures::BrownRectangle]);
-	sf::Sprite sprite2(textures[Textures::SfmlLogo]);
+	sf::Sprite sprite2(textures[Textures::ThorLogo]);
 	sf::Sound sound(sounds[Sounds::Click]);
 	sf::Text instructions("Press return to play sound, escape to quit", fonts["MainFont"], 14u);
 
@@ -56,7 +56,7 @@ int main()
 	sprite2.move(0.f, sprite1.getGlobalBounds().height);
 
 	// Create render window
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Thor Resources");
+	sf::RenderWindow window(sf::VideoMode(872, 370), "Thor Resources");
 	window.setVerticalSyncEnabled(true);
 
 	for (;;)
