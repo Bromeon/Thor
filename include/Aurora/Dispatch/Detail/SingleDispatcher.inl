@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -26,21 +26,43 @@
 namespace aurora
 {
 
-template <class B, typename R, typename Traits>
-SingleDispatcher<B, R, Traits>::SingleDispatcher()
+template <typename Signature, typename Traits>
+SingleDispatcher<Signature, Traits>::SingleDispatcher()
 : mMap()
+, mFallback()
 {
 }
 
-template <class B, typename R, typename Traits>
+template <typename Signature, typename Traits>
+SingleDispatcher<Signature, Traits>::SingleDispatcher(SingleDispatcher&& source)
+: mMap(std::move(source.mMap))
+, mFallback(std::move(source.mFallback))
+{
+}
+
+template <typename Signature, typename Traits>
+SingleDispatcher<Signature, Traits>& SingleDispatcher<Signature, Traits>::operator= (SingleDispatcher&& source)
+{
+	mMap = std::move(source.mMap);
+	mFallback = std::move(source.mFallback);
+
+	return *this;
+}
+
+template <typename Signature, typename Traits>
+SingleDispatcher<Signature, Traits>::~SingleDispatcher()
+{
+}
+
+template <typename Signature, typename Traits>
 template <typename Id, typename Fn>
-void SingleDispatcher<B, R, Traits>::bind(Id identifier, Fn function)
+void SingleDispatcher<Signature, Traits>::bind(const Id& identifier, Fn function)
 {
 	mMap[Traits::keyFromId(identifier)] = Traits::template trampoline1<Id>(function);
 }
 
-template <class B, typename R, typename Traits>
-R SingleDispatcher<B, R, Traits>::call(B arg) const
+template <typename Signature, typename Traits>
+typename SingleDispatcher<Signature, Traits>::Result SingleDispatcher<Signature, Traits>::call(Parameter arg) const
 {
 	Key key = Traits::keyFromBase(arg);
 
@@ -58,8 +80,27 @@ R SingleDispatcher<B, R, Traits>::call(B arg) const
 	return itr->second(arg);
 }
 
-template <class B, typename R, class Traits>
-void SingleDispatcher<B, R, Traits>::fallback(std::function<R(B)> function)
+template <typename Signature, typename Traits>
+typename SingleDispatcher<Signature, Traits>::Result SingleDispatcher<Signature, Traits>::call(Parameter arg, UserData data) const
+{
+	Key key = Traits::keyFromBase(arg);
+
+	// If no corresponding class (or base class) has been found, throw exception
+	auto itr = mMap.find(key);
+	if (itr == mMap.end())
+	{
+		if (mFallback)
+			return mFallback(arg, data);
+		else
+			throw FunctionCallException(std::string("SingleDispatcher::call() - function with parameter \"") + Traits::name(key) + "\" not registered");
+	}
+
+	// Otherwise, call dispatched function
+	return itr->second(arg, data);
+}
+
+template <typename Signature, typename Traits>
+void SingleDispatcher<Signature, Traits>::fallback(std::function<Signature> function)
 {
 	mFallback = std::move(function);
 }

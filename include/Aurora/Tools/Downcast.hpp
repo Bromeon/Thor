@@ -24,10 +24,13 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Class aurora::NonCopyable
+/// @brief Function template aurora::downcast()
 
-#ifndef AURORA_NONCOPYABLE_HPP
-#define AURORA_NONCOPYABLE_HPP
+#ifndef AURORA_DOWNCAST_HPP
+#define AURORA_DOWNCAST_HPP
+
+#include <cassert>
+#include <type_traits>
 
 
 namespace aurora
@@ -36,30 +39,30 @@ namespace aurora
 /// @addtogroup Tools
 /// @{
 
-/// @brief Non-copyable base class.
-/// @details Copy constructor and copy assignment operator are not accessible.
-///  Derive from this class to prevent copying of your class.
-class NonCopyable
+/// @brief Safe polymorphic downcast for references
+/// @details Can be used in place of a static_cast from a base class to a derived class -- that is,
+/// you expect the downcast to succeed. In debug mode, types are checked at runtime using dynamic_cast.
+/// In release mode (with the NDBEBUG macro defined), a static_cast at full speed is used.
+template <typename To, typename From>
+To downcast(From& base)
 {
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Protected member functions
-	protected:
-		// Default constructor
-									NonCopyable() {}
-									~NonCopyable() {}
+	assert(dynamic_cast<typename std::remove_reference<To>::type*>(&base));
+	return static_cast<To>(base);
+}
 
-	// ---------------------------------------------------------------------------------------------------------------------------
-	// Private member functions
-	private:
-		// Copy constructor (forbidden)
-									NonCopyable(const NonCopyable& origin);
-
-		// Assignment operator (forbidden)
-		NonCopyable&				operator= (const NonCopyable& origin);
-};
+/// @brief Safe polymorphic downcast for pointers
+/// @details Can be used in place of a static_cast from a base class to a derived class -- that is,
+/// you expect the downcast to succeed. In debug mode, types are checked at runtime using dynamic_cast.
+/// In release mode (with the NDBEBUG macro defined), a static_cast at full speed is used.
+template <typename To, typename From>
+To downcast(From* base)
+{
+	assert(dynamic_cast<To>(base));
+	return static_cast<To>(base);
+}
 
 /// @}
 
 } // namespace aurora
 
-#endif // AURORA_NONCOPYABLE_HPP
+#endif // AURORA_DOWNCAST_HPP

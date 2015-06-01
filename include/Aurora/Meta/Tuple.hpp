@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -31,13 +31,13 @@
 
 #include <Aurora/Config.hpp>
 #include <Aurora/Meta/Templates.hpp>
+#include <Aurora/Meta/Variadic.hpp>
 
 #include <tuple>
 
 
 namespace aurora
 {
-		
 namespace detail
 {
 
@@ -146,6 +146,14 @@ auto tupleBack(Tuple&& t) -> AURORA_AUTO_RETURN
 (
 	std::get<std::tuple_size<typename std::remove_reference<Tuple>::type>::value - 1>(t)
 )
+
+/// @brief Return tuple element with type T
+/// @details Does the same thing as std::get<T>(tuple). Some compilers don't support that overload yet.
+template <typename T, typename... Us>
+T& tupleGet(std::tuple<Us...>& tuple)
+{
+	return std::get<detail::IndexOfType<T, Us...>::value>(tuple);
+}
 
 /// @}
 

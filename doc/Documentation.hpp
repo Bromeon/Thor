@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -44,6 +44,3 @@
 
 /// @defgroup Tools Tools
 /// @brief C++ utility and idioms, such as noncopyable base classes, foreach macros or safe bool idiom.
-
-/// @defgroup Range Range
-/// @brief Type-erased ranges, a generic abstraction from iterator interfaces.

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2014 Jan Haller
+// Copyright (c) 2012-2015 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,6 +29,8 @@
 #ifndef AURORA_MODULE_TOOLS_HPP
 #define AURORA_MODULE_TOOLS_HPP
 
+#include <Aurora/Tools/Algorithms.hpp>
+#include <Aurora/Tools/Downcast.hpp>
 #include <Aurora/Tools/Exceptions.hpp>
 #include <Aurora/Tools/ForEach.hpp>
 #include <Aurora/Tools/Hash.hpp>
@@ -36,5 +38,6 @@
 #include <Aurora/Tools/NonCopyable.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
 #include <Aurora/Tools/Swap.hpp>
+#include <Aurora/Tools/Typeid.hpp>
 
 #endif // AURORA_MODULE_TOOLS_HPP
