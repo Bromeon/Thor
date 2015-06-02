@@ -23,6 +23,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
+/// @file
+/// @brief Enum KnownIdStrategy, used by thor::ResourceHolder
+
 #ifndef THOR_KNOWNIDSTRATEGY_HPP
 #define THOR_KNOWNIDSTRATEGY_HPP
 

@@ -23,6 +23,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
+/// @file
+/// @brief Ownership models for thor::ResourceHolder
+
 #ifndef THOR_OWNERSHIPMODELS_HPP
 #define THOR_OWNERSHIPMODELS_HPP
 
