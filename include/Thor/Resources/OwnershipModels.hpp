@@ -81,9 +81,11 @@ namespace detail
 	};
 
 	template <typename Map>
-	ElementRef<Map> MakeElementRef(Map& map, typename Map::iterator itr)
+	ElementRef<Map> makeElementRef(Map& map, typename Map::iterator itr)
 	{
-		return {&map, itr};
+		// Aggregate syntax instead of return {...}; to support older compilers and work around compiler bug in VS 2015 RC
+		ElementRef<Map> ref = {&map, itr};
+		return ref;
 	}
 
 	template <typename R, typename Map>
@@ -121,18 +123,18 @@ namespace detail
 		typedef std::unique_ptr<R>	Loaded;
 		typedef std::unique_ptr<R>	Stored;
 
-		static Returned MakeReturned(const std::unique_ptr<R>& initialOrStorage)
+		static Returned makeReturned(const std::unique_ptr<R>& initialOrStorage)
 		{
 			return *initialOrStorage;
 		}
 
 		template <typename Map>
-		static std::unique_ptr<R> MakeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&&)
+		static std::unique_ptr<R> makeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&&)
 		{
 			return std::move(resource);
 		}
 
-		static std::unique_ptr<R> MakeStored(std::unique_ptr<R>&& loaded)
+		static std::unique_ptr<R> makeStored(std::unique_ptr<R>&& loaded)
 		{
 			return std::move(loaded);
 		}
@@ -161,19 +163,19 @@ namespace detail
 			std::weak_ptr<R> resource;
 		};
 
-		static std::shared_ptr<R> MakeReturned(const Loaded& loaded)
+		static std::shared_ptr<R> makeReturned(const Loaded& loaded)
 		{
 			return loaded.resource;
 		}
 
-		static std::shared_ptr<R> MakeReturned(const Stored& stored)
+		static std::shared_ptr<R> makeReturned(const Stored& stored)
 		{
 			assert(!stored.resource.expired());
 			return std::shared_ptr<R>(stored.resource); // shouldn't throw after assert
 		}
 
 		template <typename Map>
-		static Loaded MakeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&& element)
+		static Loaded makeLoaded(std::unique_ptr<R>&& resource, ElementRef<Map>&& element)
 		{
 			// Tracked object: shared pointer referenced by multiple weak pointers.
 			// If object holding tracked dies, all weak_ptr objects become expired.
@@ -192,7 +194,7 @@ namespace detail
 			return loaded;
 		}
 
-		static Stored MakeStored(Loaded&& loaded)
+		static Stored makeStored(Loaded&& loaded)
 		{
 			Stored stored;
 			stored.tracked = std::move(loaded.tracked);

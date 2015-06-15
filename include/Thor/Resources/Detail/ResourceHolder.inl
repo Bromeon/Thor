@@ -66,7 +66,7 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::acquire(cons
 			return load(id, how);
 
 		case Resources::Reuse:
-			return Om::MakeReturned(found->second);
+			return Om::makeReturned(found->second);
 	}
 }
 
@@ -87,7 +87,7 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::operator[] (
 	if (found == mMap.end())
 		throw ResourceAccessException("Failed to access resource, ID not currently stored in ResourceHolder");
 
-	return Om::MakeReturned(found->second);
+	return Om::makeReturned(found->second);
 }
 
 template <typename R, typename I, class O>
@@ -97,7 +97,7 @@ typename ResourceHolder<R, I, O>::ConstResource ResourceHolder<R, I, O>::operato
 	if (found == mMap.end())
 		throw ResourceAccessException("Failed to access resource, ID not currently stored in ResourceHolder");
 
-	return Om::MakeReturned(found->second);
+	return Om::makeReturned(found->second);
 }
 
 template <typename R, typename I, class O>
@@ -118,14 +118,14 @@ typename ResourceHolder<R, I, O>::Resource ResourceHolder<R, I, O>::load(const I
 
 	// For ownership policies that try to be smart and remove resources from the holder when unused, 
 	// we need to pass them information about the container and the iterator referring to the element
-	auto elementRef = detail::MakeElementRef(mMap, inserted);
+	auto elementRef = detail::makeElementRef(mMap, inserted);
 
 	// Create temporary 'loaded' object and from it, 'returned' object given to user
-	typename Om::Loaded loaded = Om::MakeLoaded(std::move(original), std::move(elementRef));
-	typename Om::Returned returned = Om::MakeReturned(loaded);
+	typename Om::Loaded loaded = Om::makeLoaded(std::move(original), std::move(elementRef));
+	typename Om::Returned returned = Om::makeReturned(loaded);
 
 	// Actually store resource (together with tracking element) in map
-	inserted->second = Om::MakeStored(std::move(loaded));
+	inserted->second = Om::makeStored(std::move(loaded));
 
 	return returned;
 }
