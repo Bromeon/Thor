@@ -35,6 +35,11 @@
 
 namespace thor
 {
+namespace
+{
+	const float InfiniteRadius = std::numeric_limits<float>::max();
+}
+
 namespace detail
 {
 
@@ -259,7 +264,7 @@ namespace detail
 		{
 			// We define the circumcircle as extremely large, so that it will always breach the Delaunay condition
 			// The midpoint is not relevant, we simply choose the gravity center of the triangle
-			return Circle((at(triangle, 0) + at(triangle, 1) + at(triangle, 2)) / 3.f, std::numeric_limits<float>::max());
+			return Circle((at(triangle, 0) + at(triangle, 1) + at(triangle, 2)) / 3.f, InfiniteRadius);
 		}
 
 		// Now we have the lines p + s*v and q + t*w with s and t being real numbers. The intersection is:
@@ -488,7 +493,7 @@ namespace detail
 		assert(false);
 	}
 
-	// Helper function for TransferVertices2()
+	// Helper function for transferVertices2()
 	void transferVertices2Impl(TriangleIterator oldFirst, TriangleIterator oldSecond, TriangleIterator newFirst, TriangleIterator newSecond,
 		const UintPair& disjointCornerIndices, TriangleIterator oldTriangle)
 	{
@@ -686,12 +691,13 @@ namespace detail
 
 		// If the vertex of the other triangle is inside this triangle's circumcircle, the Delaunay condition is locally breached and we need to flip edges.
 		// Independently, there can be an enforced edge flip (at the boundary, or because of the constraints).
-		// The second && operand is actually not necessary, since the Delaunay condition is symmetric to both triangles. However, rounding errors may occur
-		// at close points.
+		// Condition (2) is actually not necessary, since the Delaunay condition is symmetric to both triangles. However, rounding errors may occur
+		// at close points. Condition (0) makes sure that we don't perform a pointless edge flip if both triangles are degenerate (flat).
 		Circle circle = computeCircumcircle(*first);
 		Circle circle2 = computeCircumcircle(*second);
-		if (squaredLength(at(*second, disjointCornerIndices.second) - circle.midPoint) < circle.squaredRadius
-		 && squaredLength(at(*first, disjointCornerIndices.first) - circle2.midPoint) < circle2.squaredRadius)
+		if (!(circle.squaredRadius == InfiniteRadius && circle2.squaredRadius == InfiniteRadius)				// (0)
+		 && squaredLength(at(*second, disjointCornerIndices.second) - circle.midPoint) < circle.squaredRadius	// (1)
+		 && squaredLength(at(*first, disjointCornerIndices.first) - circle2.midPoint) < circle2.squaredRadius)	// (2)
 		{
 			changeEdgeSituation(triangles, first, second, boundaryTriangle, constrainedEdges, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
 			return true;
@@ -707,7 +713,7 @@ namespace detail
 		TriangleIterator oldTriangleItr = vertex.getSurroundingTriangle().target;
 		AdvancedTriangle& oldTriangle = *oldTriangleItr;
 
-		assert(isClockwiseOriented(at(oldTriangle, 0), at(oldTriangle, 1), at(oldTriangle,2)));
+		assert(isClockwiseOriented(at(oldTriangle, 0), at(oldTriangle, 1), at(oldTriangle, 2)));
 
 		// Split triangle up into three new sub-triangles, each consisting of two old corners and the new vertex
 		TriangleItrArray newTriangles = {
@@ -730,7 +736,7 @@ namespace detail
 		triangles.erase(oldTriangleItr);
 
 		// For each newly created triangle, we must ensure that the Delaunay condition with its adjacent is kept up.
-		// The variable adjacent (third argument of EnsureLocalDelaunay()) is the adjacent of the old triangle.
+		// The variable adjacent (third argument of ensureLocalDelaunay()) is the adjacent of the old triangle.
 		// Corner number 2 is always the vertex inserted in this function, so the triangle on the opposite is the sought one.
 		for (unsigned int i = 0; i < 3; ++i)
 		{
