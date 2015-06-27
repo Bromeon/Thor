@@ -52,14 +52,14 @@ class Particle;
 ///  to ensure the lifetime of the referenced object. Example:
 /// @code
 /// // Create affector and particle system
-/// thor::ForceAffector affector(...);
+/// thor::ForceAffector affector(acceleration);
 /// thor::ParticleSystem system(...);
 ///
 /// // Add affector to particle system
 /// system.addAffector(thor::refAffector(affector));
 ///
 /// // Change affector properties later
-/// affector.setAcceleration(acceleration);
+/// affector = ForceAffector(newAcceleration);
 /// @endcode
 template <typename Affector>
 std::function<void(Particle&, sf::Time)> refAffector(Affector& referenced)
@@ -87,14 +87,6 @@ class THOR_API ForceAffector
 		/// @param dt Time interval during which particles are affected.
 		void						operator() (Particle& particle, sf::Time dt);
 
-		/// @brief Sets the linear acceleration applied to the particles.
-		///
-		void						setAcceleration(sf::Vector2f acceleration);
-
-		/// @brief Returns the linear acceleration applied to the particles.
-		///
-		sf::Vector2f				getAcceleration() const;
-
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
@@ -119,14 +111,6 @@ class THOR_API TorqueAffector
 		///
 		void						operator() (Particle& particle, sf::Time dt);
 
-		/// @brief sets the angular acceleration applied to the particles (in degrees).
-		///
-		void						setAngularAcceleration(float angularAcceleration);
-
-		/// @brief Returns the angular acceleration applied to the particles (in degrees).
-		///
-		float						getAngularAcceleration() const;
-
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
@@ -149,14 +133,6 @@ class THOR_API ScaleAffector
 		/// @copydoc ForceAffector::operator()()
 		///
 		void						operator() (Particle& particle, sf::Time dt);
-
-		/// @brief Sets the factor by which particles are scaled every second.
-		/// 
-		void						setScaleFactor(sf::Vector2f scaleFactor);
-
-		/// @brief Returns the factor by which particles are scaled every second.
-		/// 
-		sf::Vector2f				getScaleFactor() const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
