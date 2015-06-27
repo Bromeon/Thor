@@ -24,15 +24,18 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <Thor/Shapes/ConcaveShape.hpp>
+#include <Thor/Shapes/Shapes.hpp>
 #include <Thor/Math/Triangulation.hpp>
 
 #include <Aurora/Tools/ForEach.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 
 // TODO: Possible optimization: Don't recompute everything if a single attribute such as fill color changes.
@@ -92,7 +95,8 @@ ConcaveShape::ConcaveShape()
 , mOutlineColor()
 , mOutlineThickness(0.f)
 , mTriangleVertices(sf::Triangles)
-, mOutlineShape()
+, mOutlineShapes()
+, mLocalBounds()
 , mNeedsDecomposition(false)
 , mNeedsOutlineUpdate(false)
 {
@@ -106,7 +110,8 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 , mOutlineColor(shape.getOutlineColor())
 , mOutlineThickness(shape.getOutlineThickness())
 , mTriangleVertices(sf::Triangles)
-, mOutlineShape()
+, mOutlineShapes()
+, mLocalBounds()
 , mNeedsDecomposition(true)
 , mNeedsOutlineUpdate(true)
 {
@@ -194,7 +199,8 @@ void ConcaveShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draw all triangles and the outline
 	target.draw(mTriangleVertices, states);
-	target.draw(mOutlineShape, states);
+	AURORA_FOREACH(const sf::ConvexShape& shape, mOutlineShapes)
+		target.draw(shape, states);
 }
 
 void ConcaveShape::ensureDecomposed() const
@@ -214,22 +220,51 @@ void ConcaveShape::ensureOutlineUpdated() const
 	if (!mNeedsOutlineUpdate)
 		return;
 
-	// Reuse a SFML convex shape for the concave outline; fill it with transparent color
-	mOutlineShape.setPointCount(mPoints.size());
-	mOutlineShape.setFillColor(sf::Color::Transparent);
-	mOutlineShape.setOutlineColor(mOutlineColor);
-	mOutlineShape.setOutlineThickness(mOutlineThickness);
+	// Coordinates for bounding rect - initially largest possible negative rectangle - works also for 0 points
+	sf::Vector2f boundsMin = std::numeric_limits<float>::max() * sf::Vector2f(1.f, 1.f);
+	sf::Vector2f boundsMax = std::numeric_limits<float>::min() * sf::Vector2f(1.f, 1.f);
 
+	const float radius = mOutlineThickness / 2.f;
+
+	// Create outline based on SFML lines (rectangles) and circles
+	mOutlineShapes.clear();
 	for (unsigned int i = 0; i < mPoints.size(); ++i)
-		mOutlineShape.setPoint(i, mPoints[i]);
+	{
+		sf::Vector2f firstPos = mPoints[i];
+		sf::Vector2f secondPos = mPoints[(i+1) % mPoints.size()];
 
+		// Insert circles at the polygon points to round the outline off
+		sf::CircleShape circle;
+		circle.setPosition(firstPos - sf::Vector2f(radius, radius));
+		circle.setRadius(radius);
+		circle.setFillColor(mOutlineColor);
+
+		// Create lines representing the edges
+		sf::ConvexShape line = Shapes::line(secondPos - firstPos, mOutlineColor, mOutlineThickness);
+		line.setPosition(firstPos);
+
+		// Add shapes
+		mOutlineShapes.push_back(Shapes::toConvexShape(circle));
+		mOutlineShapes.push_back(line);
+
+		// Update bounding rect
+		boundsMin.x = std::min(boundsMin.x, firstPos.x);
+		boundsMin.y = std::min(boundsMin.y, firstPos.y);
+		boundsMax.x = std::max(boundsMax.x, firstPos.x);
+		boundsMax.y = std::max(boundsMax.y, firstPos.y);
+	}
+
+	mLocalBounds = sf::FloatRect(boundsMin, boundsMax - boundsMin);
 	mNeedsOutlineUpdate = false;
 }
 
 sf::FloatRect ConcaveShape::getLocalBounds() const
 {
+	// Empty shape has no valid bounding rect
+	assert(!mPoints.empty());
+
 	ensureOutlineUpdated();
-	return mOutlineShape.getLocalBounds();
+	return mLocalBounds;
 }
 
 sf::FloatRect ConcaveShape::getGlobalBounds() const

@@ -136,15 +136,16 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private variables
 	private:
-		std::vector<sf::Vector2f>	mPoints;
-		sf::Color					mFillColor;
-		sf::Color					mOutlineColor;
-		float						mOutlineThickness;
+		std::vector<sf::Vector2f>				mPoints;
+		sf::Color								mFillColor;
+		sf::Color								mOutlineColor;
+		float									mOutlineThickness;
 
-		mutable sf::VertexArray		mTriangleVertices;
-		mutable sf::ConvexShape		mOutlineShape;
-		mutable bool				mNeedsDecomposition;
-		mutable bool				mNeedsOutlineUpdate;
+		mutable sf::VertexArray					mTriangleVertices;
+		mutable std::vector<sf::ConvexShape>	mOutlineShapes;
+		mutable sf::FloatRect					mLocalBounds;
+		mutable bool							mNeedsDecomposition;
+		mutable bool							mNeedsOutlineUpdate;
 };
 
 /// @}
