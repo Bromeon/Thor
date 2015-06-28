@@ -48,13 +48,13 @@ Edge<V>::Edge(V& corner0, V& corner1)
 }
 
 template <typename V>
-V& Edge<V>::operator[] (unsigned int cornerIndex)
+V& Edge<V>::operator[] (std::size_t cornerIndex)
 {
 	return *mCorners[cornerIndex];
 }
 
 template <typename V>
-const V& Edge<V>::operator[] (unsigned int cornerIndex) const
+const V& Edge<V>::operator[] (std::size_t cornerIndex) const
 {
 	return *mCorners[cornerIndex];
 }
@@ -76,13 +76,13 @@ Triangle<V>::Triangle(V& corner0, V& corner1, V& corner2)
 }
 
 template <typename V>
-V& Triangle<V>::operator[] (unsigned int cornerIndex)
+V& Triangle<V>::operator[] (std::size_t cornerIndex)
 {
 	return *mCorners[cornerIndex];
 }
 
 template <typename V>
-const V& Triangle<V>::operator[] (unsigned int cornerIndex) const
+const V& Triangle<V>::operator[] (std::size_t cornerIndex) const
 {
 	return *mCorners[cornerIndex];
 }

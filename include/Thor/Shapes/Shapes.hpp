@@ -34,6 +34,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Color.hpp>
 
+#include <cstddef> // std::size_t
+
 
 namespace sf
 {
@@ -87,7 +89,7 @@ namespace Shapes
 	/// @param outlineThickness The thickness of the outline.
 	/// @param outlineColor The color used for the outline.
 	/// @return A sf::ConvexShape copy representing the regular polygon.
-	sf::ConvexShape THOR_API	polygon(unsigned int nbPoints, float radius, const sf::Color& fillColor,
+	sf::ConvexShape THOR_API	polygon(std::size_t nbPoints, float radius, const sf::Color& fillColor,
 									float outlineThickness = 0.f, const sf::Color& outlineColor = sf::Color());
 
 	/// @brief Creates a regular star shape.
@@ -98,7 +100,7 @@ namespace Shapes
 	/// @param outlineThickness The thickness of the outline.
 	/// @param outlineColor The color used for the outline.
 	/// @return A convex shape representing the star.
-	sf::ConvexShape THOR_API	star(unsigned int nbStarPoints, float innerRadius, float outerRadius, const sf::Color& fillColor,
+	sf::ConvexShape THOR_API	star(std::size_t nbStarPoints, float innerRadius, float outerRadius, const sf::Color& fillColor,
 									float outlineThickness = 0.f, const sf::Color& outlineColor = sf::Color());
 
 } // namespace Shapes

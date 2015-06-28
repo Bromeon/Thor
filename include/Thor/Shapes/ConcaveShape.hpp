@@ -64,20 +64,20 @@ class THOR_API ConcaveShape : public sf::Drawable, public sf::Transformable
 
 		/// @brief Sets the amount of points in the concave polygon.
 		///
-		void						setPointCount(unsigned int count);
+		void						setPointCount(std::size_t count);
 
 		/// @brief Returns the amount of points in the concave polygon.
 		///
-		unsigned int				getPointCount() const;
+		std::size_t					getPointCount() const;
 
 		/// @brief Sets the position of a point.
 		/// @param index Which point? Must be in [0, getPointCount()[
 		/// @param position New point position in local coordinates.
-		void						setPoint(unsigned int index, sf::Vector2f position);
+		void						setPoint(std::size_t index, sf::Vector2f position);
 
 		/// @brief Returns the position of a point.
 		/// @param index Which point? Must be in [0, getPointCount()[
-		sf::Vector2f				getPoint(unsigned int index) const;
+		sf::Vector2f				getPoint(std::size_t index) const;
 
 		/// @brief Sets the polygon's fill color.
 		/// 

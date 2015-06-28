@@ -83,8 +83,8 @@ namespace detail
 		public:
 			// Constructor
 			IdConnectionImpl(Container& container, unsigned int id)
-				: mContainer(&container)
-				, mId(id)
+			: mContainer(&container)
+			, mId(id)
 			{
 			}
 

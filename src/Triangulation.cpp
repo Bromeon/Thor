@@ -52,7 +52,7 @@ namespace detail
 	// Type definitions
 	typedef std::array<TriangleIterator, 3>					TriangleItrArray;
 	typedef std::pair<TriangleIterator, TriangleIterator>	TriangleItrPair;
-	typedef std::pair<unsigned int, unsigned int>			UintPair;
+	typedef std::pair<std::size_t, std::size_t>				IndexPair;
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 
@@ -209,12 +209,12 @@ namespace detail
 		return mRemainingVertices.end();
 	}
 
-	void AdvancedTriangle::setAdjacentTriangle(unsigned int index, const OptTriangleIterator& adjacentTriangle)
+	void AdvancedTriangle::setAdjacentTriangle(std::size_t index, const OptTriangleIterator& adjacentTriangle)
 	{
 		mAdjacentTriangles->iterators[index] = adjacentTriangle;
 	}
 
-	OptTriangleIterator AdvancedTriangle::getAdjacentTriangle(unsigned int index) const
+	OptTriangleIterator AdvancedTriangle::getAdjacentTriangle(std::size_t index) const
 	{
 		return mAdjacentTriangles->iterators[index];
 	}
@@ -233,7 +233,7 @@ namespace detail
 
 
 	// Returns the position of the triangle's vertex identified by index.
-	sf::Vector2f at(const AdvancedTriangle& triangle, unsigned int index)
+	sf::Vector2f at(const AdvancedTriangle& triangle, std::size_t index)
 	{
 		return triangle[index].getPosition();
 	}
@@ -353,7 +353,7 @@ namespace detail
 		if (other.valid)
 		{
 			// Find out the index of other's adjacent that points to this triangle.
-			for (unsigned int i = 0; i < 3; ++i)
+			for (std::size_t i = 0; i < 3; ++i)
 			{
 				OptTriangleIterator thisOne = other.target->getAdjacentTriangle(i);
 				if (thisOne.valid && thisOne.target == oldTriangle)
@@ -369,10 +369,10 @@ namespace detail
 
 	// Sets up the adjacent triangles of each element in newTriangles according to the old triangle
 	// (before the split into three new ones). Updates also the adjacents' back-references.
-	void initializeAdjacents(TriangleItrArray& newTriangles, unsigned int index, TriangleIterator oldTriangle)
+	void initializeAdjacents(TriangleItrArray& newTriangles, std::size_t index, TriangleIterator oldTriangle)
 	{
-		unsigned int index1 = (index+1) % 3;
-		unsigned int index2 = (index+2) % 3;
+		std::size_t index1 = (index+1) % 3;
+		std::size_t index2 = (index+2) % 3;
 
 		OptTriangleIterator other = oldTriangle->getAdjacentTriangle(index2);
 
@@ -415,17 +415,17 @@ namespace detail
 	// sharedCornerIndices2 to the second shared corner, disjointCornerIndices to the corners that aren't part of the common edge.
 	// The member first refers for each pair to the first triangle, second to the second one.
 	void arrangeCorners(const AdvancedTriangle& first, const AdvancedTriangle& second,
-		UintPair& sharedCornerIndices1, UintPair& sharedCornerIndices2, UintPair& disjointCornerIndices)
+		IndexPair& sharedCornerIndices1, IndexPair& sharedCornerIndices2, IndexPair& disjointCornerIndices)
 	{
 		// The triangle's corners are numbered in clockwise order. For example, to compare ABC and BAD,          A
 		// we need to reverse BAD to DAB. Here, the AB subsequences are equal in ABC and DAB.                 C  |  D
 		// The variable j determines by how many elements the first sequence is rotated.                         B
-		for (unsigned int j = 0; j < 3; ++j)
+		for (std::size_t j = 0; j < 3; ++j)
 		{
 			std::array<bool, 3> match;
 
 			// Rotate vertex sequence in first until two of them are equal to second
-			for (unsigned int i = 0; i < 3; ++i)
+			for (std::size_t i = 0; i < 3; ++i)
 			{
 				// j determines rotation, 2-i is the reversed second sequence
 				match[i] = (at(first, (j+i) % 3) == at(second, 2-i));
@@ -434,13 +434,13 @@ namespace detail
 			// If 2 of 3 corners are equal, then we know the corner arrangement.
 			if (std::accumulate(match.begin(), match.end(), 0) == 2)
 			{
-				unsigned int nbSharedCorners = 0;
+				std::size_t nbSharedCorners = 0;
 
 				// Fill output parameters with the correct vertices (according to the function's interface description)
-				for (unsigned int i = 0; i < 3; ++i)
+				for (std::size_t i = 0; i < 3; ++i)
 				{
-					unsigned int firstIndex = (j+i) % 3;
-					unsigned int secondIndex = 2-i;
+					std::size_t firstIndex = (j+i) % 3;
+					std::size_t secondIndex = 2-i;
 
 					// A corner that both adjacent triangles (first and second) have in common
 					if (match[i])
@@ -495,7 +495,7 @@ namespace detail
 
 	// Helper function for transferVertices2()
 	void transferVertices2Impl(TriangleIterator oldFirst, TriangleIterator oldSecond, TriangleIterator newFirst, TriangleIterator newSecond,
-		const UintPair& disjointCornerIndices, TriangleIterator oldTriangle)
+		const IndexPair& disjointCornerIndices, TriangleIterator oldTriangle)
 	{
 		// Find out on which side of the new edge each vertex is located and push it into the appropriate new triangle.
 		for (VertexPtrIterator itr = oldTriangle->begin(); itr != oldTriangle->end(); )
@@ -515,7 +515,7 @@ namespace detail
 	// Moves all vertices in oldTriangle to either newFirst or newSecond, depending on which side of the new
 	// edge they are situated.
 	void transferVertices2(TriangleIterator oldFirst, TriangleIterator oldSecond, TriangleIterator newFirst, TriangleIterator newSecond,
-		const UintPair& disjointCornerIndices)
+		const IndexPair& disjointCornerIndices)
 	{
 		transferVertices2Impl(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices, oldFirst);
 		transferVertices2Impl(oldFirst, oldSecond, newFirst, newSecond, disjointCornerIndices, oldSecond);
@@ -523,7 +523,7 @@ namespace detail
 
 	// Copies the adjacent triangle from oldTriangle at oldIndex to newTriangle at newIndex (only one reference).
 	// Additionally, the referencee is updated so that it points to newTriangle instead of oldTriangle.
-	void updateAdjacentRelation(TriangleIterator oldTriangle, unsigned int oldIndex, TriangleIterator newTriangle, unsigned int newIndex)
+	void updateAdjacentRelation(TriangleIterator oldTriangle, std::size_t oldIndex, TriangleIterator newTriangle, std::size_t newIndex)
 	{
 		OptTriangleIterator other = oldTriangle->getAdjacentTriangle(oldIndex);
 
@@ -543,7 +543,7 @@ namespace detail
 	// @param disjointCornerIndices Indices of the non-shared, disjoint corners.
 	// @return						Pair of the newly created triangles
 	TriangleItrPair flipEdges(TriangleList& triangles, TriangleIterator oldFirst, TriangleIterator oldSecond,
-		const UintPair& sharedCornerIndices1, const UintPair& sharedCornerIndices2, const UintPair& disjointCornerIndices)
+		const IndexPair& sharedCornerIndices1, const IndexPair& sharedCornerIndices2, const IndexPair& disjointCornerIndices)
 	{
 		// Create the new triangles which are going to outlive this function
 		TriangleIterator newFirst = insertTriangle(triangles,
@@ -596,7 +596,7 @@ namespace detail
 
 	// Returns true if any of the boundary (dummy) vertices is part of first/second's shared edge.
 	bool isSharedBoundary(const AdvancedTriangle& boundaryTriangle, const AdvancedTriangle& first,
-		const UintPair& sharedCornerIndices1, const UintPair& sharedCornerIndices2)
+		const IndexPair& sharedCornerIndices1, const IndexPair& sharedCornerIndices2)
 	{
 		return hasCorner(boundaryTriangle, first[sharedCornerIndices1.first])
 			|| hasCorner(boundaryTriangle, first[sharedCornerIndices2.first]);
@@ -604,7 +604,7 @@ namespace detail
 
 	// Returns true if any of the boundary (dummy) vertices is either first's or second's disjoint corner.
 	bool isDisjointBoundary(const AdvancedTriangle& boundaryTriangle, const AdvancedTriangle& first, const AdvancedTriangle& second,
-		const UintPair& disjointCornerIndices)
+		const IndexPair& disjointCornerIndices)
 	{
 		return hasCorner(boundaryTriangle, first[disjointCornerIndices.first])
 			|| hasCorner(boundaryTriangle, second[disjointCornerIndices.second]);
@@ -615,7 +615,7 @@ namespace detail
 
 	// Applies the check for the Delaunay condition recursively to the triangles neighbors.
 	// @return true if an edge flip is performed, false otherwise.
-	bool ensureLocalDelaunayAdjacent(TriangleList& triangles, TriangleIterator triangleItr, unsigned int adjacentIndex, const AdvancedTriangle& boundaryTriangle,
+	bool ensureLocalDelaunayAdjacent(TriangleList& triangles, TriangleIterator triangleItr, std::size_t adjacentIndex, const AdvancedTriangle& boundaryTriangle,
 		const EdgeSet& constrainedEdges)
 	{
 		OptTriangleIterator itr = triangleItr->getAdjacentTriangle(adjacentIndex);
@@ -625,7 +625,7 @@ namespace detail
 
 	// Flips edges and enforces the Delaunay condition at adjacent triangles
 	void changeEdgeSituation(TriangleList& triangles, TriangleIterator first, TriangleIterator second, const AdvancedTriangle& boundaryTriangle,
-		const EdgeSet& constrainedEdges, const UintPair& sharedCornerIndices1, const UintPair& sharedCornerIndices2, const UintPair& disjointCornerIndices)
+		const EdgeSet& constrainedEdges, const IndexPair& sharedCornerIndices1, const IndexPair& sharedCornerIndices2, const IndexPair& disjointCornerIndices)
 	{
 		TriangleItrPair newTriangles = flipEdges(triangles, first, second, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
 
@@ -654,9 +654,9 @@ namespace detail
 			return false;
 
 		// Find out which triangle indices refer to the corners that are shared by both triangles, and which to the disjoint ones.
-		UintPair sharedCornerIndices1;
-		UintPair sharedCornerIndices2;
-		UintPair disjointCornerIndices;
+		IndexPair sharedCornerIndices1;
+		IndexPair sharedCornerIndices2;
+		IndexPair disjointCornerIndices;
 		arrangeCorners(*first, *second, sharedCornerIndices1, sharedCornerIndices2, disjointCornerIndices);
 
 		// Check if we must flip edges because of the boundaries (the triangles there don't have to conform Delaunay, but the triangles inside do)
@@ -722,7 +722,7 @@ namespace detail
 			insertTriangle(triangles, oldTriangle[2], oldTriangle[0], vertex)};
 
 		// Assign the adjacent triangles to the new triangles
-		for (unsigned int i = 0; i < 3; ++i)
+		for (std::size_t i = 0; i < 3; ++i)
 			initializeAdjacents(newTriangles, i, oldTriangleItr);
 
 		// Remove current vertex - as soon as it forms a triangle corner, it counts no longer as remaining vertex
@@ -738,7 +738,7 @@ namespace detail
 		// For each newly created triangle, we must ensure that the Delaunay condition with its adjacent is kept up.
 		// The variable adjacent (third argument of ensureLocalDelaunay()) is the adjacent of the old triangle.
 		// Corner number 2 is always the vertex inserted in this function, so the triangle on the opposite is the sought one.
-		for (unsigned int i = 0; i < 3; ++i)
+		for (std::size_t i = 0; i < 3; ++i)
 		{
 			OptTriangleIterator adjacent = newTriangles[i]->getAdjacentTriangle(2);
 
@@ -765,7 +765,7 @@ namespace detail
 		// First triangle in list is the one containing the three boundary vertices
 		triangles.push_back(AdvancedTriangle(allVertices[0], allVertices[1], allVertices[2]));
 
-		for (unsigned int i = 0; i < 3; ++i)
+		for (std::size_t i = 0; i < 3; ++i)
 			allVertices[i].setSurroundingTriangle(triangles.begin());
 	}
 
@@ -810,7 +810,7 @@ namespace detail
 
 	// Checks if the adjacent triangle is in use (i.e. inside the polygon) and returns a valid OptTriangleIterator in this case.
 	// Otherwise, the latter is invalid.
-	OptTriangleIterator hasUnusedAdjacent(const AdvancedTriangle& triangle, unsigned int index, const EdgeSet& constrainedEdges)
+	OptTriangleIterator hasUnusedAdjacent(const AdvancedTriangle& triangle, std::size_t index, const EdgeSet& constrainedEdges)
 	{
 		if (isEdgeConstrained(constrainedEdges, triangle[(index+1) % 3], triangle[(index+2) % 3]))
 			return OptTriangleIterator();
@@ -828,7 +828,7 @@ namespace detail
 		current->setFlagged(true);
 
 		OptTriangleIterator adjacent;
-		for (unsigned int i = 0; i < 3; ++i)
+		for (std::size_t i = 0; i < 3; ++i)
 		{
 			if ((adjacent = hasUnusedAdjacent(*current, i, constrainedEdges)).valid)
 				stack.push(adjacent.target);

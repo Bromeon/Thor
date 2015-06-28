@@ -60,12 +60,12 @@ class Edge
 		/// @brief Accesses a corner of the edge.
 		/// @param cornerIndex The index of the corner. Must be either 0 or 1.
 		/// @return Reference to the vertex at the specified corner.
-		V&							operator[] (unsigned int cornerIndex);
+		V&							operator[] (std::size_t cornerIndex);
 
 		/// @brief Accesses a corner of the edge (const overload).
 		/// @param cornerIndex The index of the corner. Must be either 0 or 1.
 		/// @return Const-reference to the vertex at the specified corner.
-		const V&					operator[] (unsigned int cornerIndex) const;
+		const V&					operator[] (std::size_t cornerIndex) const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -93,12 +93,12 @@ class Triangle
 		/// @brief Accesses a corner of the triangle.
 		/// @param cornerIndex The index of the corner. Must be 0, 1 or 2.
 		/// @return Reference to the vertex at the specified corner.
-		V&							operator[] (unsigned int cornerIndex);
+		V&							operator[] (std::size_t cornerIndex);
 
 		/// @brief Accesses a corner of the triangle (const overload).
 		/// @param cornerIndex The index of the corner. Must be 0, 1 or 2.
 		/// @return Const-reference to the vertex at the specified corner.
-		const V&					operator[] (unsigned int cornerIndex) const;
+		const V&					operator[] (std::size_t cornerIndex) const;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

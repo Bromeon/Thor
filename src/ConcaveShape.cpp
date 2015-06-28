@@ -115,15 +115,15 @@ ConcaveShape::ConcaveShape(const sf::Shape& shape)
 , mNeedsDecomposition(true)
 , mNeedsOutlineUpdate(true)
 {
-	const unsigned int size = shape.getPointCount();
+	const std::size_t size = shape.getPointCount();
 
 	setPointCount(size);
-	for (unsigned int i = 0; i < size; ++i)
+	for (std::size_t i = 0; i < size; ++i)
 		setPoint(i, shape.getPoint(i));
 }
 
 
-void ConcaveShape::setPointCount(unsigned int count)
+void ConcaveShape::setPointCount(std::size_t count)
 {
 	mPoints.resize(count);
 
@@ -131,12 +131,12 @@ void ConcaveShape::setPointCount(unsigned int count)
 	mNeedsOutlineUpdate = true;
 }
 
-unsigned int ConcaveShape::getPointCount() const
+std::size_t ConcaveShape::getPointCount() const
 {
-	return static_cast<unsigned int>(mPoints.size());
+	return static_cast<std::size_t>(mPoints.size());
 }
 
-void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
+void ConcaveShape::setPoint(std::size_t index, sf::Vector2f position)
 {
 	mPoints[index] = position;
 
@@ -144,7 +144,7 @@ void ConcaveShape::setPoint(unsigned int index, sf::Vector2f position)
 	mNeedsOutlineUpdate = true;
 }
 
-sf::Vector2f ConcaveShape::getPoint(unsigned int index) const
+sf::Vector2f ConcaveShape::getPoint(std::size_t index) const
 {
 	return mPoints[index];
 }
@@ -228,7 +228,7 @@ void ConcaveShape::ensureOutlineUpdated() const
 
 	// Create outline based on SFML lines (rectangles) and circles
 	mOutlineShapes.clear();
-	for (unsigned int i = 0; i < mPoints.size(); ++i)
+	for (std::size_t i = 0; i < mPoints.size(); ++i)
 	{
 		sf::Vector2f firstPos = mPoints[i];
 		sf::Vector2f secondPos = mPoints[(i+1) % mPoints.size()];

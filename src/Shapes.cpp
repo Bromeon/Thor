@@ -39,7 +39,7 @@ namespace
 	template <class Shape>
 	void addPoint(Shape& shape, sf::Vector2f point)
 	{
-		const unsigned int size = shape.getPointCount();
+		const std::size_t size = shape.getPointCount();
 
 		shape.setPointCount(size + 1);
 		shape.setPoint(size, point);
@@ -55,7 +55,7 @@ namespace Shapes
 
 	sf::ConvexShape toConvexShape(const sf::Shape& shape)
 	{
-		const unsigned int size = shape.getPointCount();
+		const std::size_t size = shape.getPointCount();
 
 		sf::ConvexShape convexShape;
 
@@ -75,7 +75,7 @@ namespace Shapes
 		convexShape.setTexture(shape.getTexture());
 		convexShape.setTextureRect(shape.getTextureRect());
 
-		for (unsigned int i = 0; i < size; ++i)
+		for (std::size_t i = 0; i < size; ++i)
 		{
 			convexShape.setPoint(i, shape.getPoint(i));
 		}
@@ -112,7 +112,7 @@ namespace Shapes
 		sf::Vector2f currentCorner(size.x - cornerRadius, size.y - cornerRadius);
 		PolarVector2f radialVec(cornerRadius, 0.f);
 
-		const unsigned int nbSegmentsPerCorner = 20;
+		const std::size_t nbSegmentsPerCorner = 20;
 		const float difference = 90.f / nbSegmentsPerCorner;
 
 		// right lower rounded corner
@@ -137,7 +137,7 @@ namespace Shapes
 		return shape;
 	}
 
-	sf::ConvexShape polygon(unsigned int nbPoints, float radius, const sf::Color& fillColor,
+	sf::ConvexShape polygon(std::size_t nbPoints, float radius, const sf::Color& fillColor,
 		float outlineThickness, const sf::Color& outlineColor)
 	{
 		assert(radius > 0.f);
@@ -152,7 +152,7 @@ namespace Shapes
 		shape.setOutlineColor(outlineColor);
 
 		// Add regularly distributed polygon points
-		for (unsigned int points = 0; points < nbPoints; ++points)
+		for (std::size_t points = 0; points < nbPoints; ++points)
 		{
 			vector.phi = 360.f * points / nbPoints;
 
@@ -162,7 +162,7 @@ namespace Shapes
 		return shape;
 	}
 
-	sf::ConvexShape star(unsigned int nbStarPoints, float innerRadius, float outerRadius,
+	sf::ConvexShape star(std::size_t nbStarPoints, float innerRadius, float outerRadius,
 		const sf::Color& fillColor, float outlineThickness, const sf::Color& outlineColor)
 	{
 		assert(innerRadius > 0.f);
@@ -179,7 +179,7 @@ namespace Shapes
 		shape.setOutlineColor(outlineColor);
 
 		// Step around and alternately add inner and outer points
-		for (unsigned int points = 0; points < nbStarPoints; ++points)
+		for (std::size_t points = 0; points < nbStarPoints; ++points)
 		{
 			inner.phi = 360.f * points / nbStarPoints;
 			outer.phi = inner.phi + 180.f / nbStarPoints;

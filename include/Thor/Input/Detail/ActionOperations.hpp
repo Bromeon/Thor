@@ -83,7 +83,7 @@ namespace detail
 									ActionResult();
 
 		std::vector<sf::Event>		eventContainer;
-		unsigned int				nbRealtimeTriggers;
+		std::size_t					nbRealtimeTriggers;
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------------

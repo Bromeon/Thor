@@ -47,9 +47,9 @@ UniversalEmitter::UniversalEmitter()
 
 void UniversalEmitter::operator() (EmissionInterface& system, sf::Time dt)
 {
-	const unsigned int nbParticles = computeParticleCount(dt);
+	const std::size_t nbParticles = computeParticleCount(dt);
 
-	for (unsigned int i = 0; i < nbParticles; ++i)
+	for (std::size_t i = 0; i < nbParticles; ++i)
 	{
 		// Create particle and specify parameters
 		Particle particle( mParticleLifetime() );
@@ -105,17 +105,17 @@ void UniversalEmitter::setParticleColor(Distribution<sf::Color> particleColor)
 	mParticleColor = std::move(particleColor);
 }
 
-void UniversalEmitter::setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex)
+void UniversalEmitter::setParticleTextureIndex(Distribution<std::size_t> particleTextureIndex)
 {
 	mParticleTextureIndex = std::move(particleTextureIndex);
 }
 
-unsigned int UniversalEmitter::computeParticleCount(sf::Time dt)
+std::size_t UniversalEmitter::computeParticleCount(sf::Time dt)
 {
 	// We want to fulfill the desired particle rate as exact as possible. Since the amount of emitted particles per frame is
 	// integral, we have to emit sometimes more and sometimes less. mParticleDifference takes care of the deviation each frame.
 	float particleAmount = mEmissionRate * dt.asSeconds() + mEmissionDifference;
-	unsigned int nbParticles = static_cast<unsigned int>(particleAmount);
+	std::size_t nbParticles = static_cast<std::size_t>(particleAmount);
 
 	// Compute difference for next frame, return current amount
 	mEmissionDifference = particleAmount - nbParticles;

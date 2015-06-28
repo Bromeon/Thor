@@ -43,7 +43,7 @@ namespace
 		static_assert(!std::is_same<T, std::string>::value, "Type different from std::string expected");
 
 		public:
-			explicit StringBimap(unsigned int valueCount, unsigned int specialValueCount = 0)
+			explicit StringBimap(std::size_t valueCount, std::size_t specialValueCount = 0)
 			: mStringVector(valueCount + specialValueCount)
 			, mTMap()
 			, mSpecialValueCount(specialValueCount)
@@ -78,7 +78,7 @@ namespace
 		private:
 			std::vector<std::string>	mStringVector;
 			std::map<std::string, T>	mTMap;
-			unsigned int				mSpecialValueCount;
+			std::size_t					mSpecialValueCount;
 	};
 
 	StringBimap<sf::Keyboard::Key> initMap(aurora::Type<sf::Keyboard::Key>)

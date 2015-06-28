@@ -112,7 +112,7 @@ void ParticleSystem::setTexture(const sf::Texture& texture)
 	mNeedsQuadUpdate = true;
 }
 
-unsigned int ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
+std::size_t ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
 {
 	mTextureRects.push_back(textureRect);
 	mNeedsQuadUpdate = true;
@@ -253,7 +253,7 @@ void ParticleSystem::computeVertices() const
 		assert(p.textureIndex == 0 || p.textureIndex < mTextureRects.size());
 
 		const auto& quad = mQuads[p.textureIndex];
-		for (unsigned int i = 0; i < 4; ++i)
+		for (std::size_t i = 0; i < 4; ++i)
 		{
 			sf::Vertex vertex;
 			vertex.position = transform.transformPoint(quad[i].position);
