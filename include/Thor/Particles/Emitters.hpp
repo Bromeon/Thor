@@ -133,7 +133,7 @@ class THOR_API UniversalEmitter
 	// Private member functions
 	private:
 		// Returns the number of particles to emit during this frame.
-		unsigned int				computeParticleCount(sf::Time dt);
+		std::size_t					computeParticleCount(sf::Time dt);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------

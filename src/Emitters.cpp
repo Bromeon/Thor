@@ -105,7 +105,7 @@ void UniversalEmitter::setParticleColor(Distribution<sf::Color> particleColor)
 	mParticleColor = std::move(particleColor);
 }
 
-void UniversalEmitter::setParticleTextureIndex(Distribution<std::size_t> particleTextureIndex)
+void UniversalEmitter::setParticleTextureIndex(Distribution<unsigned int> particleTextureIndex)
 {
 	mParticleTextureIndex = std::move(particleTextureIndex);
 }

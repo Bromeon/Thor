@@ -112,12 +112,12 @@ void ParticleSystem::setTexture(const sf::Texture& texture)
 	mNeedsQuadUpdate = true;
 }
 
-std::size_t ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
+unsigned int ParticleSystem::addTextureRect(const sf::IntRect& textureRect)
 {
 	mTextureRects.push_back(textureRect);
 	mNeedsQuadUpdate = true;
 
-	return mTextureRects.size() - 1;
+	return static_cast<unsigned int>(mTextureRects.size() - 1);
 }
 
 Connection ParticleSystem::addAffector(std::function<void(Particle&, sf::Time)> affector)
