@@ -41,6 +41,8 @@ macro(thor_example THOR_EXAMPLE_NAME)
 		thor_link_sfml_dependencies(${THOR_EXAMPLE_NAME})
 	endif()
 
+    # Set IDE folder to group example files
+    set_target_properties(${THOR_EXAMPLE_NAME} PROPERTIES FOLDER "Examples")
 
 	install(TARGETS ${THOR_EXAMPLE_NAME}
 			RUNTIME DESTINATION ${THOR_EXAMPLE_INSTALL_DIR}/examples)

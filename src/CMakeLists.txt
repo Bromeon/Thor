@@ -75,6 +75,10 @@ else()
 endif()
 
 
+# Set IDE folder for main project
+set_target_properties(${THOR_LIB} PROPERTIES FOLDER "Thor")
+
+
 # Install (use "bin" folder for DLL, "lib" for SO files)
 if(WIN32)
 	install(TARGETS ${THOR_LIB}
