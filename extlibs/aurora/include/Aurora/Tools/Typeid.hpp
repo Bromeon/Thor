@@ -80,7 +80,7 @@ std::type_index typeIndex(T& reference)
 }
 
 /// @brief Safe typeid operator for types
-/// @details Same as @ref aurora::typeIndex(T&), but for types.
+/// @details Same as <c>typeIndex(T& reference)</c>, but for types.
 ///
 /// Usage:
 /// @code

@@ -131,7 +131,7 @@ struct Int
 };
 
 /// @brief Find out the return type of a function.
-/// @details Contains a member typedef @a Type. Example:
+/// @details Contains a member typedef @c Type. Example:
 /// @code
 /// FunctionResult<void(int, double)>::Type // is void
 /// @endcode
@@ -142,7 +142,7 @@ struct FunctionResult
 };
 
 /// @brief Find out the N-th parameter type of a function.
-/// @details Contains a member typedef @a Type. The type is unspecified if there exists no such parameter. Example:
+/// @details Contains a member typedef @c Type. The type is unspecified if there exists no such parameter. Example:
 /// @code
 /// FunctionParam<void(int, double), 1>::Type // is double
 /// @endcode
@@ -153,7 +153,7 @@ struct FunctionParam
 };
 
 /// @brief Find out the number of parameters of a function.
-/// @details Contains a member constant @a value. Example:
+/// @details Contains a member constant @c value. Example:
 /// @code
 /// FunctionArity<void(int, double)>::value // is 2
 /// @endcode

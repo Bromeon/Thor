@@ -24,21 +24,32 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /// @file
-/// @brief Macro to implement global swap() overload
+/// @brief Helpers to declare and invoke swap() functions
 
 #ifndef AURORA_SWAP_HPP
 #define AURORA_SWAP_HPP
+
+#include <utility> // std::swap (until C++11, it was in <algorithm> header)
 
 
 /// @addtogroup Tools
 /// @{
 
-/// @brief Macro to implement a global overload of swap(lhs, rhs) to allow argument-dependent lookup.
-/// @details Accesses the memberfunction void Class::Swap(Class&).
+/// @brief Macro to implement a global overload of <tt>swap(lhs, rhs)</tt> to allow argument-dependent lookup.
+/// @details Accesses the member function <tt>void Class::swap(Class&)</tt>.
 #define AURORA_GLOBAL_SWAP(Class)			\
 inline void swap(Class& lhs, Class& rhs)	\
 {											\
 	lhs.swap(rhs);							\
+}
+
+/// @brief %swap() function with argument-dependent lookup
+/// @details Chooses the best overload of <tt>swap(lhs, rhs)</tt> with argument-dependent lookup. If none is found, @c std::swap() will be called.
+template <typename T>
+inline void adlSwap(T& lhs, T& rhs)
+{
+	using namespace std;
+	swap(lhs, rhs);
 }
 
 /// @}

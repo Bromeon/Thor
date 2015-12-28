@@ -107,7 +107,7 @@ struct DispatchTraits
 
 /// @brief Identifies a class using RTTI.
 /// @details Default key for SingleDispatcher and DoubleDispatcher. With it, classes are identified using the compiler's
-///  RTTI capabilities (in particular, the @a typeid operator).
+///  RTTI capabilities (in particular, the @c typeid operator).
 template <typename S, std::size_t N>
 class RttiDispatchTraits
 {	

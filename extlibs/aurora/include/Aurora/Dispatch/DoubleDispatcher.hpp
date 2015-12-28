@@ -62,7 +62,7 @@ namespace aurora
 ///  * <b>U</b>: Any parameter type that can be used to forward user arguments to the functions
 /// @tparam Traits Traits class to customize the usage of the dispatcher. To define your own traits, you can (but don't have to)
 ///  inherit the class @ref aurora::DispatchTraits<K>, where K is your key. It predefines most members for convenience.
-///  In general, the @a Traits class must contain the following members:
+///  In general, the @c Traits class must contain the following members:
 /// @code 
 /// struct Traits
 /// {
@@ -129,7 +129,7 @@ class DoubleDispatcher : private NonCopyable
 		/// 
 		typedef typename FunctionParam<Signature, 0>::Type		Parameter;
 
-		/// @brief Addition parameter for user data, only useful if @a Signature contains more than 2 parameters
+		/// @brief Addition parameter for user data, only useful if @c Signature contains more than 2 parameters
 		/// 
 		typedef typename FunctionParam<Signature, 2>::Type		UserData;
 
@@ -171,14 +171,14 @@ class DoubleDispatcher : private NonCopyable
 		/// @param identifier1,identifier2 Values that identify the object. The key, which is mapped to the function, is computed
 		///  from each identifier through Traits::keyFromId(identifier).
 		/// @param function Function to register and associate with the given identifier. Usually, the function has the signature
-		///  <i>Result(Parameter, Parameter)</i>, but it's possible to deviate from it (e.g. using derived classes), see also the
-		///  note about trampolines in the Traits classes. In case you specified a third parameter for the @a Signature template
-		///  parameter, the function should have the signature <i>Result(Parameter, Parameter, UserData)</i>.
+		///  <tt>Result(Parameter, Parameter)</tt>, but it's possible to deviate from it (e.g. using derived classes), see also the
+		///  note about trampolines in the Traits classes. In case you specified a third parameter for the @c Signature template
+		///  parameter, the function should have the signature <tt>Result(Parameter, Parameter, UserData)</tt>.
 		template <typename Id1, typename Id2, typename Fn>
 		void						bind(const Id1& identifier1, const Id2& identifier2, Fn function);
 
-		/// @brief Dispatches the key of @a arg1 and @a arg2 and invokes the corresponding function.
-		/// @details <i>Traits::keyFromBase(arg)</i> is invoked to determine the key of each passed argument. The function bound to
+		/// @brief Dispatches the key of @c arg1 and @c arg2 and invokes the corresponding function.
+		/// @details <tt>Traits::keyFromBase(arg)</tt> is invoked to determine the key of each passed argument. The function bound to
 		///  the combination of both keys is then looked up in the map and invoked. If no match is found and a fallback function has
 		///  been registered using fallback(), then the fallback function will be invoked.
 		///  @n@n When the dispatcher is configured in symmetric mode (see constructor), then the arguments are forwarded to the
@@ -189,15 +189,15 @@ class DoubleDispatcher : private NonCopyable
 		/// @throw FunctionCallException when no corresponding function is found and no fallback has been registered.
 		Result						call(Parameter arg1, Parameter arg2) const;
 
-		/// @brief Invokes the function depending on @a arg1 and @a arg2 and passes a user-defined argument @a data
-		/// @details <i>Traits::keyFromBase(arg)</i> is invoked to determine the key of the passed argument. The function bound to
+		/// @brief Invokes the function depending on @c arg1 and @c arg2 and passes a user-defined argument @c data
+		/// @details <tt>Traits::keyFromBase(arg)</tt> is invoked to determine the key of the passed argument. The function bound to
 		///  that key is then looked up in the map and invoked. If no match is found and a fallback function has been registered
 		///  using fallback(), then the fallback function will be invoked.
 		///  @n@n When the dispatcher is configured in symmetric mode (see constructor), then the arguments are forwarded to the
 		///  correct parameters in the registered functions, even if the order is different. When necessary, they are swapped.
 		///  In other words, symmetric dispatchers don't care about the order of the first two arguments.
-		///  @n@n This method is only enabled if the @a Signature template parameter contains 3 parameters.
-		/// @param arg Function argument as a reference or pointer.
+		///  @n@n This method is only enabled if the @c Signature template parameter contains 3 parameters.
+		/// @param arg1,arg2 Function arguments as references or pointers.
 		/// @param data An additional user argument that is forwarded to the function.
 		/// @return The return value of the dispatched function, if any.
 		/// @throw FunctionCallException when no corresponding function is found and no fallback has been registered.
@@ -206,7 +206,7 @@ class DoubleDispatcher : private NonCopyable
 		/// @brief Registers a fallback function.
 		/// @details The passed function will be invoked when call() doesn't find a registered function. It can be used when
 		///  not finding a match does not represent an exceptional situation, but a common case.
-		/// @n@n If you want to perform no action, you can pass @ref aurora::NoOp<R, 2>().
+		/// @n@n If you want to perform no action, you can pass aurora::NoOp<R, 2>().
 		/// @param function Function according to the specified signature.
 		void						fallback(std::function<Signature> function);
 

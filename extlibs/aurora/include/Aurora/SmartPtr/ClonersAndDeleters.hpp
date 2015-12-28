@@ -51,7 +51,7 @@ struct OperatorNewCopy
 };
 
 /// @brief Cloner that invokes a member function clone().
-/// @details clone() shall be a virtual function with the signature <i>C* C::clone() const</i>, where C is the class type.
+/// @details clone() shall be a virtual function with the signature <tt>C* C::clone() const</tt>, where C is the class type.
 ///  The returned pointer has to point to a new copy of the object on which clone() is invoked. In case you do not call
 ///  the new operator to allocate the copy, make sure you also use a corresponding deleter in CopiedPtr.
 template <typename T>
