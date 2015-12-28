@@ -32,6 +32,7 @@
 #include <Aurora/SmartPtr/ClonersAndDeleters.hpp>
 #include <Aurora/SmartPtr/Detail/PtrOwner.hpp>
 #include <Aurora/Tools/SafeBool.hpp>
+#include <Aurora/Tools/Swap.hpp>
 #include <Aurora/Config.hpp>
 
 #include <algorithm>
@@ -71,7 +72,7 @@ class CopiedPtr
 		}
 
 		/// @brief Construct from nullptr
-		/// @details Allows conversions from the @a nullptr literal to a CopiedPtr.
+		/// @details Allows conversions from the @c nullptr literal to a CopiedPtr.
 		CopiedPtr(std::nullptr_t)
 		: mOwner(nullptr)
 		, mPointer(nullptr)
@@ -113,7 +114,7 @@ class CopiedPtr
 
 		/// @brief Copy constructor
 		/// @param origin Original smart pointer
-		/// @details If the origin's pointer is @a nullptr, this pointer will also be @a nullptr.
+		/// @details If the origin's pointer is @c nullptr, this pointer will also be @c nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		CopiedPtr(const CopiedPtr& origin)
 		: mOwner(origin ? origin.mOwner->clone() : nullptr)
@@ -123,7 +124,7 @@ class CopiedPtr
 
 		/// @brief Construct from different %CopiedPtr
 		/// @param origin Original smart pointer, where U* convertible to T*. Can refer to a derived object.
-		/// @details If the origin's pointer is @a nullptr, this pointer will also be @a nullptr.
+		/// @details If the origin's pointer is @c nullptr, this pointer will also be @c nullptr.
 		///  Otherwise, this instance will hold the pointer returned by the cloner.
 		template <typename U>
 		CopiedPtr(const CopiedPtr<U>& origin)
@@ -214,12 +215,12 @@ class CopiedPtr
 			delete mOwner;
 		}
 
-		/// @brief Exchanges the values of *this and @a other.
+		/// @brief Exchanges the values of *this and @c other.
 		/// 
 		void swap(CopiedPtr& other)
 		{
-			std::swap(mOwner, other.mOwner);
-			std::swap(mPointer, other.mPointer);
+			adlSwap(mOwner, other.mOwner);
+			adlSwap(mPointer, other.mPointer);
 		}
 		
 		/// @brief Dereferences the pointer.
@@ -239,7 +240,7 @@ class CopiedPtr
 		}
 
 		/// @brief Checks if the smart pointer is not nullptr.
-		/// @details Allows expressions of the form <i>if (ptr)</i> or <i>if (!ptr)</i>.
+		/// @details Allows expressions of the form <tt>if (ptr)</tt> or <tt>if (!ptr)</tt>.
 		/// @return Value convertible to true, if CopiedPtr is not empty; value convertible to false otherwise
 		operator SafeBool() const
 		{
@@ -315,7 +316,7 @@ void swap(CopiedPtr<T>& lhs, CopiedPtr<T>& rhs)
 
 
 // For documentation and modern compilers
-#if defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
+#ifdef AURORA_HAS_VARIADIC_TEMPLATES
 
 /// @relates CopiedPtr
 /// @brief Emplaces an object directly inside the copied pointer.
@@ -338,7 +339,7 @@ CopiedPtr<T> makeCopied(Args&&... args)
 }
 
 // Unoptimized fallback for compilers that don't support variadic templates, emulated by preprocessor metaprogramming
-#else  // defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
+#else  // AURORA_HAS_VARIADIC_TEMPLATES
 
 #include <Aurora/SmartPtr/Detail/Factories.hpp>
 
@@ -348,7 +349,7 @@ CopiedPtr<T> makeCopied(Args&&... args)
 // Generate code
 AURORA_PP_ENUMERATE(AURORA_PP_LIMIT, AURORA_DETAIL_COPIEDPTR_FACTORY)
 
-#endif // defined(AURORA_DOXYGEN_SECTION) || defined(AURORA_HAS_VARIADIC_TEMPLATES)
+#endif // AURORA_HAS_VARIADIC_TEMPLATES
 
 /// @}
 

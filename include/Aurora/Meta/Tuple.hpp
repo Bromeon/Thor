@@ -108,10 +108,10 @@ Result* dynamicGet(Tuple& t, std::size_t i)
 
 /// @brief Transform one tuple into another
 /// @details Transforms each element of a tuple using a given function.
-/// @tparam Transformer Class that has a method <i>static R transform(T element)</i> that takes an element of the source tuple and
-///  returns a corresponding value of the new tuple. @a transform() can be a function template to account for different element types.
+/// @tparam Transformer Class that has a method <tt>static R transform(T element)</tt> that takes an element of the source tuple and
+///  returns a corresponding value of the new tuple. @c transform() can be a function template to account for different element types.
 /// @param src Input tuple being transformed.
-/// @return Output tuple, result of the transform. Has the same size as @a src, but possibly different element types.
+/// @return Output tuple, result of the transform. Has the same size as @c src, but possibly different element types.
 /// @details Example code:
 /// @code
 /// struct ToDouble

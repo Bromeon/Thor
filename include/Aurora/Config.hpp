@@ -37,6 +37,7 @@
 
 // Mislead doxygen to keep documentation clean from internals
 #define AURORA_FAKE_DOC(real, fake) real
+#define AURORA_IMPL_DEF(...) __VA_ARGS__
 
 
 // Tell the compiler that a code path is unreachable, to disable warnings and enable optimizations

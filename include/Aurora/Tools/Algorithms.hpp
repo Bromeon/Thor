@@ -29,6 +29,8 @@
 #ifndef AURORA_ALGORITHMS_HPP
 #define AURORA_ALGORITHMS_HPP
 
+#include <Aurora/Tools/Swap.hpp>
+
 #include <algorithm>
 #include <cassert>
 
@@ -41,7 +43,7 @@ namespace aurora
 
 /// @brief Determines whether two values are considered equivalent in sorting
 /// @details Equal implies equivalent, but not vice versa. Two values are considered
-///  equivalent if neither appears the other (w.r.t. sorting criterion, here operator<)
+///  equivalent if neither appears before the other (w.r.t. sorting criterion, here operator<)
 template <typename T>
 bool equivalent(const T& lhs, const T& rhs)
 {
@@ -67,19 +69,18 @@ ForwardIterator binarySearch(ForwardIterator first, ForwardIterator last, const 
 }
 
 /// @brief Erase element using swap-and-pop_back idiom
-/// @details Erases the element at position @a itr by swapping it with the last element in the container
+/// @details Erases the element at position @c itr by swapping it with the last element in the container
 ///  and erasing the last element. This O(1) operation is particularly useful for std::vector or std::deque
 ///  as long as the element order is not relevant.
 template <typename Container, typename Iterator>
 void eraseUnordered(Container& c, Iterator itr)
 {
-	using std::swap;
-	swap(*itr, c.back());
+	adlSwap(*itr, c.back());
 	c.pop_back();
 }
 
 /// @brief Erase-remove idiom
-/// @details Removes value @a v from sequential container @a c (std::vector or std::deque)
+/// @details Removes value @c v from sequential container @c c (std::vector or std::deque)
 template <typename Container, typename Value>
 void remove(Container& c, const Value& v)
 {
@@ -88,7 +89,7 @@ void remove(Container& c, const Value& v)
 }
 
 /// @brief Erase-remove-if idiom
-/// @details Removes value @a v from sequential container @a c (std::vector or std::deque)
+/// @details Removes value @c v from sequential container @c c (std::vector or std::deque)
 template <typename Container, typename Predicate>
 void removeIf(Container& c, const Predicate& p)
 {
@@ -97,7 +98,7 @@ void removeIf(Container& c, const Predicate& p)
 }
 
 /// @brief Pop from queue with return value
-/// @details Combines std::queue's pop() and front() operations.
+/// @details Combines std::queue's %pop() and front() operations.
 template <typename Queue>
 typename Queue::value_type pop(Queue& q)
 {
@@ -106,9 +107,18 @@ typename Queue::value_type pop(Queue& q)
 	return value;
 }
 
+/// @brief Clear std::queue
+/// @details Calls pop() repeatedly until the queue is empty.
+template <typename Queue>
+void clearQueue(Queue& q)
+{
+	while (!q.empty())
+		q.pop();
+}
+
 /// @brief Returns the value type for a specific key.
 /// @details Assumes existence of the key, returns corresponding mapped type without inserting it.
-///  In contrast to <i>std::[unordered_]map::at()</i>, this does not throw exceptions. If the key
+///  In contrast to <tt>std::[unordered_]map::at()</tt>, this does not throw exceptions. If the key
 ///  is not available, the behavior is undefined, in favor of optimized performance.
 template <typename AssocContainer, typename Key>
 typename AssocContainer::mapped_type& mapAt(AssocContainer& map, const Key& k)

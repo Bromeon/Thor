@@ -132,7 +132,7 @@
 	}																							\
 
 /// @brief Hash functor for named tuples
-/// @details Supplies the named tuple with a member typedef @a Hasher inside the tuple class.
+/// @details Supplies the named tuple with a member typedef @c Hasher inside the tuple class.
 ///  Do not invoke this macro directly. It is passed to @ref AURORA_NAMED_TUPLE_EXT.
 /// @hideinitializer
 #define AURORA_NT_HASHER(TupleName, typeVarPairs)												\

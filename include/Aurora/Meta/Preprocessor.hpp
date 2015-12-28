@@ -119,9 +119,9 @@
 #define AURORA_PP_IF_IMPL(condition, trueCase, falseCase)	AURORA_PP_IF_IMPL2(condition, trueCase, falseCase)
 
 /// @brief Conditional evaluation
-/// @details If @a condition evaluates to a positive number, then the expression will be replaced with @a trueCase. If @a condition is zero,
-///  then it will be @a falseCase.
-/// @n@n When you use function style macros for @a trueCase and @a falseCase, put the argument list after the invocation, i.e. AURORA_PP_IF(...)(args)
+/// @details If @c condition evaluates to a positive number, then the expression will be replaced with @c trueCase. If @c condition is zero,
+///  then it will be @c falseCase.
+/// @n@n When you use function style macros for @c trueCase and @c falseCase, put the argument list after the invocation, i.e. AURORA_PP_IF(...)(args)
 /// @code
 /// AURORA_PP_IF(0, true, false) == false
 /// AURORA_PP_IF(1, true, false) == true
@@ -142,7 +142,7 @@
 
 /// @brief Apply a macro repeated times
 /// @param n Number of invocations
-/// @param macro Macro with signature <i>macro(index)</i>, where @a index is a number from 0 to n-1.
+/// @param macro Macro with signature <tt>macro(index)</tt>, where @c index is a number from 0 to n-1.
 /// @details Invokes the macro n times, passing it the indices from 0 to n-1 in this order.
 /// @code
 /// #define GENERATOR(index) [index]
@@ -165,7 +165,7 @@
 
 /// @brief Apply a macro repeated times, comma-separated
 /// @param n Number of invocations
-/// @param macro Macro with signature <i>macro(index)</i>, where @a index is a number from 0 to n-1.
+/// @param macro Macro with signature <tt>macro(index)</tt>, where @c index is a number from 0 to n-1.
 /// @details Invokes the macro n times, passing it the indices from 0 to n-1 in this order. Puts a comma
 ///  between each invocation.
 /// @code
@@ -235,8 +235,8 @@
 #define AURORA_PP_FOREACH_SIZED(macro, size, tuple)	AURORA_PP_CAT(AURORA_PP_FOREACH_, size) (macro, size, tuple)
 
 /// @brief Apply macro for each element in tuple
-/// @param macro Macro with signature <i>macro(value, index)</i>, where @a value is the current element of the tuple and
-///  @a index is its index as a number from 0 to n-1.
+/// @param macro Macro with signature <tt>macro(value, index)</tt>, where @c value is the current element of the tuple and
+///  @c index is its index as a number from 0 to n-1.
 /// @param tuple Parenthesized tuple, such as (a, b, c). May be empty.
 /// @details Applies a macro repeated times, passing it every element in a tuple.
 /// @code
@@ -264,8 +264,8 @@
 #define AURORA_PP_FOREACH_DATA_SIZED(macro, size, tuple, data)	AURORA_PP_CAT(AURORA_PP_FOREACH_DATA_, size) (macro, size, tuple, data)
 
 /// @brief Apply macro for each element in tuple, with additional argument
-/// @param macro Macro with signature <i>macro(value, index, data)</i>, where @a value is the current element of the tuple, 
-///  @a index is its index as a number from 0 to n-1, and @a data is the additional argument being forwarded.
+/// @param macro Macro with signature <tt>macro(value, index, data)</tt>, where @c value is the current element of the tuple, 
+///  @c index is its index as a number from 0 to n-1, and @c data is the additional argument being forwarded.
 /// @param tuple Parenthesized tuple, such as (a, b, c). May be empty.
 /// @param data Additional argument to forward.
 /// @details Applies a macro repeated times, passing it every element in a tuple. Additional data can be specified that doesn't affect the repetition, but is

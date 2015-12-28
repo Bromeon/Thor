@@ -136,7 +136,7 @@ struct Typelist
 };
 
 /// @brief Concatenate two typelists
-/// @details Metafunction that puts two typelists together. The @a Type member holds the resulting aurora::Typelist type.
+/// @details Metafunction that puts two typelists together. The @c Type member holds the resulting aurora::Typelist type.
 template <typename LhsTypelist, typename RhsTypelist>
 struct TypelistCat;
 
@@ -148,7 +148,7 @@ struct TypelistCat<Typelist<Ts...>, Typelist<Us...>>
 
 
 /// @brief Check if type is part of typelist
-/// @details The boolean @a value member constant is true when @a T is a member of @a Types, false when not.
+/// @details The boolean @c value member constant is true when @c T is a member of @c Types, false when not.
 template <typename Typelist1, typename T>
 struct TypelistContains;
 
@@ -169,7 +169,7 @@ struct TypelistContains<Typelist<>, T>
 /// @brief Apply function for each type in variadic parameter pack
 /// @tparam Ts List of types to iterate through. Can also be a single type of aurora::Typelist<...>.
 /// @param fn Function object with a member function template <b>void operator() ()</b>.
-/// @details For each type @a T in @a Ts, the @a fn's operator() is called with explicit template argument @a T. Example:
+/// @details For each type @c T in @c Ts, the @c fn's operator() is called with explicit template argument @c T. Example:
 /// @code
 /// struct Example
 /// {
@@ -190,9 +190,9 @@ void foreach(Function&& fn)
 
 /// @brief Apply function for each value in variadic parameter pack
 /// @param fn Function object with a member function template <b>void operator() (T& value)</b>, or C++14 generic lambda. 
-///  The parameter must be compatible to type @a T, however pass by value or by (const) (lvalue|rvalue) reference is allowed.
+///  The parameter must be compatible to type @c T, however pass by value or by (const) (lvalue|rvalue) reference is allowed.
 /// @param args Arguments to iterate through.
-/// @details For each argument @a arg in @a args, the expression <b>fn(arg)</b> is evaluated. Example:
+/// @details For each argument @c arg in @c args, the expression <b>fn(arg)</b> is evaluated. Example:
 /// @code
 /// struct Example
 /// {

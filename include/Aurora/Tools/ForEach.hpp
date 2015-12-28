@@ -40,36 +40,6 @@
 /// @addtogroup Tools
 /// @{
 
-/// @brief Macro to iterate forward on a mutable sequence.
-/// @details Code example:
-/// @code
-/// std::vector<int> v = createVector();
-/// AURORA_ITR_FOREACH(itr, v)
-/// {
-///     *itr += 2;
-/// }
-/// @endcode
-/// @hideinitializer
-#define AURORA_ITR_FOREACH(iterator, container)		\
-	for (auto iterator = (container).begin(),		\
-	auroraForeachEnd = (container).end();			\
-	iterator != auroraForeachEnd; ++iterator)
-
-/// @brief Macro to iterate forward on a constant sequence.
-/// @details Code example:
-/// @code
-/// const std::vector<int> v = createVector();
-/// AURORA_CITR_FOREACH(itr, v)
-/// {
-///     std::cout << *itr << std::endl;
-/// }
-/// @endcode
-/// @hideinitializer
-#define AURORA_CITR_FOREACH(iterator, container)	\
-	for (auto iterator = (container).cbegin(),		\
-	auroraForeachEnd = (container).cend();			\
-	iterator != auroraForeachEnd; ++iterator)
-
 /// @brief Macro that emulates C++11 range-based for loop.
 /// @details Code example:
 /// @code
@@ -86,7 +56,6 @@
 	if (bool AURORA_LINE_ID(passed) = false) {} else																									\
 	if (AURORA_LINE_ID(broken) = true, false) {} else																									\
 	for (declaration = *AURORA_LINE_ID(itr); !AURORA_LINE_ID(passed); AURORA_LINE_ID(passed) = true, AURORA_LINE_ID(broken) = false)
-
 
 /// @}
 
