@@ -1,4 +1,3 @@
-
 #include <Thor/Animations.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -16,6 +15,32 @@ void addFrames(thor::FrameAnimation& animation, int x, int yFirst, int yLast, fl
 		animation.addFrame(duration, sf::IntRect(36*x, 39*y, 36, 39));
 }
 
+// Plays an animation, and updates the text correspondingly
+// animator:    Thor animator to play the animation
+// animationId: Name of the animation to play
+// restart:     true if the queued animations are discarded, false if the new animation is enqueued at the end
+// display:     SFML text that displays the current animation
+void playAnimation(thor::Animator<sf::Sprite, std::string>& animator, const std::string& animationId, bool restart, sf::Text& display)
+{
+	// Function to call before animation is played
+	auto onStart = [&display, animationId] ()
+	{
+		display.setString(animationId);
+	};
+
+	// Function to call after animation is played
+	auto onFinish = [&display] ()
+	{
+		display.setString("(idle)");
+	};
+
+	// Enqueue animation and callbacks -- restart determines whether queue is reset
+	(restart ? animator.play() : animator.queue())
+		<< thor::Playback::notify(onStart)
+		<< animationId
+		<< thor::Playback::notify(onFinish);
+}
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(300, 200), "Thor Animation");
@@ -28,14 +53,16 @@ int main()
 
 	// Instruction text
 	sf::Text instructions(
-		"W:     Play walk animation (loop)\n"
-		"A:      Play attack animation\n"
-		"S:      Stop current animation\n"
-		"Esc:  Quit",
+		"A:                          Play attack animation\n"
+		"W:                         Play walk animation\n"
+		"S:                          Stop all queued animations\n"
+		"Ctrl + <Key>:    Reset queue when playing\n"
+		"Esc:                     Quit",
 		font, 14u);
 
-	sf::Text animationText("", font, 14u);
+	sf::Text animationText("(idle)", font, 14u);
 	animationText.setPosition(100.f, 150.f);
+	animationText.setColor(sf::Color(250, 215, 11));
 
 	// Load image that contains animation steps
 	sf::Image image;
@@ -71,10 +98,14 @@ int main()
 	addFrames(stand, 0, 0, 0);
 
 	// Register animations with their corresponding durations
-	thor::Animator<sf::Sprite, std::string> animator;
-	animator.addAnimation("walk", walk, sf::seconds(1.f));
-	animator.addAnimation("stand", stand, sf::seconds(1.f));
-	animator.addAnimation("attack", attack, sf::seconds(1.f));
+	thor::AnimationMap<sf::Sprite, std::string> animations;
+	animations.addAnimation("attack", attack, sf::seconds(1.f));
+	animations.addAnimation("walk", walk, sf::seconds(1.f));
+	animations.addAnimation("stand", stand, sf::microseconds(1));
+
+	// Create animator referring to this map, and play 'stand' animation to bring the sprite into an initial state
+	thor::Animator<sf::Sprite, std::string> animator(animations);
+	animator.play() << "stand";
 
 	// Create clock to measure frame time
 	sf::Clock frameClock;
@@ -90,10 +121,21 @@ int main()
 			{
 				switch (event.key.code)
 				{
-					case sf::Keyboard::W:		animator.playAnimation("walk", true);			break;
-					case sf::Keyboard::A:		animator.playAnimation("attack");				break;
-					case sf::Keyboard::S:		animator.stopAnimation();						break;
-					case sf::Keyboard::Escape:	return 0;
+					case sf::Keyboard::W:
+						playAnimation(animator, "walk", event.key.control, animationText);
+						break;
+
+					case sf::Keyboard::A:
+						playAnimation(animator, "attack", event.key.control, animationText);
+						break;
+
+					case sf::Keyboard::S:
+						animationText.setString("(interrupted)");
+						animator.stop();
+						break;
+
+					case sf::Keyboard::Escape:
+						return 0;
 				}
 			}
 			else if (event.type == sf::Event::Closed)
@@ -101,16 +143,6 @@ int main()
 				return 0;
 			}
 		}
-
-		// If no other animation is playing, play stand animation
-		if (!animator.isPlayingAnimation())
-			animator.playAnimation("stand");
-
-		// Output playing animation (general case; at the moment an animation is always playing)
-		if (animator.isPlayingAnimation())
-			animationText.setString("Animation: " + animator.getPlayingAnimation());
-		else
-			animationText.setString("");
 
 		// Update animator and apply current animation state to the sprite
 		animator.update(frameClock.restart());
@@ -122,5 +154,5 @@ int main()
 		window.draw(animationText);
 		window.draw(sprite);
 		window.display();
-	}	
+	}
 }
