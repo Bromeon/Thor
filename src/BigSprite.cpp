@@ -40,8 +40,8 @@ namespace thor
 BigSprite::BigSprite()
 : sf::Drawable()
 , sf::Transformable()
-, mSize(0.f, 0.f)
 , mSplitSprites()
+, mSize(0.f, 0.f)
 , mColor(sf::Color::White)
 {
 }
@@ -49,8 +49,8 @@ BigSprite::BigSprite()
 BigSprite::BigSprite(const BigTexture& texture)
 : sf::Drawable()
 , sf::Transformable()
-, mSize()
 , mSplitSprites()
+, mSize()
 , mColor(sf::Color::White)
 {
 	setTexture(texture);
