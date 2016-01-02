@@ -164,6 +164,9 @@ endif()
 install(DIRECTORY include
 		DESTINATION .)
 
+install(FILES cmake/Modules/FindThor.cmake
+		DESTINATION ./cmake/Modules/)
+
 install(FILES License.txt
 		RENAME LicenseThor.txt
 		DESTINATION ${THOR_DOC_INSTALL_DIR})
