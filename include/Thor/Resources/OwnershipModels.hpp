@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Thor C++ Library
-// Copyright (c) 2011-2015 Jan Haller
+// Copyright (c) 2011-2016 Jan Haller
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -83,7 +83,7 @@ namespace detail
 	template <typename Map>
 	ElementRef<Map> makeElementRef(Map& map, typename Map::iterator itr)
 	{
-		// Aggregate syntax instead of return {...}; to support older compilers and work around compiler bug in VS 2015 RC
+		// Aggregate syntax instead of return {...}; to support older compilers and work around compiler bug in VS 2016 RC
 		ElementRef<Map> ref = {&map, itr};
 		return ref;
 	}
