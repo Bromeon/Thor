@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ class CopiedPtr
 		/// @brief Construct from raw pointer with cloner and deleter
 		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @param cloner Callable with signature <b>T*(const T*)</b> that is invoked during CopiedPtr copies.
-		///  Must return a pointer to a copy of the argument. 
+		///  Must return a pointer to a copy of the argument.
 		/// @param deleter Callable with signature <b>void(T*)</b> that is invoked during CopiedPtr destruction.
 		template <typename U, typename C, typename D>
 		CopiedPtr(U* pointer, C cloner, D deleter)
@@ -216,15 +216,15 @@ class CopiedPtr
 		}
 
 		/// @brief Exchanges the values of *this and @c other.
-		/// 
+		///
 		void swap(CopiedPtr& other)
 		{
 			adlSwap(mOwner, other.mOwner);
 			adlSwap(mPointer, other.mPointer);
 		}
-		
+
 		/// @brief Dereferences the pointer.
-		/// 
+		///
 		AURORA_FAKE_DOC(typename std::add_lvalue_reference<T>::type, T&) operator* () const
 		{
 			assert(mPointer);
@@ -232,7 +232,7 @@ class CopiedPtr
 		}
 
 		/// @brief Dereferences the pointer for member access.
-		/// 
+		///
 		T* operator-> () const
 		{
 			assert(mPointer);
@@ -273,8 +273,8 @@ class CopiedPtr
 		/// @brief Reset to raw pointer with cloner
 		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @param cloner Callable with signature <b>T*(const T*)</b> that is invoked during CopiedPtr copies.
-		///  Must return a pointer to a copy of the argument. 
-		/// @details If this instance currently holds a pointer, the old deleter is invoked. 
+		///  Must return a pointer to a copy of the argument.
+		/// @details If this instance currently holds a pointer, the old deleter is invoked.
 		///  @n Uses OperatorDelete<U> as deleter. Make sure your cloner returns an object allocated with new.
 		template <typename U, typename C>
 		void reset(U* pointer, C cloner)
@@ -285,7 +285,7 @@ class CopiedPtr
 		/// @brief Reset to raw pointer with cloner and deleter
 		/// @param pointer Initial pointer value, can be nullptr. Must be convertible to T*.
 		/// @param cloner Callable with signature <b>T*(const T*)</b> that is invoked during CopiedPtr copies.
-		///  Must return a pointer to a copy of the argument. 
+		///  Must return a pointer to a copy of the argument.
 		/// @param deleter Callable with signature <b>void(T*)</b> that is invoked during CopiedPtr destruction.
 		/// @details If this instance currently holds a pointer, the old deleter is invoked.
 		template <typename U, typename C, typename D>
@@ -326,7 +326,7 @@ void swap(CopiedPtr<T>& lhs, CopiedPtr<T>& rhs)
 /// * The new operator is encapsulated, making code exception-safe (in cases where multiple temporary smart pointers are constructed).
 /// * This function is considerably more efficient and requires less memory, because pointee and cloner/deleter can be stored together.
 /// * You avoid mentioning the pointee type twice.
-/// 
+///
 /// Example:
 /// @code
 /// auto ptr = aurora::makeCopied<MyClass>(arg1, arg2); // instead of

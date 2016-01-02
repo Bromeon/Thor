@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@
 // to either CopiedPtr(VeryDerived*), CopiedPtr(Derived*) or CopiedPtr(const CopiedPtr<VeryDerived>&). Note that in the 2nd case, the CopiedPtr has never
 // had any static type information, the user upcast the pointer already before passing it to the constructor. But even in the 1st and 3rd case, the
 // static type information is type-erased and only available within a derived object like PtrOwner.
-// 
+//
 // Conclusion: In the general case, it is not possible to maintain a single type-erased object for the implementation of derived-to-base conversions.
 // Some special cases could be optimized using RTTI trial and error, but that's just a hack which doesn't solve the inherent underlying problem.
 // The current implementation is very clean: No static_cast, dynamic_cast or typeid is used.
@@ -55,7 +55,7 @@ namespace aurora
 {
 namespace detail
 {
-	
+
 	// Types to differ between copy, move and emplacement semantics
 	struct CopyTag {};
 	struct MoveTag {};
@@ -111,7 +111,7 @@ namespace detail
 		C cloner;
 		D deleter;
 	};
-	
+
 
 #ifdef AURORA_HAS_VARIADIC_TEMPLATES
 
@@ -178,7 +178,7 @@ namespace detail
 
 		PtrOwnerBase<U>* base;
 	};
-	
+
 
 	// Maker (object generator) idiom for PtrOwner
 	template <typename T, typename U, typename C, typename D>
