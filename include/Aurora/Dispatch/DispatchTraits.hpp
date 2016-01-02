@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -55,9 +55,9 @@ namespace detail
 	}
 
 } // namespace detail
-	
+
 // ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 /// @addtogroup Dispatch
 /// @{
@@ -71,7 +71,7 @@ template <typename K>
 struct DispatchTraits
 {
 	/// @brief Key to differentiate objects
-	/// 
+	///
 	typedef K Key;
 
 	/// @brief Maps a key to itself (assuming key and type identifier are the same)
@@ -82,7 +82,7 @@ struct DispatchTraits
 	}
 
 	/// @brief Maps a function to itself (no trampoline needed)
-	/// 
+	///
 	template <typename UnusedId, typename Fn>
 	static Fn trampoline1(Fn f)
 	{
@@ -90,7 +90,7 @@ struct DispatchTraits
 	}
 
 	/// @brief Maps a function to itself (no trampoline needed)
-	/// 
+	///
 	template <typename UnusedId1, typename UnusedId2, typename Fn>
 	static Fn trampoline2(Fn f)
 	{
@@ -98,7 +98,7 @@ struct DispatchTraits
 	}
 
 	/// @brief Returns a string representation of the key, for debugging
-	/// 
+	///
 	static const char* name(Key)
 	{
 		return "unknown";
@@ -110,15 +110,15 @@ struct DispatchTraits
 ///  RTTI capabilities (in particular, the @c typeid operator).
 template <typename S, std::size_t N>
 class RttiDispatchTraits
-{	
+{
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Private types
-	private: 
+	private:
 		typedef typename FunctionResult<S>::Type R;
 		typedef typename FunctionParam<S, 0>::Type B;
 		typedef typename FunctionParam<S, N>::Type U;
 
-		static_assert(std::is_polymorphic<typename std::remove_pointer<typename std::remove_reference<B>::type>::type>::value, 
+		static_assert(std::is_polymorphic<typename std::remove_pointer<typename std::remove_reference<B>::type>::type>::value,
 			"B must be a pointer or reference to a polymorphic base class.");
 
 
@@ -126,18 +126,18 @@ class RttiDispatchTraits
 	// Public types and static member functions
 	public:
 		/// @brief Key type.
-		/// 
+		///
 		typedef std::type_index Key;
 
 		/// @brief Function that takes an object to identify and returns the corresponding std::type_index object.
-		/// 
+		///
 		static Key keyFromBase(B m)
 		{
 			return detail::derefTypeid(m);
 		}
-	
+
 		/// @brief Function that takes static type information and returns a type-erased std::type_index object.
-		/// 
+		///
 		template <typename T>
 		static Key keyFromId(Type<T> id)
 		{
@@ -146,7 +146,7 @@ class RttiDispatchTraits
 		}
 
 		/// @brief Wraps a function such that the argument is downcast before being passed
-		/// 
+		///
 		template <typename Id, typename Fn>
 		static std::function<S> trampoline1(Fn f)
 		{
@@ -154,7 +154,7 @@ class RttiDispatchTraits
 		}
 
 		/// @brief Wraps a function such that both arguments are downcast before being passed
-		/// 
+		///
 		template <typename Id1, typename Id2, typename Fn>
 		static std::function<S> trampoline2(Fn f)
 		{
@@ -162,7 +162,7 @@ class RttiDispatchTraits
 		}
 
 		/// @brief Returns a string representation of the key, for debugging
-		/// 
+		///
 		static const char* name(Key k)
 		{
 			return k.name();
@@ -193,7 +193,7 @@ class RttiDispatchTraits
 				return f(static_cast<Derived>(arg), userData);
 			};
 		}
-		
+
 		// Implementation for signature without additional argument
 		template <typename Id1, typename Id2, typename Fn>
 		static std::function<S> trampoline2(Fn f, Int<0>)

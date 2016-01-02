@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ void foreach(Function&& fn)
 }
 
 /// @brief Apply function for each value in variadic parameter pack
-/// @param fn Function object with a member function template <b>void operator() (T& value)</b>, or C++14 generic lambda. 
+/// @param fn Function object with a member function template <b>void operator() (T& value)</b>, or C++14 generic lambda.
 ///  The parameter must be compatible to type @c T, however pass by value or by (const) (lvalue|rvalue) reference is allowed.
 /// @param args Arguments to iterate through.
 /// @details For each argument @c arg in @c args, the expression <b>fn(arg)</b> is evaluated. Example:

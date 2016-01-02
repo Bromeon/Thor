@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -63,30 +63,30 @@ namespace aurora
 /// @tparam Traits Traits class to customize the usage of the dispatcher. To define your own traits, you can (but don't have to)
 ///  inherit the class @ref aurora::DispatchTraits<K>, where K is your key. It predefines most members for convenience.
 ///  In general, the @c Traits class must contain the following members:
-/// @code 
+/// @code
 /// struct Traits
 /// {
-///	    // The type that is used to differentiate objects. For RTTI class hierarchies, std::type_index is a good choice 
-///	    // -- but you're free to choose anything, such as an enum or a string. The requirements are that Key can be used 
+///	    // The type that is used to differentiate objects. For RTTI class hierarchies, std::type_index is a good choice
+///	    // -- but you're free to choose anything, such as an enum or a string. The requirements are that Key can be used
 ///	    // as a key in std::unordered_map, i.e. it must support a std::hash<Key> specialization and operator==.
 ///	    typedef K Key;
-///	    
+///
 ///	    // A function that returns the corresponding key (such as std::type_index) from a type identifier (such as aurora::Type<T>).
 ///	    // The type identifier is passed to bind() and can contain static type information, while the key is used by the map
-///	    // storing the registered functions. Often, key and type identifier are the same. 
+///	    // storing the registered functions. Often, key and type identifier are the same.
 ///	    static Key keyFromId(Id id);
-///	    
+///
 ///	    // Given a function argument base, this static function extracts the key from it. B corresponds to the template parameter
 ///	    // specified at SingleDispatcher, that is, it is a reference or pointer.
 ///	    static Key keyFromBase(B base);
-///	    
+///
 ///	    // trampoline2() takes a function that is passed to DoubleDispatcher::bind() and modifies it in order to fit the common
 ///	    // R(B, B) signature. It therefore acts as a wrapper for user-defined functions which can link different signatures together.
 ///	    // For example, this is the place to insert downcasts.
 ///	    // The first two template parameters Id1 and Id2 are required, as they will be explicitly specified when trampoline2() is called.
 ///	    template <typename Id1, typename Id2, typename Fn>
 ///	    static std::function<R(B, B)> trampoline2(Fn f);
-///	    
+///
 ///	    // Optional function that returns a string representation of key for debugging.
 ///	    static const char* name(Key k);
 /// };
@@ -122,18 +122,18 @@ class DoubleDispatcher : private NonCopyable
 	// Public types
 	public:
 		/// @brief Function return type
-		/// 
+		///
 		typedef typename FunctionResult<Signature>::Type		Result;
 
 		/// @brief Function parameter type denoting the object used for the dispatch
-		/// 
+		///
 		typedef typename FunctionParam<Signature, 0>::Type		Parameter;
 
 		/// @brief Addition parameter for user data, only useful if @c Signature contains more than 2 parameters
-		/// 
+		///
 		typedef typename FunctionParam<Signature, 2>::Type		UserData;
 
-		
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Static assertions
 
@@ -145,7 +145,7 @@ class DoubleDispatcher : private NonCopyable
 	static_assert(std::is_same<typename FunctionParam<Signature, 0>::Type, typename FunctionParam<Signature, 1>::Type>::value,
 		"The two function parameters must have the same type.");
 
-	 
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Public member functions
 	public:

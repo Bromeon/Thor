@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ namespace detail
 
 /// @addtogroup Meta
 /// @{
-	
+
 /// @brief Simple type wrapper, can be used for overload resolution.
 ///
 template <typename T>
@@ -174,6 +174,8 @@ struct FunctionArity
 #define AURORA_ENABLE_IF(...)  , typename std::enable_if<__VA_ARGS__>::type* = nullptr
 
 
+#if defined(AURORA_DOXYGEN_SECTION)
+
 /// @brief Macro to ensure complete type
 /// @details Usage:
 /// @code
@@ -185,7 +187,18 @@ struct FunctionArity
 /// }
 /// @endcode
 /// @hideinitializer
-#define AURORA_REQUIRE_COMPLETE_TYPE(Type) typedef char auroraRequireCompleteType[(sizeof(Type))]
+#define AURORA_REQUIRE_COMPLETE_TYPE(Type) ImplementationDefined
+
+#elif defined(__GNUC__) || defined(__clang__)
+
+	// g++ and clang issue a warning regarding the unused typedef
+	#define AURORA_REQUIRE_COMPLETE_TYPE(Type) typedef char auroraRequireCompleteType[(sizeof(Type))] __attribute__((unused))
+
+#else
+
+	#define AURORA_REQUIRE_COMPLETE_TYPE(Type) typedef char auroraRequireCompleteType[(sizeof(Type))]
+
+#endif
 
 
 /// @brief Function declaration with inferred return type
@@ -202,7 +215,7 @@ struct FunctionArity
 /// @}
 
 // ---------------------------------------------------------------------------------------------------------------------------
-	
+
 
 namespace detail
 {
@@ -245,7 +258,7 @@ namespace detail
 
 	// Human-readable form
 	#define AURORA_REPLICATE(Origin, New) typename aurora::detail::Replicate<Origin, New>::type
-	
+
 } // namespace detail
 } // namespace aurora
 

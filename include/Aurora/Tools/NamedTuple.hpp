@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -161,21 +161,21 @@ AURORA_PP_IF(AURORA_PP_SIZE(typeVarPairs), /* there is already a 0-argument ctor
 /// @param TupleName Name of the struct
 /// @param typeVarPairs Parenthesized sequence of (Type, variable) pairs, such as ((int, i), (double, d))
 /// @details Example:
-/// @code 
+/// @code
 /// // Defines a named tuple called Index2D with two members x and y of type std::size_t
 /// AURORA_NAMED_TUPLE(Index2D,
 /// (
 ///     (std::size_t,  x),
 ///     (std::size_t,  y)
 /// ))
-/// 
+///
 /// // Defines a named tuple called Tile with members index (of type Index2D) and visible (of type bool)
 /// AURORA_NAMED_TUPLE(Tile,
 /// (
 ///     (Index2D,      index),
 ///     (bool,         visible)
 /// ))
-/// 
+///
 /// // Create tuple object using constructor
 /// Tile tile(Index2D(2, 3), true);
 ///
@@ -206,15 +206,15 @@ struct TupleName																							\
 ///     (std::size_t,  y)
 /// ),
 /// (AURORA_NT_DEFAULT_CTOR, AURORA_NT_LESS))
-/// 
+///
 /// // Use constructor with arguments and default constructor
 /// Index2D i(2, 1);
 /// Index2D j;
-/// 
+///
 /// // Access members
 /// j.x = 1;
 /// j.y = 3;
-/// 
+///
 /// // Use operator< for key in map
 /// std::map<Index2D, Tile> tileMap;
 /// @endcode
@@ -230,5 +230,5 @@ struct TupleName																							\
 };																											\
 
 /// @}
-	
+
 #endif // AURORA_NAMEDTUPLE_HPP

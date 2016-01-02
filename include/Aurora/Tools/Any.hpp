@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -51,10 +51,10 @@ namespace aurora
 /// @code
 /// aurora::Any any = 32; // store int
 /// any = 44l;            // store long
-/// 
+///
 /// long& ref = any.get<long>();   // extract reference (UB if wrong type)
 /// long* ptr = any.check<long>(); // extract pointer (nullptr if wrong type)
-/// 
+///
 /// @endcode
 /// @warning Types must match exactly when extracted -- implicit conversions are not supported.
 class Any
@@ -63,7 +63,7 @@ class Any
 	// Public member functions
 	public:
 		/// @brief Construct empty value
-		/// 
+		///
 		Any()
 		: mPointer()
 		, mType(typeid(void))
@@ -71,7 +71,7 @@ class Any
 		}
 
 		/// @brief Construct from arbitrary value
-		/// 
+		///
 		template <typename T>
 		Any(const T& value)
 		: mPointer(makeCopied<T>(value))
@@ -80,7 +80,7 @@ class Any
 		}
 
 		/// @brief Copy constructor
-		/// 
+		///
 		Any(const Any& origin)
 		: mPointer(origin.mPointer)
 		, mType(origin.mType)
@@ -88,7 +88,7 @@ class Any
 		}
 
 		/// @brief Move constructor
-		/// 
+		///
 		Any(Any&& source)
 		: mPointer(std::move(source.mPointer))
 		, mType(source.mType)
@@ -96,7 +96,7 @@ class Any
 		}
 
 		/// @brief Assignment operator from value
-		/// 
+		///
 		template <typename T>
 		Any& operator= (const T& value)
 		{
@@ -105,7 +105,7 @@ class Any
 		}
 
 		/// @brief Copy assignment operator
-		/// 
+		///
 		Any& operator= (const Any& origin)
 		{
 			Any(origin).swap(*this);
@@ -113,7 +113,7 @@ class Any
 		}
 
 		/// @brief Move assignment operator
-		/// 
+		///
 		Any& operator= (Any&& source)
 		{
 			Any(std::move(source)).swap(*this);
@@ -121,13 +121,13 @@ class Any
 		}
 
 		/// @brief Destructor
-		/// 
+		///
 		~Any()
 		{
 		}
 
 		/// @brief Swaps the Any with another Any of the same type.
-		/// 
+		///
 		void swap(Any& other)
 		{
 			adlSwap(mPointer, other.mPointer);

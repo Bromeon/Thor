@@ -1,24 +1,24 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Aurora C++ Library
-// Copyright (c) 2012-2015 Jan Haller
-// 
+// Copyright (c) 2012-2016 Jan Haller
+//
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
-// 
+//
 // 1. The origin of this software must not be misrepresented; you must not
 //    claim that you wrote the original software. If you use this software
 //    in a product, an acknowledgment in the product documentation would be
 //    appreciated but is not required.
-// 
+//
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 
+//
 // 3. This notice may not be removed or altered from any source distribution.
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -75,23 +75,23 @@ const struct InplaceType {} inplace;
 ///  * <tt>bool has()</tt> + <tt>T find()</tt> -- requires two calls, thus two possibly expensive searches instead of one
 ///  * <tt>bool find(T& out)</tt> -- user must construct T up-front, requiring a default constructor, incurring useless initialization
 ///    and preventing const qualifier
-///  
+///
 /// This class offers a new way:
 ///  * <tt>Optional<T> find()</tt>
-///  
+///
 /// The syntax is very similar to a pointer, with dereferencing operators and conversion to bool contexts:
 /// @code
 /// aurora::Optional<T> opt = find();
 /// if (opt) // check if 'opt' has a value
 ///     use(*opt); // dereference 'opt' to access the T object
 /// @endcode
-/// 
+///
 /// You can even simplify this code further, using type inference and the little-known C++ feature of declarations inside if statements:
 /// @code
 /// if (auto opt = find())
 ///     use(*opt);
 /// @endcode
-///  
+///
 /// This class can be used as an interim solution until <tt>std::optional</tt> becomes part of a C++ standard and is supported by all
 ///  major compilers. aurora::Optional uses a very similar (although slightly smaller) API.
 template <typename T>
@@ -101,14 +101,14 @@ class Optional
 	// Public member functions
 	public:
 		/// @brief Construct empty optional with default constructor
-		/// 
+		///
 		Optional()
 		: mFilled(false)
 		{
 		}
 
 		/// @brief Construct empty optional from @ref aurora::NulloptType "aurora::nullopt"
-		/// 
+		///
 		Optional(NulloptType)
 		: mFilled(false)
 		{
@@ -117,7 +117,7 @@ class Optional
 #ifdef AURORA_HAS_VARIADIC_TEMPLATES
 
 		/// @brief Construct object in-place, forwarding arguments
-		/// 
+		///
 		template <typename... Args>
 		explicit Optional(InplaceType, Args&&... args)
 		: mFilled(false)
@@ -128,7 +128,7 @@ class Optional
 #endif // AURORA_HAS_VARIADIC_TEMPLATES
 
 		/// @brief Construct implicitly from T object (move or copy)
-		/// 
+		///
 		Optional(T object)
 		: mFilled(false)
 		{
@@ -136,7 +136,7 @@ class Optional
 		}
 
 		/// @brief Copy constructor
-		/// 
+		///
 		Optional(const Optional& origin)
 		: mFilled(false)
 		{
@@ -145,7 +145,7 @@ class Optional
 		}
 
 		/// @brief Move constructor
-		/// 
+		///
 		Optional(Optional&& source)
 		: mFilled(false)
 		{
@@ -165,7 +165,7 @@ class Optional
 		}
 
 		/// @brief Copy assignment operator
-		/// 
+		///
 		Optional& operator= (const Optional& origin)
 		{
 			Optional(origin).swap(*this);
@@ -173,7 +173,7 @@ class Optional
 		}
 
 		/// @brief Move assignment operator
-		/// 
+		///
 		Optional& operator= (Optional&& source)
 		{
 			Optional(std::move(source)).swap(*this);
@@ -181,7 +181,7 @@ class Optional
 		}
 
 		/// @brief Destructor
-		/// 
+		///
 		~Optional()
 		{
 			if (mFilled)
@@ -189,7 +189,7 @@ class Optional
 		}
 
 		/// @brief Swaps two optional objects.
-		/// 
+		///
 		void swap(Optional& other)
 		{
 			// TODO: Exception safety in 2nd and 3rd case
@@ -317,7 +317,7 @@ void swap(Optional<T>& lhs, Optional<T>& rhs)
 /// auto opt = aurora::makeOptional<MyClass>(arg1, arg2); // may invoke move constructor
 /// aurora::Optional<MyClass> opt = MyClass(arg1, arg2); // may invoke move or copy constructor
 /// @endcode
-/// @param args Variable argument list, the single arguments are forwarded to T's constructor. 
+/// @param args Variable argument list, the single arguments are forwarded to T's constructor.
 /// @see InplaceType
 template <typename T, typename... Args>
 Optional<T> makeOptional(Args&&... args)
