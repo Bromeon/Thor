@@ -70,7 +70,7 @@ namespace Playback
 	/// @brief Register a callback function in the queue
 	/// @param callback Function to be called.
 	/// @return Queue object with @c operator<< to chain multiple playback schemes
-	AURORA_IMPL_DEF(detail::NotifyScheme) notify(std::function<void()> callback)
+	inline AURORA_IMPL_DEF(detail::NotifyScheme) notify(std::function<void()> callback)
 	{
 		return detail::NotifyScheme(std::move(callback));
 	}
