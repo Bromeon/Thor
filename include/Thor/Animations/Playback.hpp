@@ -55,7 +55,7 @@ namespace Playback
 	AURORA_IMPL_DEF(typename detail::DecayedScheme<detail::RepeatScheme, Id>::Type) repeat(Id id, std::size_t times)
 	{
 		assert(times > 0u);
-		return detail::DecayedScheme<detail::RepeatScheme, Id>::Type(std::move(id), times);
+		return typename detail::DecayedScheme<detail::RepeatScheme, Id>::Type(std::move(id), times);
 	}
 
 	/// @brief Repeat animation an infinite number of times
@@ -64,7 +64,7 @@ namespace Playback
 	template <typename Id>
 	AURORA_IMPL_DEF(typename detail::DecayedScheme<detail::LoopScheme, Id>::Type) loop(Id id)
 	{
-		return detail::DecayedScheme<detail::LoopScheme, Id>(std::move(id));
+		return typename detail::DecayedScheme<detail::LoopScheme, Id>::Type(std::move(id));
 	}
 
 	/// @brief Register a callback function in the queue
