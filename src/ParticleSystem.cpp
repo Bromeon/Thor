@@ -176,7 +176,7 @@ void ParticleSystem::update(sf::Time dt)
 		updateParticle(*reader, dt);
 
 		// If current particle is not dead
-		if (reader->passedLifetime < reader->totalLifetime)
+		if ((reader->totalLifetime > sf::seconds(0) && reader->passedLifetime < reader->totalLifetime) || !reader->isDead)
 		{
 			// Only apply affectors to living particles
 			AURORA_FOREACH(auto& affectorPair, mAffectors)

@@ -52,7 +52,7 @@ class THOR_API Particle
 	// Public member functions
 	public:
 		/// @brief Constructor
-		/// @param totalLifetime How long the particle totally exists.
+		/// @param totalLifetime How long the particle totally exists. Give sf::Time::Zero to manually invoke removal of the particle by manipulating its isDead variable
 		explicit					Particle(sf::Time totalLifetime);
 
 
@@ -66,6 +66,7 @@ class THOR_API Particle
 		sf::Vector2f				scale;				///< Scale, where (1,1) represents the original size.
 		sf::Color					color;				///< %Particle color.
 		unsigned int				textureIndex;		///< Index of the used texture rect, returned by ParticleSystem::addTextureRect()
+		bool						isDead; //This is set to true If the particle is wanted to be removed
 
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -98,11 +99,11 @@ sf::Time THOR_API			getTotalLifetime(const Particle& particle);
 sf::Time THOR_API			getRemainingLifetime(const Particle& particle);
 
 /// @relates Particle
-/// @brief Returns <b>elapsed lifetime / total lifetime</b>.
+/// @brief Returns <b>elapsed lifetime / total lifetime</b> in seconds.
 float THOR_API				getElapsedRatio(const Particle& particle);
 
 /// @relates Particle
-/// @brief Returns <b>remaining lifetime / total lifetime</b>.
+/// @brief Returns <b>remaining lifetime / total lifetime</b> in seconds.
 float THOR_API				getRemainingRatio(const Particle& particle);
 
 /// @relates Particle

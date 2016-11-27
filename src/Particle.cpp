@@ -37,6 +37,7 @@ Particle::Particle(sf::Time totalLifetime)
 , scale(1.f, 1.f)
 , color(255, 255, 255)
 , textureIndex(0)
+, isDead(false)
 , passedLifetime(sf::Time::Zero)
 , totalLifetime(totalLifetime)
 {
@@ -59,12 +60,12 @@ sf::Time getRemainingLifetime(const Particle& particle)
 
 float getElapsedRatio(const Particle& particle)
 {
-	return getElapsedLifetime(particle) / getTotalLifetime(particle);
+	return getElapsedLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
 }
 
 float getRemainingRatio(const Particle& particle)
 {
-	return getRemainingLifetime(particle) / getTotalLifetime(particle);
+	return getRemainingLifetime(particle).asSeconds() / getTotalLifetime(particle).asSeconds();
 }
 
 void abandonParticle(Particle& particle)
