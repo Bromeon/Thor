@@ -91,3 +91,9 @@ else()
 			LIBRARY DESTINATION lib
 			ARCHIVE DESTINATION lib)
 endif()
+
+if (APPLE)
+	set_target_properties(${THOR_LIB} PROPERTIES 
+						  BUILD_WITH_INSTALL_RPATH 1 
+						  INSTALL_NAME_DIR "@rpath")
+endif()
