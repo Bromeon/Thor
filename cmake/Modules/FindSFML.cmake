@@ -7,14 +7,14 @@
 # When you try to locate the SFML libraries, you must specify which modules you want to use (system, window, graphics, network, audio, main).
 # If none is given, the SFML_LIBRARIES variable will be empty and you'll end up linking to nothing.
 # example:
-#   find_package(SFML COMPONENTS graphics window system) // find the graphics, window and system modules
+#   find_package(SFML COMPONENTS graphics window system) # find the graphics, window and system modules
 #
 # You can enforce a specific version, either MAJOR.MINOR or only MAJOR.
 # If nothing is specified, the version won't be checked (i.e. any version will be accepted).
 # example:
-#   find_package(SFML COMPONENTS ...)     // no specific version required
-#   find_package(SFML 2 COMPONENTS ...)   // any 2.x version
-#   find_package(SFML 2.4 COMPONENTS ...) // version 2.4 or greater
+#   find_package(SFML COMPONENTS ...)     # no specific version required
+#   find_package(SFML 2 COMPONENTS ...)   # any 2.x version
+#   find_package(SFML 2.4 COMPONENTS ...) # version 2.4 or greater
 #
 # By default, the dynamic libraries of SFML will be found. To find the static ones instead,
 # you must set the SFML_STATIC_LIBRARIES variable to TRUE before calling find_package(SFML ...).
@@ -89,10 +89,12 @@ if(SFML_FIND_VERSION AND SFML_INCLUDE_DIR)
         set(SFML_CONFIG_HPP_INPUT "${SFML_INCLUDE_DIR}/SFML/Config.hpp")
     endif()
     FILE(READ "${SFML_CONFIG_HPP_INPUT}" SFML_CONFIG_HPP_CONTENTS)
-    STRING(REGEX MATCH ".*#define SFML_VERSION_MAJOR ([0-9]+).*#define SFML_VERSION_MINOR ([0-9]+).*#define SFML_VERSION_PATCH ([0-9]+).*" SFML_CONFIG_HPP_CONTENTS "${SFML_CONFIG_HPP_CONTENTS}")
     STRING(REGEX REPLACE ".*#define SFML_VERSION_MAJOR ([0-9]+).*" "\\1" SFML_VERSION_MAJOR "${SFML_CONFIG_HPP_CONTENTS}")
     STRING(REGEX REPLACE ".*#define SFML_VERSION_MINOR ([0-9]+).*" "\\1" SFML_VERSION_MINOR "${SFML_CONFIG_HPP_CONTENTS}")
     STRING(REGEX REPLACE ".*#define SFML_VERSION_PATCH ([0-9]+).*" "\\1" SFML_VERSION_PATCH "${SFML_CONFIG_HPP_CONTENTS}")
+    if (NOT "${SFML_VERSION_PATCH}" MATCHES "^[0-9]+$")
+        set(SFML_VERSION_PATCH 0)
+    endif()
     math(EXPR SFML_REQUESTED_VERSION "${SFML_FIND_VERSION_MAJOR} * 10000 + ${SFML_FIND_VERSION_MINOR} * 100 + ${SFML_FIND_VERSION_PATCH}")
 
     # if we could extract them, compare with the requested version number
@@ -283,10 +285,7 @@ if(SFML_STATIC_LIBRARIES)
         # find libraries
         if(FIND_SFML_OS_LINUX OR FIND_SFML_OS_FREEBSD)
             find_sfml_dependency(X11_LIBRARY "X11" X11)
-            find_sfml_dependency(LIBXCB_LIBRARIES "XCB" xcb libxcb)
-            find_sfml_dependency(X11_XCB_LIBRARY "X11-xcb" X11-xcb libX11-xcb)
-            find_sfml_dependency(XCB_RANDR_LIBRARY "xcb-randr" xcb-randr libxcb-randr)
-            find_sfml_dependency(XCB_IMAGE_LIBRARY "xcb-image" xcb-image libxcb-image)
+            find_sfml_dependency(XRANDR_LIBRARY "Xrandr" Xrandr)
         endif()
 
         if(FIND_SFML_OS_LINUX)
@@ -297,9 +296,9 @@ if(SFML_STATIC_LIBRARIES)
         if(FIND_SFML_OS_WINDOWS)
             set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "opengl32" "winmm" "gdi32")
         elseif(FIND_SFML_OS_LINUX)
-            set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "GL" ${X11_LIBRARY} ${LIBXCB_LIBRARIES} ${X11_XCB_LIBRARY} ${XCB_RANDR_LIBRARY} ${XCB_IMAGE_LIBRARY} ${UDEV_LIBRARIES})
+            set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "GL" ${X11_LIBRARY} ${XRANDR_LIBRARY} ${UDEV_LIBRARIES})
         elseif(FIND_SFML_OS_FREEBSD)
-            set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "GL" ${X11_LIBRARY} ${LIBXCB_LIBRARIES} ${X11_XCB_LIBRARY} ${XCB_RANDR_LIBRARY} ${XCB_IMAGE_LIBRARY} "usbhid")
+            set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "GL" ${X11_LIBRARY} ${XRANDR_LIBRARY} "usbhid")
         elseif(FIND_SFML_OS_MACOSX)
             set(SFML_WINDOW_DEPENDENCIES ${SFML_WINDOW_DEPENDENCIES} "-framework OpenGL -framework Foundation -framework AppKit -framework IOKit -framework Carbon")
         endif()
@@ -312,10 +311,9 @@ if(SFML_STATIC_LIBRARIES)
 
         # find libraries
         find_sfml_dependency(FREETYPE_LIBRARY "FreeType" freetype)
-        find_sfml_dependency(JPEG_LIBRARY "libjpeg" jpeg)
 
         # update the list
-        set(SFML_GRAPHICS_DEPENDENCIES ${FREETYPE_LIBRARY} ${JPEG_LIBRARY})
+        set(SFML_GRAPHICS_DEPENDENCIES ${FREETYPE_LIBRARY})
         set(SFML_DEPENDENCIES ${SFML_GRAPHICS_DEPENDENCIES} ${SFML_DEPENDENCIES})
     endif()
 
@@ -329,7 +327,7 @@ if(SFML_STATIC_LIBRARIES)
         find_sfml_dependency(VORBIS_LIBRARY "Vorbis" vorbis)
         find_sfml_dependency(VORBISFILE_LIBRARY "VorbisFile" vorbisfile)
         find_sfml_dependency(VORBISENC_LIBRARY "VorbisEnc" vorbisenc)
-        find_sfml_dependency(FLAC_LIBRARY "FLAC" flac)
+        find_sfml_dependency(FLAC_LIBRARY "FLAC" FLAC)
 
         # update the list
         set(SFML_AUDIO_DEPENDENCIES ${OPENAL_LIBRARY} ${FLAC_LIBRARY} ${VORBISENC_LIBRARY} ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
