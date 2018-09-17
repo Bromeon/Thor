@@ -68,7 +68,79 @@ void BigSprite::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	AURORA_FOREACH(const sf::Sprite& sprite, mSplitSprites)
 		target.draw(sprite, states);
 }
+	
+void BigSprite::setTextureRect(const sf::IntRect& rect)
+{
+	if ((rect.left == 0) && (rect.top == 0) && (rect.width == mSize.x) && (rect.height == mSize.y))
+		return;
 
+	unsigned int maxSize = sf::Texture::getMaximumSize();
+
+	int leftWidth = rect.left + rect.width,
+		topHeight = rect.top + rect.height,
+		x, y, width, height;
+
+	AURORA_FOREACH(sf::Sprite& sprite, mSplitSprites)
+	{
+		sf::Vector2f pos = sprite.getPosition();
+
+		int pSizeX = pos.x + maxSize, pSizeY = pos.y + maxSize;
+
+		if ((pSizeX >= rect.left) && (pos.x <= leftWidth) && 
+			(pSizeY >= rect.top) && (pos.y <= topHeight))
+		{
+			if ((rect.left > pos.x) && (rect.left < pSizeX))
+				x = rect.left - (pSizeX - maxSize);
+			else
+				x = 0;
+
+			if ((rect.top > pos.y) && (rect.top < pSizeY))
+				y = rect.top - (pSizeY - maxSize);
+			else
+				y = 0;
+
+			if ((rect.left > pos.x) && (rect.left + rect.width <= pSizeX))
+				width = rect.width;
+			else
+				width = (rect.left + rect.width) - (pSizeX - maxSize);
+
+			if ((rect.top > pos.y) && (rect.top + rect.height <= pSizeY))
+				height = rect.height;
+			else
+				height = (rect.top + rect.height) - (pSizeY - maxSize);
+
+			if (rect.top + height > pSizeY)
+			{
+				height -= ((rect.top + height) - pSizeY);
+			}
+
+			if (rect.left + width > pSizeX)
+			{
+				width -= ((rect.left + width) - pSizeX);
+			}
+
+			if ((width != maxSize) || (height != maxSize))
+			{
+				int pX = 0, pY = 0;
+
+				if ((rect.left + pos.x != 0) && (x == 0))
+					pX = rect.width - width;
+
+				if ((rect.top + pos.y != 0) && (y == 0))
+					pY = rect.height - height;
+
+				sprite.setPosition(pX, pY);
+			}
+
+			sprite.setTextureRect(sf::IntRect(x, y, width, height));
+		}
+		else
+		{
+			sprite.setPosition(-9999, -9999);
+		}
+	}
+}
+	
 void BigSprite::setColor(const sf::Color& color)
 {
 	mColor = color;
