@@ -66,7 +66,6 @@ set(THOR_LIB ${PROJECT_NAME})
 if(THOR_SHARED_LIBS)
 	add_library(${THOR_LIB} SHARED ${THOR_SRC})
 	set_target_properties(${THOR_LIB} PROPERTIES DEBUG_POSTFIX -d)
-	thor_link_sfml(${THOR_LIB})
 else()
 	add_definitions(-DSFML_STATIC)
 	add_library(${THOR_LIB} STATIC ${THOR_SRC})
@@ -74,6 +73,7 @@ else()
 	set_target_properties(${THOR_LIB} PROPERTIES RELEASE_POSTFIX -s)
 endif()
 
+thor_link_sfml(${THOR_LIB})
 
 # Set IDE folder for main project
 set_target_properties(${THOR_LIB} PROPERTIES FOLDER "Thor")

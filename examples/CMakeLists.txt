@@ -35,10 +35,11 @@ macro(thor_example THOR_EXAMPLE_NAME)
 	thor_link_thor(${THOR_EXAMPLE_NAME})
 	thor_link_sfml(${THOR_EXAMPLE_NAME})
 
-	# Static link: Link also dependencies and define SFML_STATIC
+	# Static link: Define SFML_STATIC
+	# Note: since SFML 2.5, it's no longer necessary to link SFML's dependencies, CMake will do it transitively
+	# (see https://en.sfml-dev.org/forums/index.php?topic=24070)
 	if(NOT THOR_SHARED_LIBS)
 		add_definitions(-DSFML_STATIC)
-		thor_link_sfml_dependencies(${THOR_EXAMPLE_NAME})
 	endif()
 
     # Set IDE folder to group example files

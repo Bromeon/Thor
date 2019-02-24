@@ -26,7 +26,7 @@
 # Directory Thor
 
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 # Specify default build type if none provided (before project() command)
 if(NOT CMAKE_BUILD_TYPE)
@@ -107,32 +107,23 @@ else()
 endif()
 
 
-# Add directory containing FindSFML.cmake to module path
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
-
-
-# Find SFML
+# Find SFML. Note: this handles all dependencies, libraries and include directories.
 if(NOT THOR_SHARED_LIBS)
 	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
-find_package(SFML 2 COMPONENTS audio graphics window system)
+find_package(SFML 2.5 COMPONENTS audio graphics window system REQUIRED)
 
-if(SFML_FOUND)
-	include_directories(${SFML_INCLUDE_DIR})
-else()
-	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-	message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
-	message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
+if(NOT SFML_FOUND)
+	set(SFML_DIR "" CACHE PATH "SFML top-level directory")
+	message("\n-> SFML directory not found. Set SFML_DIR (not SFML_ROOT) to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+	message("-> Make sure the SFML libraries >= 2.5 with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
 endif()
 
 
 # Macro to link SFML
 macro(thor_link_sfml THOR_TARGET)
-	target_link_libraries(${THOR_TARGET} ${SFML_LIBRARIES})
-endmacro()
-
-macro(thor_link_sfml_dependencies THOR_TARGET)
-	target_link_libraries(${THOR_TARGET} ${SFML_DEPENDENCIES})
+	# Note: in the future, should use target_link_libraries(${THOR_TARGET} SFML::audio SFML::graphics SFML::window SFML::system)
+	target_link_libraries(${THOR_TARGET} sfml-audio sfml-graphics sfml-window sfml-system)
 endmacro()
 
 # Macro to link Thor (for examples)
