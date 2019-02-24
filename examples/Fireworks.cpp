@@ -36,7 +36,7 @@ class FireworkEmitter
 		explicit FireworkEmitter(sf::Vector2f position)
 		: mAccumulatedTime(sf::Time::Zero)
 		, mPosition(position)
-		, mColor(fireworkColors[thor::random(0u, fireworkColors.size() - 1u)])
+		, mColor(fireworkColors[thor::random(0u, static_cast<unsigned int>(fireworkColors.size()) - 1u)])
 		{
 		}
 

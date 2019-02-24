@@ -62,7 +62,7 @@ int main()
 
 	sf::Text animationText("(idle)", font, 14u);
 	animationText.setPosition(100.f, 150.f);
-	animationText.setColor(sf::Color(250, 215, 11));
+	animationText.setFillColor(sf::Color(250, 215, 11));
 
 	// Load image that contains animation steps
 	sf::Image image;

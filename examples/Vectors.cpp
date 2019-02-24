@@ -63,7 +63,7 @@ int main()
 	// Initialize texts and arrows
 	for (unsigned int i = 0; i < Count; ++i)
 	{
-		texts[i].setColor(colors[i]);
+		texts[i].setFillColor(colors[i]);
 		texts[i].setCharacterSize(14u);
 		texts[i].setFont(font);
 		texts[i].setPosition(0.f, 16.f * i);

@@ -42,16 +42,16 @@ int main()
 	stopWatchMeasurement.setCharacterSize(20);
 	stopWatchMeasurement.setFont(font);
 	stopWatchMeasurement.setPosition(70.f, 120.f);
-	stopWatchMeasurement.setColor(sf::Color(0, 190, 140));
+	stopWatchMeasurement.setFillColor(sf::Color(0, 190, 140));
 	
 	sf::Text timerMeasurement;
 	timerMeasurement.setFont(font);
 	timerMeasurement.setCharacterSize(20);
 	timerMeasurement.setPosition(70.f, 150.f);
-	timerMeasurement.setColor(sf::Color(0, 140, 190));
+	timerMeasurement.setFillColor(sf::Color(0, 140, 190));
 	
 	// Connect timer with callback (colorize yellow) invoked at expiration time
-	timer.connect(std::bind(&sf::Text::setColor, &timerMeasurement, sf::Color::Yellow));
+	timer.connect(std::bind(&sf::Text::setFillColor, &timerMeasurement, sf::Color::Yellow));
 
 	// Main loop
 	for (;;)
@@ -95,7 +95,7 @@ int main()
 					case sf::Keyboard::R:
 						stopWatch.reset();
 						timer.reset(initialTime);
-						timerMeasurement.setColor(sf::Color(0, 140, 190));
+						timerMeasurement.setFillColor(sf::Color(0, 140, 190));
 						break;
 				}
 			}
