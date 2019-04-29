@@ -334,8 +334,8 @@ Optional<T> makeOptional(Args&&... args)
 template <typename T>
 bool operator== (const Optional<T>& lhs, const Optional<T>& rhs)
 {
-	return !lhs && !rhs
-		|| lhs && rhs && *lhs == *rhs;
+	return (!lhs && !rhs)
+		|| (lhs && rhs && *lhs == *rhs);
 }
 
 /// @relates Optional
