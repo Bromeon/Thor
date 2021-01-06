@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Thor C++ Library
-// Copyright (c) 2011-2019 Jan Haller
+// Copyright (c) 2011-2021 Jan Haller
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
