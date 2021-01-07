@@ -78,7 +78,12 @@ class THOR_API BigSprite : public sf::Drawable, public sf::Transformable
 		/// @brief Sets the texture which is used for this sprite.
 		/// @details The referenced texture must remain valid during the lifetime of this sprite.
 		void						setTexture(const BigTexture& texture);
-
+		
+		/// @brief Set the sub-rectangle of the texture that the sprite will display.
+                /// @details Set the sub-rectangle of the texture that the sprite will display.
+		/// The texture rect is useful when you don't want to display the whole texture, but rather a part of it. By default, the texture rect covers the entire texture.e.
+		void						setTextureRect(const sf::IntRect& rect);
+		
 		/// @brief Sets the sprite's color.
 		///
 		void						setColor(const sf::Color& color);
