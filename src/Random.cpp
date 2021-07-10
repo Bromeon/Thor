@@ -76,13 +76,13 @@ namespace
 			}
 
 			// Return minimal value (compliant to Std.Random)
-			static sf::Uint32 min()
+			static constexpr sf::Uint32 min()
 			{
 				return 0;
 			}
 
 			// Return maximal value (compliant to Std.Random)
-			static sf::Uint32 max()
+			static constexpr sf::Uint32 max()
 			{
 				return 0xffffffff;
 			}
