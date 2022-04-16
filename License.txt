@@ -1,4 +1,3 @@
-Thor C++ Library
 Copyright (c) 2011-2022 Jan Haller
 
 This software is provided 'as-is', without any express or implied
